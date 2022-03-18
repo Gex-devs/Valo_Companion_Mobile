@@ -3,6 +3,7 @@ package com.gex.gex_riot_take_a_shit;
 import static com.gex.gex_riot_take_a_shit.MainActivity.*;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -23,32 +24,29 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
 
-    Button Connect_btn;
 
-    @SuppressLint("StaticFieldLeak")
-    static TextView Game_Status;
-
-    @SuppressLint("StaticFieldLeak")
-    static TextView Con_status;
-
+    // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
+    // Might not need it in Main Activity, Need to go to Fragments
     static Handler UI_Handler = new Handler();
-
+    Button Test = findViewById(R.id.Navigation_Button_Test);
+    FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Game_Status = findViewById(R.id.Status);
-        Connect_btn = findViewById(R.id.connect_btn);
-        Con_status = findViewById(R.id.Connection_status);
-
-        Connect_btn.setOnClickListener(new View.OnClickListener() {
+        Test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new WebsocketServer().start();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, Agent_Selection_Menu.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("name") // name can be null
+                        .commit();
             }
         });
+        /* new WebsocketServer().start();
+                Starts server, Maybe make it as a startup function since The app is the Host server*/
     }
 
 
@@ -57,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
         UI_Handler.post(new Runnable() {
             @Override
             public void run() {
-                Con_status.setText("Connected");
+
+                // Set status on connection
             }
         });
     }
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         UI_Handler.post(new Runnable() {
             @Override
             public void run() {
-                Game_Status.setText(stat);
+                // Set Game Status
             }
         });
     }
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         UI_Handler.post(new Runnable() {
             @Override
             public void run() {
-                Con_status.setText("disconnected");
+                // Set Status
             }
         });
     }
@@ -118,6 +117,21 @@ class WebsocketServer extends WebSocketServer {
             case "CharacterSelectPersistentLevel":
                 Game_status("Agent Select");
         }*/
+
+        /*
+        Agent Selection Menu
+
+        {"match_info":{"roster_0":
+        "{\"name\":\"besobetbet #7749\",
+        \"player_id\":\"2978f23d-a61f-5c0d-a328-d870e062e2ff\",
+        \"character\":\"Phoenix\",
+        \"rank\":0,
+        \"locked\":true,
+        \"local\":true,
+        \"teammate\":true}"}}
+
+        */
+
         if(message.equals("MainMenu")){
             Game_status("Main Menu");
         }else if(message.equals("CharacterSelectPersistentLevel")){

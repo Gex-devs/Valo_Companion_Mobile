@@ -1,0 +1,8 @@
+Features:
+
+1. Game Start , Game End Notification
+2. Check Store from Phone
+3. Get match history and MMR
+4. Share ID feature
+5. Agent Select using Phone
+6. Stream Game to friends
