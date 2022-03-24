@@ -2,8 +2,6 @@ package com.gex.gex_riot_take_a_shit;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -11,7 +9,7 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void adition_isCorrect() {
+        System.out.println("test?");
     }
 }

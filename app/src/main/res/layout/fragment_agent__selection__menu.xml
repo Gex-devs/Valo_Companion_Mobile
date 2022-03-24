@@ -8,68 +8,137 @@
     tools:context=".Agent_Selection_Menu" >
 
     <ImageView
-        android:id="@+id/Player_1"
+        android:id="@+id/Player_0"
         android:layout_width="86dp"
         android:layout_height="88dp"
         android:background="@drawable/border"
-        android:src=""
+        android:contentDescription="TODO"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.049"
-        android:contentDescription="TODO" />
+        app:srcCompat="?attr/selectableItemBackground" />
+
+    <ImageView
+        android:id="@+id/Player_1"
+        android:layout_width="86dp"
+        android:layout_height="88dp"
+        android:background="@drawable/border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.241"
+        app:srcCompat="?attr/selectableItemBackground" />
 
     <ImageView
         android:id="@+id/Player_2"
         android:layout_width="86dp"
         android:layout_height="88dp"
         android:background="@drawable/border"
-        android:src=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.241" />
+        app:layout_constraintVertical_bias="0.43"
+        app:srcCompat="?attr/selectableItemBackground" />
 
     <ImageView
         android:id="@+id/Player_3"
         android:layout_width="86dp"
         android:layout_height="88dp"
         android:background="@drawable/border"
-        android:src=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.43" />
+        app:layout_constraintVertical_bias="0.611"
+        app:srcCompat="?attr/selectableItemBackground" />
 
     <ImageView
         android:id="@+id/Player_4"
         android:layout_width="86dp"
         android:layout_height="88dp"
         android:background="@drawable/border"
-        android:src=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.611" />
+        app:layout_constraintVertical_bias="0.813"
+        app:srcCompat="?attr/selectableItemBackground" />
 
-    <ImageView
-        android:id="@+id/Player_5"
-        android:layout_width="86dp"
-        android:layout_height="88dp"
-        android:background="@drawable/border"
-        android:src=""
+    <TextView
+        android:id="@+id/Player_0_Name"
+        android:layout_width="128dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="60dp"
+        android:text="Player_1"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/Player_1_Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.433"
+        app:layout_constraintStart_toEndOf="@+id/Player_0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.075" />
+
+    <TextView
+        android:id="@+id/Player_1_Name"
+        android:layout_width="134dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="176dp"
+        android:text="Player_2"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/Player_2_Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toEndOf="@+id/Player_0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.353" />
+
+    <TextView
+        android:id="@+id/Player_2_Name"
+        android:layout_width="134dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="304dp"
+        android:text="Player_3"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/Player_3_Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toEndOf="@+id/Player_0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.363" />
+
+    <TextView
+        android:id="@+id/Player_3_Name"
+        android:layout_width="134dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="428dp"
+        android:text="Player_4"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/Player_4_Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toEndOf="@+id/Player_0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.416" />
+
+    <TextView
+        android:id="@+id/Player_4_Name"
+        android:layout_width="134dp"
+        android:layout_height="29dp"
+        android:text="Player_5"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toEndOf="@+id/Player_0"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.813" />
+        app:layout_constraintVertical_bias="0.786" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,14 +4,13 @@ import static com.gex.gex_riot_take_a_shit.MainActivity.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.java_websocket.server.WebSocketServer;
 import org.java_websocket.WebSocket;
@@ -28,21 +27,34 @@ public class MainActivity extends AppCompatActivity {
     // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
     // Might not need it in Main Activity, Need to go to Fragments
     static Handler UI_Handler = new Handler();
-    Button Test = findViewById(R.id.Navigation_Button_Test);
-    FragmentManager fragmentManager = getSupportFragmentManager();
+
+    static FragmentManager fragmentManager;
+
+    {
+        fragmentManager = getSupportFragmentManager();
+    }
+
+    public static Current_status_Data viewModel;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button Test = findViewById(R.id.Navigation_Button_Test);
+        viewModel = new ViewModelProvider(this).get(Current_status_Data.class);
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, Game_Status.class, null)
+                .setReorderingAllowed(true)
+                .addToBackStack(null) // name can be null
+                .commit();
         Test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, Agent_Selection_Menu.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack("name") // name can be null
-                        .commit();
+                System.out.println("clicked");
+                new WebsocketServer().start();
             }
         });
         /* new WebsocketServer().start();
@@ -51,40 +63,34 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public static void Connected(){
+    public static void Agent_Select_fragment(){
         UI_Handler.post(new Runnable() {
             @Override
             public void run() {
-
-                // Set status on connection
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, Agent_Selection_Menu.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null) // name can be null
+                        .commit();
             }
         });
     }
-    public static void Game_status(String stat){
+    public static void Game_status(){
         UI_Handler.post(new Runnable() {
             @Override
             public void run() {
-                // Set Game Status
+                viewModel.Game_state("pfft");
             }
         });
     }
-    public static void disconnected() {
-        UI_Handler.post(new Runnable() {
-            @Override
-            public void run() {
-                // Set Status
-            }
-        });
-    }
+    // Use this three functions incase you want to change a Ui element in the main_activity
 }
-
 
 class WebsocketServer extends WebSocketServer {
 
     private static int TCP_PORT = 4444;
 
     private Set<WebSocket> conns;
-
     public WebsocketServer() {
         super(new InetSocketAddress(TCP_PORT));
         conns = new HashSet<>();
@@ -94,14 +100,12 @@ class WebsocketServer extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         conns.add(conn);
         System.out.println("New connection from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
-        Connected();
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         conns.remove(conn);
         System.out.println("Closed connection to " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
-        disconnected();
     }
 
     @SuppressLint("SetTextI18n")
@@ -111,35 +115,19 @@ class WebsocketServer extends WebSocketServer {
         for (WebSocket sock : conns) {
             sock.send(message);
         }
-        /*switch (message){
+
+        //viewModel.Selection(message.toString());
+        switch (message) {
             case "MainMenu":
-                Game_status("MainMenu");
+                viewModel.Game_state("MainMenu");
             case "CharacterSelectPersistentLevel":
-                Game_status("Agent Select");
-        }*/
-
-        /*
-        Agent Selection Menu
-
-        {"match_info":{"roster_0":
-        "{\"name\":\"besobetbet #7749\",
-        \"player_id\":\"2978f23d-a61f-5c0d-a328-d870e062e2ff\",
-        \"character\":\"Phoenix\",
-        \"rank\":0,
-        \"locked\":true,
-        \"local\":true,
-        \"teammate\":true}"}}
-
-        */
-
-        if(message.equals("MainMenu")){
-            Game_status("Main Menu");
-        }else if(message.equals("CharacterSelectPersistentLevel")){
-            Game_status("Agent Select");
-        }else if(message.equals("Game starting")){
-            Game_status("Game starting");
-        }else if(message.equals("match_start")){
-            Game_status("Game Started");
+                Agent_Select_fragment();
+            case "Game starting":
+                System.out.println("Game Starting");
+            case "match_start":
+                System.out.println("Match Started");
+            default:
+                viewModel.Selection(message.toString());
         }
     }
 

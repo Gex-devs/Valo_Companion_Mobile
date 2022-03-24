@@ -6,3 +6,4 @@ Features:
 4. Share ID feature
 5. Agent Select using Phone
 6. Stream Game to friends
+7. Connect Via QR Code

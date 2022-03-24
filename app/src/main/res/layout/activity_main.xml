@@ -34,7 +34,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="com.gex.gex_riot_take_a_shit.Agent_Selection_Menu"
+        android:name="com.gex.gex_riot_take_a_shit.Game_Status"
         android:layout_width="411dp"
         android:layout_height="664dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomAppBar"
