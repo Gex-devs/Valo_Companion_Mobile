@@ -2,6 +2,7 @@ package com.gex.gex_riot_take_a_shit;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 public class Current_status_Data extends ViewModel {
@@ -9,7 +10,6 @@ public class Current_status_Data extends ViewModel {
     private final MutableLiveData<String> anotherItem = new MutableLiveData<>();
 
     public void Selection(String item) {
-
         Selection_Menu_json.postValue(item);
     }
 

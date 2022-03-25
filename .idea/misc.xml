@@ -5,9 +5,11 @@
       <map>
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/border.xml" value="0.219" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/gg.xml" value="0.219" />
-        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/font/keep_calm.xml" value="0.3182777543267201" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_agent__selection__menu.xml" value="0.25" />
-        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_game__status.xml" value="0.33" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_game__status.xml" value="0.25" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_store_.xml" value="0.33" />
       </map>
     </option>
   </component>

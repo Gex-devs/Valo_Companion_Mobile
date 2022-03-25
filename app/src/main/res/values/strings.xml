@@ -2,4 +2,7 @@
     <string name="app_name">Gex_Riot_Take_A_Shit</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button">Button</string>
+    <string name="game">Game_Status</string>
+    <string name="network">Network</string>
 </resources>

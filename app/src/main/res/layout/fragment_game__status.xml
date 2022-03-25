@@ -3,33 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_tag"
+    android:background="@android:color/darker_gray"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Game_Status">
 
     <TextView
         android:id="@+id/nah_bruh"
-        android:layout_width="222dp"
-        android:layout_height="69dp"
-        android:text="Game"
-        android:textSize="50sp"
+        android:layout_width="380dp"
+        android:layout_height="89dp"
+        android:fontFamily="@font/staubach"
+        android:text="@string/game"
+        android:textSize="65sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.657"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.232" />
+        app:layout_constraintVertical_bias="0.182"
+        tools:ignore="TextContrastCheck" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="153dp"
-        android:layout_height="39dp"
-        android:text="Network"
-        android:textSize="30sp"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nah_bruh"
-        app:layout_constraintVertical_bias="0.098" />
+        app:layout_constraintTop_toBottomOf="@+id/nah_bruh" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
