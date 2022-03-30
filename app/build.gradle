@@ -36,6 +36,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.2.0'
     implementation 'com.labo.kaji:fragmentanimations:0.1.1'
+    implementation 'io.github.muddz:styleabletoast:2.4.0'
+    implementation 'com.nightonke:jellytogglebutton:1.0.2'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

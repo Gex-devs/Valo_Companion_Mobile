@@ -30,33 +30,35 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <Button
-        android:id="@+id/Server_Starter"
+    <com.nightonke.jellytogglebutton.JellyToggleButton
+        android:id="@+id/server_switch"
+        android:layout_width="69dp"
+        android:layout_height="32dp"
+        app:jtbJelly="random"
+        app:jtbDraggable="false"
+        app:jtbLeftBackgroundColor="#ae0001"
+        app:jtbRightBackgroundColor="#008744"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.953"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:id="@+id/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Server"
+        android:fontFamily="@font/valorant"
+        android:text="T.A.SHIT"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.453"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-        android:layout_width="416dp"
-        android:layout_height="52dp"
-        android:layout_gravity="bottom"
-        android:background="@color/black"
-        app:backgroundTint="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.846" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

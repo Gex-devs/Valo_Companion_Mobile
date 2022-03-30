@@ -3,19 +3,22 @@ package com.gex.gex_riot_take_a_shit;
 import static com.gex.gex_riot_take_a_shit.MainActivity.*;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.nightonke.jellytogglebutton.JellyToggleButton;
+import com.nightonke.jellytogglebutton.JellyTypes.Jelly;
+import com.nightonke.jellytogglebutton.State;
 
 import org.java_websocket.server.WebSocketServer;
 import org.java_websocket.WebSocket;
@@ -25,8 +28,11 @@ import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.github.muddz.styleabletoast.StyleableToast;
+
 
 public class MainActivity extends AppCompatActivity {
+
 
 
 
@@ -35,14 +41,16 @@ public class MainActivity extends AppCompatActivity {
     static Handler UI_Handler = new Handler();
     static FragmentManager fragmentManager;
 
-
     {
         fragmentManager = getSupportFragmentManager();
     }
 
     public static Current_status_Data viewModel;
 
-
+    public static Context ContextMethod() {
+        Context context = App.getContext();
+        return context;
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -53,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Main Activity background color
+        getWindow().getDecorView().setBackgroundColor(Color.BLACK);
+
+        JellyToggleButton server_Switch = findViewById(R.id.server_switch);
+        server_Switch.setJelly(Jelly.LAZY_TREMBLE_TAIL_SLIM_JIM);
 
         // STARTS HERE *  Bottom Navigation Bar https://github.com/Ashok-Varma/BottomNavigation
         BottomNavigationBar bottomNavigationBar = (BottomNavigationBar)findViewById(R.id.bottom_navigation_bar);
@@ -87,24 +100,27 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(int position) {}
         });
         // ENDS HERE * Bottom Navigation Bar
-        Button Test = findViewById(R.id.Server_Starter);
         viewModel = new ViewModelProvider(this).get(Current_status_Data.class);
         fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, Game_Status.class, null)
                 .setReorderingAllowed(true)
-                .addToBackStack(null)// name can be null
+                .addToBackStack(null)       // name can be null
                 .commit();
-        Test.setOnClickListener(new View.OnClickListener() {
+        // change this to the switch button
+        server_Switch.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
             @Override
-            public void onClick(View view) {
-                System.out.println("clicked");
-                new WebsocketServer().start();
+            public void onStateChange(float process, State state, JellyToggleButton jtb) {
+                new StyleableToast
+                        .Builder(ContextMethod())
+                        .text("Hosted")
+                        .textColor(Color.WHITE)
+                        .backgroundColor(Color.BLUE)
+                        .iconStart(R.drawable.riot)
+                        .show();
+                // Start server somewhere here
             }
         });
-        /* new WebsocketServer().start();
-                Starts server, Maybe make it as a startup function since The app is the Host server*/
     }
-
 
 
     public static void Agent_Select_fragment(){
@@ -160,12 +176,27 @@ class WebsocketServer extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         conns.add(conn);
         System.out.println("New connection from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+        new StyleableToast
+                .Builder(ContextMethod())
+                .text("Connected")
+                .textColor(Color.WHITE)
+                .backgroundColor(Color.BLUE)
+                .iconStart(R.drawable.riot)
+                .show();
+        // Add something similar to TOAST here.
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         conns.remove(conn);
         System.out.println("Closed connection to " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+        new StyleableToast
+                .Builder(ContextMethod())
+                .text("Disconnected")
+                .textColor(Color.WHITE)
+                .backgroundColor(Color.RED)
+                .iconStart(R.drawable.riot)
+                .show();
     }
 
     @SuppressLint("SetTextI18n")

@@ -20,12 +20,15 @@ public class Game_Status extends Fragment {
 
     TextView t;
     Button G;
+    String FF = "nigga";
     Current_status_Data viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if(savedInstanceState != null) {
+            t.setText(savedInstanceState.getString(FF));
+        }
     }
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
@@ -34,7 +37,9 @@ public class Game_Status extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //Save the fragment's state here
+
+        outState.putString(FF,t.getText().toString());
+
     }
 
 
@@ -49,6 +54,7 @@ public class Game_Status extends Fragment {
         G.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 t.setText("changed");
             }
         });
