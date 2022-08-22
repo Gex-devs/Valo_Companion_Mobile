@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,12 +17,12 @@ import com.labo.kaji.fragmentanimations.MoveAnimation;
 
 import org.json.JSONObject;
 
-public class Agent_Selection_Menu extends Fragment {
+public class Agent_Selection_Menu extends Fragment implements View.OnClickListener{
 
 
     TextView P_0,P_1,P_2,P_3,P_4;
     ImageView Photo_0,Photo_1,Photo_2,Photo_3,Photo_4;
-
+    Button Jett,Omen,Raze,Sage,Reyna,Skye;
     Current_status_Data viewModel;
 
     @Override
@@ -37,17 +38,62 @@ public class Agent_Selection_Menu extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_agent__selection__menu, container, false);
+
+        // buttons
+        Jett = (Button) v.findViewById(R.id.button20);
+        Omen = (Button) v.findViewById(R.id.button21);
+        Raze = (Button) v.findViewById(R.id.button18);
+        Sage = (Button) v.findViewById(R.id.button22);
+        Reyna = (Button) v.findViewById(R.id.button23);
+        Skye = (Button) v.findViewById(R.id.button24);
+
+        Jett.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.for_char("Jett");
+            }
+        });
+        Omen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.for_char("Omen");
+            }
+        });
+        Raze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.for_char("Raze");
+            }
+        });
+        Sage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.for_char("Sage");
+            }
+        });
+        Reyna.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.for_char("Reyna");
+            }
+        });
+        Skye.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.for_char("Skye");
+            }
+        });
+        //player Names and Agent images
         P_0 = (TextView) v.findViewById(R.id.Player_0_Name);
         P_1 = (TextView) v.findViewById(R.id.Player_1_Name);
         P_2 = (TextView) v.findViewById(R.id.Player_2_Name);
         P_3 = (TextView) v.findViewById(R.id.Player_3_Name);
         P_4 = (TextView) v.findViewById(R.id.Player_4_Name);
-        Photo_0 = (ImageView) v.findViewById(R.id.Player_0);
+        Photo_0 = (ImageView) v.findViewById(R.id.Player_1_improved);
         Photo_1 = (ImageView) v.findViewById(R.id.Player_1);
         Photo_2 = (ImageView) v.findViewById(R.id.Player_2);
         Photo_3 = (ImageView) v.findViewById(R.id.Player_3);
         Photo_4 = (ImageView) v.findViewById(R.id.Player_4);
-
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
         viewModel.getSelectedItem().observe(requireActivity(),item ->{
             try{
@@ -112,24 +158,23 @@ public class Agent_Selection_Menu extends Fragment {
     public int get_respective_image(String t){
         switch (t){
             case "Clay":
-                return R.drawable.raze;
+                return R.drawable.raze_background;
             case "Pandemic":
-                return R.drawable.viper;
+                return R.drawable.viper_background;
             case "Wraith":
-                return R.drawable.omen;
+                return R.drawable.omen_background;
             case "Hunter":
-                System.out.println("sova");
-                return R.drawable.sova;
+                return R.drawable.sova_background;
             case "Thorne":
-                return R.drawable.sage;
+                return R.drawable.sage_background;
             case "Phoenix":
-                return R.drawable.phoenix;
+                return R.drawable.phx_background;
             case "Wushu":
-                return R.drawable.jett;
+                return R.drawable.jett_backgroun;
             case "Gumshoe":
-                return R.drawable.cypher;
+                return R.drawable.cypher_background;
             case "Sarge":
-                return R.drawable.brimstone;
+                return R.drawable.brimstone_background;
             case "Breach":
                 return R.drawable.breach;
             case "Vampire":
@@ -151,5 +196,10 @@ public class Agent_Selection_Menu extends Fragment {
 
         }
         return 0;
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_tag"
-    android:background="@android:color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:paddingLeft="@dimen/badge_text_size"
+    android:paddingTop="@dimen/bottom_navigation_height"
     tools:context=".Game_Status">
 
     <TextView
@@ -13,55 +15,15 @@
         android:layout_width="382dp"
         android:layout_height="105dp"
         android:fontFamily="@font/valorant"
-        android:text="MAIN MENU"
+        android:text="No Connection"
         android:textColor="@color/white"
         android:textSize="55sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.551"
+        app:layout_constraintHorizontal_bias="0.034"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.192"
+        app:layout_constraintVertical_bias="0.236"
         tools:ignore="TextContrastCheck" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nah_bruh"
-        app:layout_constraintVertical_bias="0.705" />
-
-    <TextView
-        android:id="@+id/host_ip_addr"
-        android:layout_width="87dp"
-        android:layout_height="36dp"
-        android:text="HOST:"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.173"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nah_bruh"
-        app:layout_constraintVertical_bias="0.377" />
-
-    <TextView
-        android:id="@+id/host_port"
-        android:layout_width="83dp"
-        android:layout_height="33dp"
-        android:text="PORT:"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.274"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nah_bruh"
-        app:layout_constraintVertical_bias="0.461" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

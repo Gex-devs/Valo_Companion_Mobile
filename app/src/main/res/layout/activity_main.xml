@@ -8,57 +8,29 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="com.gex.gex_riot_take_a_shit.Game_Status"
-        android:layout_width="412dp"
-        android:layout_height="749dp"
-        android:layout_marginTop="52dp"
+        android:name="com.gex.gex_riot_take_a_shit.improved_Agent_sel_fragment"
+        android:layout_width="362dp"
+        android:layout_height="833dp"
+        android:layout_gravity="center"
+        android:paddingTop="213sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.ashokvarma.bottomnavigation.BottomNavigationBar
-        android:id="@+id/bottom_navigation_bar"
-        android:layout_width="429dp"
-        android:layout_height="88dp"
-        android:layout_gravity="start"
-        android:layout_marginTop="665dp"
-        android:outlineSpotShadowColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <com.nightonke.jellytogglebutton.JellyToggleButton
-        android:id="@+id/server_switch"
-        android:layout_width="69dp"
-        android:layout_height="32dp"
-        app:jtbJelly="random"
-        app:jtbDraggable="false"
-        app:jtbLeftBackgroundColor="#ae0001"
-        app:jtbRightBackgroundColor="#008744"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
+    <com.ashokvarma.bottomnavigation.BottomNavigationBar
+        android:id="@+id/bottom_navigation_bar"
+        android:layout_width="425dp"
+        android:layout_height="58dp"
+        android:layout_gravity="start"
+        android:outlineSpotShadowColor="@color/white"
+        android:paddingRight="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.953"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8" />
-
-    <TextView
-        android:id="@+id/Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/valorant"
-        android:text="T.A.SHIT"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.453"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.846" />
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

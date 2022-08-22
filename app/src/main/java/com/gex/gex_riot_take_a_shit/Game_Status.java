@@ -13,16 +13,19 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 
-public class Game_Status extends Fragment {
+import org.java_websocket.server.WebSocketServer;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+import java.io.*;
+import java.net.*;
+public class Game_Status extends Fragment implements View.OnClickListener{
     TextView t;
-    Button G;
     String FF = "nigga";
     Current_status_Data viewModel;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +40,6 @@ public class Game_Status extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString(FF,t.getText().toString());
 
     }
@@ -50,20 +52,10 @@ public class Game_Status extends Fragment {
         View v = inflater.inflate(R.layout.fragment_game__status, container, false);
 
         t = (TextView) v.findViewById(R.id.nah_bruh);
-        G = (Button) v.findViewById(R.id.button);
-        G.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                t.setText("changed");
-            }
-        });
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
         viewModel.getAnotherItem().observe(requireActivity(),item ->{
             t.setText(item);
         });
-
-
         return v;
     }
 
@@ -73,5 +65,9 @@ public class Game_Status extends Fragment {
 
     }
 
+    @Override
+    public void onClick(View view) {
+        viewModel.for_char("Say something i am giving up on u");
+    }
 
 }

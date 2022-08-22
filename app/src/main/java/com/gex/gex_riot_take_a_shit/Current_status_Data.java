@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 public class Current_status_Data extends ViewModel {
     private final MutableLiveData<String> Selection_Menu_json = new MutableLiveData<>();
     private final MutableLiveData<String> anotherItem = new MutableLiveData<>();
-
+    private final MutableLiveData<String> char_select_item = new MutableLiveData<>();
     public void Selection(String item) {
         Selection_Menu_json.postValue(item);
     }
@@ -17,7 +17,9 @@ public class Current_status_Data extends ViewModel {
         //anotherItem.setValue(las);
         anotherItem.postValue(las);
     }
-
+    public void for_char(String som){
+        char_select_item.postValue(som);
+    }
     public LiveData<String> getSelectedItem() {
 
         return Selection_Menu_json;
@@ -27,4 +29,9 @@ public class Current_status_Data extends ViewModel {
 
         return anotherItem;
     }
+    public LiveData<String> getFor_char() {
+
+        return char_select_item;
+    }
 }
+

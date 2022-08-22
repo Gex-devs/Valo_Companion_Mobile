@@ -12,13 +12,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.nightonke.jellytogglebutton.JellyToggleButton;
-import com.nightonke.jellytogglebutton.JellyTypes.Jelly;
-import com.nightonke.jellytogglebutton.State;
 
 import org.java_websocket.server.WebSocketServer;
 import org.java_websocket.WebSocket;
@@ -60,12 +56,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WebsocketServer Gex = new WebsocketServer();
         setContentView(R.layout.activity_main);
         // Main Activity background color
         getWindow().getDecorView().setBackgroundColor(Color.BLACK);
-
-        JellyToggleButton server_Switch = findViewById(R.id.server_switch);
-        server_Switch.setJelly(Jelly.LAZY_TREMBLE_TAIL_SLIM_JIM);
+        Gex.start();
+        // https://github.com/Nightonke/JellyToggleButton#listener
+        //JellyToggleButton server_Switch = findViewById(R.id.server_switch);
+        //server_Switch.setJelly(Jelly.LAZY_TREMBLE_TAIL_SLIM_JIM);
+        viewModel = new ViewModelProvider(this).get(Current_status_Data.class);
+        viewModel.getFor_char().observe(this,item ->{
+            Gex.broadcast(item);
+        });
 
         // STARTS HERE *  Bottom Navigation Bar https://github.com/Ashok-Varma/BottomNavigation
         BottomNavigationBar bottomNavigationBar = (BottomNavigationBar)findViewById(R.id.bottom_navigation_bar);
@@ -73,10 +75,12 @@ public class MainActivity extends AppCompatActivity {
                 .addItem(new BottomNavigationItem(R.drawable.valo,"GAME"))
                 .addItem(new BottomNavigationItem(R.drawable.riot, "STORE"))
                 .addItem(new BottomNavigationItem(R.drawable.controller,"Feature"))
-                .setInActiveColor(android.R.color.holo_red_dark)
-                .setBarBackgroundColor(R.color.black)
+                .setInActiveColor(R.color.Inactive_color_bottom_bar)
+                .setBarBackgroundColor(R.color.Bottom_bar_color)
+                .setActiveColor(R.color.Valo_Color)
                 .setFirstSelectedPosition(0)
                 .initialise();
+        bottomNavigationBar.setElevation(0);
         bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
@@ -100,26 +104,43 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(int position) {}
         });
         // ENDS HERE * Bottom Navigation Bar
-        viewModel = new ViewModelProvider(this).get(Current_status_Data.class);
+        // switch here man
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, Game_Status.class, null)
+                .replace(R.id.fragmentContainerView, In_game.class, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)       // name can be null
                 .commit();
         // change this to the switch button
+        /*
         server_Switch.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
             @Override
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
-                new StyleableToast
-                        .Builder(ContextMethod())
-                        .text("Hosted")
-                        .textColor(Color.WHITE)
-                        .backgroundColor(Color.BLUE)
-                        .iconStart(R.drawable.riot)
-                        .show();
-                // Start server somewhere here
+                // add logic with State variable
+                if(state.equals(State.RIGHT)){
+                    new StyleableToast
+                            .Builder(ContextMethod())
+                            .text("Hosted")
+                            .length(2)
+                            .textColor(Color.WHITE)
+                            .backgroundColor(Color.BLUE)
+                            .iconStart(R.drawable.riot)
+                            .show();
+                    viewModel.Game_state("Connected");
+                    Gex.start();
+                }else if (state.equals(State.LEFT)){
+                    new StyleableToast
+                            .Builder(ContextMethod())
+                            .text("Disabled")
+                            .length(1)
+                            .textColor(Color.WHITE)
+                            .backgroundColor(Color.RED)
+                            .iconStart(R.drawable.riot)
+                            .show();
+                }
             }
         });
+
+         */
     }
 
 
@@ -128,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, Agent_Selection_Menu.class, null)
+                        //.replace(R.id.fragmentContainerView, Agent_Selection_Menu.class, null)
+                        .replace(R.id.fragmentContainerView, improved_Agent_sel_fragment.class, null)
                         .setReorderingAllowed(true)
                         .addToBackStack(null) // name can be null
                         .commit();
@@ -156,34 +178,37 @@ public class MainActivity extends AppCompatActivity {
                         .setReorderingAllowed(true)
                         .addToBackStack(null) // name can be null
                         .commit();
+
             }
         });
     }
     // Use this three functions incase you want to change a Ui element in the main_activity
 }
 
-class WebsocketServer extends WebSocketServer {
+class WebsocketServer extends WebSocketServer{
 
     private static int TCP_PORT = 4444;
-
     private Set<WebSocket> conns;
     public WebsocketServer() {
         super(new InetSocketAddress(TCP_PORT));
         conns = new HashSet<>();
+
+
     }
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         conns.add(conn);
         System.out.println("New connection from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+        /*
         new StyleableToast
                 .Builder(ContextMethod())
                 .text("Connected")
                 .textColor(Color.WHITE)
                 .backgroundColor(Color.BLUE)
                 .iconStart(R.drawable.riot)
-                .show();
-        // Add something similar to TOAST here.
+                .show();*/
+        // you can't broadcast if you use toast here
     }
 
     @Override
@@ -202,12 +227,14 @@ class WebsocketServer extends WebSocketServer {
     @SuppressLint("SetTextI18n")
     @Override
     public void onMessage(WebSocket conn, String message) {
+        broadcast("work?");
         System.out.println("Game Log: " + message);
         for (WebSocket sock : conns) {
             sock.send(message);
         }
 
         //viewModel.Selection(message.toString());
+
         switch (message) {
             case "MainMenu":
                 viewModel.Game_state("MainMenu");
@@ -220,6 +247,7 @@ class WebsocketServer extends WebSocketServer {
             default:
                 viewModel.Selection(message.toString());
         }
+
     }
 
     @Override
@@ -234,8 +262,17 @@ class WebsocketServer extends WebSocketServer {
 
     @Override
     public void onStart() {
-
         System.out.println("started");
-    }
-}
 
+    }
+
+    @Override
+    public  void stop(){
+
+    }
+    @Override
+    public void broadcast(String text) {
+        broadcast(text, conns);
+    }
+
+}
