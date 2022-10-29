@@ -11,19 +11,68 @@
     tools:context=".Game_Status">
 
     <TextView
-        android:id="@+id/nah_bruh"
-        android:layout_width="382dp"
-        android:layout_height="105dp"
-        android:fontFamily="@font/valorant"
-        android:text="No Connection"
-        android:textColor="@color/white"
-        android:textSize="55sp"
+        android:id="@+id/IP_TEXT"
+        android:layout_width="62dp"
+        android:layout_height="57dp"
+        android:text="IP:"
+        android:textColor="#FFFFFF"
+        android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.034"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.236"
-        tools:ignore="TextContrastCheck" />
+        app:layout_constraintVertical_bias="0.123" />
 
+    <TextView
+        android:id="@+id/IP_Input"
+        android:layout_width="286dp"
+        android:layout_height="62dp"
+        android:text="Null"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.12" />
+
+    <TextView
+        android:id="@+id/PORT_TEXT"
+        android:layout_width="140dp"
+        android:layout_height="54dp"
+        android:text="PORT:"
+        android:textColor="#FFFFFF"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.271" />
+
+    <TextView
+        android:id="@+id/PORT_input"
+        android:layout_width="176dp"
+        android:layout_height="59dp"
+        android:text="Null"
+        android:textColor="#FFFFFF"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.838"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.263" />
+
+    <Button
+        android:id="@+id/Host_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Host"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

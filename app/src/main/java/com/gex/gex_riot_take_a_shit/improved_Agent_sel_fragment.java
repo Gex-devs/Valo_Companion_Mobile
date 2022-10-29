@@ -1,7 +1,6 @@
 package com.gex.gex_riot_take_a_shit;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.imageview.ShapeableImageView;
-import com.labo.kaji.fragmentanimations.MoveAnimation;
 
 import org.json.JSONObject;
 
@@ -25,6 +23,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
     TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5;
     Current_status_Data viewModel;
     ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         sova.setOnClickListener(this);
         reyna = (ShapeableImageView) v.findViewById(R.id.Reyna_button);
         reyna.setOnClickListener(this);
-        viper = (ShapeableImageView) v.findViewById(R.id.Viper_button);
+        viper = (ShapeableImageView) v.findViewById(R.id.Attacking_Ad);
         viper.setOnClickListener(this);
         fade = (ShapeableImageView) v.findViewById(R.id.Fade_button);
         fade.setOnClickListener(this);
@@ -92,10 +91,10 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         A_4 = (TextView) v.findViewById(R.id.Player_4_Agent_Improved);
         A_5 = (TextView) v.findViewById(R.id.Player_5_Agent_Improved);
         Photo_1 = (ImageView) v.findViewById(R.id.Player_1_improved);
-        Photo_2 = (ImageView) v.findViewById(R.id.Player_1);
-        Photo_3 = (ImageView) v.findViewById(R.id.Player_2);
-        Photo_4 = (ImageView) v.findViewById(R.id.Player_3);
-        Photo_5 = (ImageView) v.findViewById(R.id.Player_4);
+        Photo_2 = (ImageView) v.findViewById(R.id.player_2_improved);
+        Photo_3 = (ImageView) v.findViewById(R.id.player_3_improved2);
+        Photo_4 = (ImageView) v.findViewById(R.id.player_4_improved3);
+        Photo_5 = (ImageView) v.findViewById(R.id.player_5_improved4);
 
 
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
@@ -117,8 +116,8 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                                 break;
                             case 1:
                                 System.out.println("case 1 active");
-                                P_2.setText(Player_Json_Object.getString("name"));
                                 Photo_2.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
+                                P_2.setText(Player_Json_Object.getString("name"));
                                 A_2.setText(get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 2:
@@ -279,7 +278,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         sova = (ShapeableImageView) getView().findViewById(R.id.Sova_button);
         sova.setStrokeColorResource(android.R.color.transparent);
         reyna.setStrokeColorResource(android.R.color.transparent);
-        viper = (ShapeableImageView) getView().findViewById(R.id.Viper_button);
+        viper = (ShapeableImageView) getView().findViewById(R.id.Attacking_Ad);
         viper.setStrokeColorResource(android.R.color.transparent);
         fade = (ShapeableImageView) getView().findViewById(R.id.Fade_button);
         fade.setStrokeColorResource(android.R.color.transparent);
@@ -390,7 +389,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                 add_stroke(view.getId());
                 viewModel.for_char("Sova");
                 break;
-            case R.id.Viper_button:
+            case R.id.Attacking_Ad:
                 System.out.println("Viper was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
@@ -401,6 +400,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                 viewModel.for_char("Lock");
         }
     }
+
 }
 
 

@@ -1,9 +1,14 @@
 package com.gex.gex_riot_take_a_shit;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,22 +20,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 
-import org.java_websocket.server.WebSocketServer;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.net.Socket;
-import java.io.*;
-import java.net.*;
 public class Game_Status extends Fragment implements View.OnClickListener{
-    TextView t;
+    TextView ip_input,port_input;
     String FF = "nigga";
     Current_status_Data viewModel;
+    Button host;
+    WebsocketServer WebServer = new WebsocketServer();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(savedInstanceState != null) {
-            t.setText(savedInstanceState.getString(FF));
+            ip_input.setText(savedInstanceState.getString(FF));
         }
     }
     @Override
@@ -40,7 +40,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(FF,t.getText().toString());
+        outState.putString(FF,ip_input.getText().toString());
 
     }
 
@@ -51,10 +51,25 @@ public class Game_Status extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_game__status, container, false);
 
-        t = (TextView) v.findViewById(R.id.nah_bruh);
+        ip_input = (TextView) v.findViewById(R.id.IP_Input);
+        port_input = (TextView) v.findViewById(R.id.PORT_input);
+        host = (Button) v.findViewById(R.id.Host_btn);
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
-        viewModel.getAnotherItem().observe(requireActivity(),item ->{
-            t.setText(item);
+
+        viewModel.getIP_Addr().observe(requireActivity(),item ->{
+            ip_input.setText(item);
+        });
+        viewModel.getPort_Addr().observe(requireActivity(),item ->{
+            port_input.setText(item);
+        });
+
+
+        host.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //WebServer.start();
+                System.out.println("you called senior?");
+            }
         });
         return v;
     }

@@ -20,4 +20,10 @@
     <color name="Agent_selected_color">#FFFF</color>
     <color name="none">#122034</color>
     <color name="scoreboard">#59FFFFFF</color>
+    <color name="Attacking_scoreboard_color_darker">#3a6e62</color>
+    <color name="defending_scoreboard_color_Darker">#723230</color>
+    <color name="Attacking_scoreboard_color_lighter">#57857a</color>
+    <color name="defending_scoreboard_color_lighter">#875550</color>
+    <color name="blackish">#747575</color>
+    <color name="transparent_white">#33fdfeff</color>
 </resources>

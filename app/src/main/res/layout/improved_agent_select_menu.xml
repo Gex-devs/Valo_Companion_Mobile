@@ -311,7 +311,7 @@
                 app:strokeWidth="3dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/Viper_button"
+                android:id="@+id/Attacking_Ad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
