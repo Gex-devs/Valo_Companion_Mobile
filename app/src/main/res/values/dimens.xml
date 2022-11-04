@@ -1,3 +1,15 @@
 <resources>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="inner_layout_height">29dp</dimen>
+    <dimen name="inner_layout_width">300dp</dimen>
+    <dimen name="inner_layout_text_view_height">40dp</dimen>
+    <dimen name="inner_layout_text_view_width">10dp</dimen>
+    <dimen name="inner_layout_text_view_width_small">152dp</dimen>
+    <dimen name="inner_layout_text_view_height_small">29dp</dimen>
+    <dimen name="inner_layout_text_view_width_medium">176dp</dimen>
+    <dimen name="inner_layout_text_view_height_medium">29dp</dimen>
+    <dimen name="inner_layout_text_view_width_larg">228dp</dimen>
+    <dimen name="inner_layout_text_view_height_larg">29dp</dimen>
+    <dimen name="text_View_padding">18dp</dimen>
+    <dimen name="text2_View_padding">1dp</dimen>
 </resources>

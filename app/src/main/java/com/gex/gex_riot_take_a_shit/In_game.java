@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ public class In_game extends Fragment {
     TextView P0_NAME,P1_NAME,P2_NAME,P3_NAME,P4_NAME,P5_NAME,P6_NAME,P7_NAME,P8_NAME,P9_NAME;
     TextView P_0_K_D,P_1_K_D,P_2_K_D,P_3_K_D,P_4_K_D,P_5_K_D,P_6_K_D,P_7_K_D,P_8_K_D,P_9_K_D;
     ImageView P0_imageholder,P1_imageholder,P2_imageholder,P3_imageholder,P4_imageholder,P5_imageholder,P6_imageholder,P7_imageholder,P8_imageholder,P9_imageholder;
+    ShapeableImageView Map;
     MaterialButton surrbtn;
     LinearLayout killfeed;
     ScrollView kill_Feed_container;
@@ -37,13 +38,16 @@ public class In_game extends Fragment {
 
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_in_game, container, false);
 
+
+        // Map shapeable view
+        Map = (ShapeableImageView) v.findViewById(R.id.imageView19) ;
         //scroll view
         killfeed = (LinearLayout) v.findViewById(R.id.inner_kill_feed);
         kill_Feed_container = (ScrollView) v.findViewById(R.id.kill_feed);
@@ -161,14 +165,102 @@ public class In_game extends Fragment {
                     JSONObject jsob = new JSONObject(item);
                     String Match_info_object = jsob.getJSONObject("match_info").getString("kill_feed");
                     JSONObject kill_Json_Object = new JSONObject(Match_info_object);
+                    int Text_layout_width = 0;
+                    int Text_layout_height = getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_height);
+                    if(kill_Json_Object.getString("attacker").length() < 5){
+                        // Small size
+                        Text_layout_width = getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_width_small);
+                    }else if(5 <= kill_Json_Object.getString("attacker").length() && kill_Json_Object.getString("attacker").length() <= 10 ){
+                        // Medium Size
+                        Text_layout_width = getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_width_medium);;
+                    }else if(kill_Json_Object.getString("attacker").length() > 10){
+                        // Large size
+                        Text_layout_width = getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_width_larg);;
+                    }
 
-                    TextView tv = new TextView(MainActivity.ContextMethod());
-                    tv.setText(kill_Json_Object.getString("attacker") + " Killed "+kill_Json_Object.getString("victim") + " with " + kill_Json_Object.getString("weapon"));
-                    killfeed.addView(tv);
+
+                    if(kill_Json_Object.getString("victim").length() < 5){
+                        // Small size
+                        Text_layout_width = getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_width_small);
+                    }else if(5 <= kill_Json_Object.getString("victim").length() && kill_Json_Object.getString("attacker").length() <= 10 ){
+                        // Medium Size
+                        Text_layout_width = getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_width_medium);
+                    }else if(kill_Json_Object.getString("victim").length() > 10){
+                        // Large size
+                        Text_layout_width = getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_width_larg);
+                    }
+
+                    LinearLayout man = new LinearLayout(MainActivity.ContextMethod());
+                    man.setOrientation(LinearLayout.HORIZONTAL);
+                    man.setBackgroundResource(R.drawable.redd);
+                    LinearLayout YOUR_LinearLayout =man;
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                            /*width*/ ViewGroup.LayoutParams.MATCH_PARENT,
+                            /*height*/ getResources().getDimensionPixelSize(R.dimen.inner_layout_height),
+                            /*weight*/ 10.0f
+                    );
+                    YOUR_LinearLayout.setLayoutParams(param);
+                    TextView AT = new TextView(MainActivity.ContextMethod());
+                    AT.setText(kill_Json_Object.getString("attacker"));
+                    LinearLayout.LayoutParams ATtextParam = new LinearLayout.LayoutParams
+                            (Text_layout_width, Text_layout_height, 1.0f);
+                    AT.setLayoutParams(ATtextParam);
+                    AT.setBackgroundResource(R.drawable.greenk);
+                    AT.setGravity(Gravity.CENTER_VERTICAL);
+                    AT.setPadding(0,0,getResources().getDimensionPixelSize(R.dimen.text_View_padding),0);
+                    AT.setCompoundDrawablesWithIntrinsicBounds(R.drawable.breach_kill_feed,0,R.drawable.vandal,0);
+                    AT.setTextColor(R.color.Agent_selected_color);
+                    AT.setTextSize(12.0f);
+
+                    TextView VT = new TextView(MainActivity.ContextMethod());
+                    LinearLayout.LayoutParams VTtextParam = new LinearLayout.LayoutParams
+                            (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
+                    VT.setText(kill_Json_Object.getString("victim"));
+                    VT.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.fbreach_kill_feed,0);
+                    VT.setText("Gex");
+                    VT.setLayoutParams(VTtextParam);
+                    VT.setGravity(Gravity.CENTER);
+                    VT.setTextSize(12.0f);
+                    VT.setPadding(getResources().getDimensionPixelSize(R.dimen.text2_View_padding),0,0,0);
+                    VT.setTextColor(R.color.white);
+
+                    man.addView(AT);
+                    man.addView(VT);
+                    killfeed.addView(YOUR_LinearLayout);
 
                 }catch (Exception f) {
                     System.out.println(f);
                 }
+            }
+        });
+
+        // Map Image
+        viewModel.get_map().observe(requireActivity(),item ->{
+            switch (item){
+                case "Haven":
+                    Map.setImageResource(R.drawable.heaven);
+                    break;
+                case "Bind":
+                    Map.setImageResource(R.drawable.bind);
+                    break;
+                case "Split":
+                    Map.setImageResource(R.drawable.split);
+                    break;
+                case "Ascent":
+                    Map.setImageResource(R.drawable.ascent);
+                    break;
+                case "Icebox":
+                    Map.setImageResource(R.drawable.icebox_1);
+                    break;
+                case "Breeze":
+                    Map.setImageResource(R.drawable.breeze);
+                    break;
+                case "Fracture":
+                    Map.setImageResource(R.drawable.fracture);
+                    break;
+                case "Pearl":
+                    Map.setImageResource(R.drawable.pearl);
+                    break;
             }
         });
 
@@ -191,19 +283,123 @@ public class In_game extends Fragment {
 
 
         surrbtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
                 TextView tv = new TextView(MainActivity.ContextMethod());
-                tv.setText("Your string");
+                tv.setText("Gex");
+                LinearLayout.LayoutParams textParam = new LinearLayout.LayoutParams
+                        (getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_width), getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_height), 1.0f);
 
-                killfeed.addView(tv);
+                //tv.setWidth(getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_width));
+                //tv.setHeight(getResources().getDimensionPixelSize(R.dimen.inner_layout_text_view_height));
+                tv.setLayoutParams(textParam);
+                tv.setBackgroundResource(R.drawable.greenk);
+                tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.breach_kill_feed,0,R.drawable.vandal,0);
+                tv.setTextColor(R.color.white);
+
+
+                TextView another = new TextView(MainActivity.ContextMethod());
+                another.setText("Your mom");
+                another.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.fbreach_kill_feed,0);
+                another.setText("Gex");
+                another.setLayoutParams(textParam);
+                another.setTextColor(R.color.white);
+
+                LinearLayout man = new LinearLayout(MainActivity.ContextMethod());
+                man.setOrientation(LinearLayout.HORIZONTAL);
+                man.setBackgroundResource(R.drawable.redd);
+                LinearLayout YOUR_LinearLayout =man;
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        /*width*/ ViewGroup.LayoutParams.MATCH_PARENT,
+                        /*height*/ getResources().getDimensionPixelSize(R.dimen.inner_layout_height),
+                        /*weight*/ 10.0f
+                );
+                YOUR_LinearLayout.setLayoutParams(param);
+                man.addView(tv);
+                man.addView(another);
+                killfeed.addView(YOUR_LinearLayout);
+
             }
         });
 
         return v;
     }
-    public int get_respective_image(String t){
-        switch (t){
+
+    public int get_respective_weapon(String weapon_name){
+        switch (weapon_name){
+            case "TX_Hud_Assault_AR10A2_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_AutoPistol":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Burst":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Deadeye_Q_Pistol":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Deadeye_X_GiantSlayer":
+                System.out.println("filler");
+                break;
+            case "tx_hud_dmr":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_HMG":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Knife_Standard_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_LMG":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Operator":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Pistol_Glock_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Pistol_Luger_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Pistol_Revolver_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Pistol_SawedOff_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Pump":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Shotguns_Spas12_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_SMG_KrissVector_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_SMG_MP5_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Sniper_BoltAction_S":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Vector":
+                System.out.println("filler");
+                break;
+            case "TX_Hud_Volcano":
+                System.out.println("filler");
+                break;
+            case "TX_SnowballLauncher":
+                System.out.println("filler");
+                break;
+
+        }
+        return 0;
+    }
+    public int get_respective_image(String Agent_name){
+        switch (Agent_name){
             case "Clay":
                 return R.drawable.raze;
             case "Pandemic":

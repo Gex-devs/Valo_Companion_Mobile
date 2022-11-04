@@ -30,7 +30,6 @@
         <item name="cornerSizeBottomRight">10%</item>
         <item name="cornerSizeBottomLeft">10%</item>
     </style>
-
     <style name="ScoreBoards" parent="">
         <item name="cornerSize">14%</item>
     </style>
