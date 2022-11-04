@@ -291,7 +291,7 @@
         app:layout_constraintVertical_bias="0.473" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/addBtn"
+        android:id="@+id/surrBtn"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="154dp"
         android:layout_height="49dp"
@@ -322,12 +322,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addBtn"
+        app:layout_constraintTop_toBottomOf="@+id/surrBtn"
         app:layout_constraintVertical_bias="0.108"
         app:shapeAppearanceOverlay="@style/roundedImageView"
         app:strokeColor="#00E7FF" />
 
     <ScrollView
+        android:id="@+id/kill_feed"
         android:layout_width="352dp"
         android:layout_height="107dp"
         app:layout_constraintBottom_toBottomOf="@+id/Player_1_improved"
@@ -336,6 +337,7 @@
         app:layout_constraintTop_toTopOf="@+id/Player_1_improved">
 
         <LinearLayout
+            android:id="@+id/inner_kill_feed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />

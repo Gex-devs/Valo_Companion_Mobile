@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -34,20 +35,21 @@ import org.json.JSONObject;
 
 import java.net.InetSocketAddress;
 import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muddz.styleabletoast.StyleableToast;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Observer {
 
 
     // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
     // Might not need it in Main Activity, Need to go to Fragments
     static Handler UI_Handler = new Handler();
     static FragmentManager fragmentManager;
-    public static String notify_map = null;
     {
         fragmentManager = getSupportFragmentManager();
     }
@@ -65,33 +67,73 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
     }
+    @SuppressLint({"NewApi", "ResourceAsColor"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ObservableObject.getInstance().addObserver(this);
         // Web socket server
         WebsocketServer Gex = new WebsocketServer();
         setContentView(R.layout.activity_main);
         // Main Activity background color
-        getWindow().getDecorView().setBackgroundColor(Color.BLACK);
+        getWindow().getDecorView().setBackgroundColor(Color.argb(255,255,71,85));
         Gex.start();
         // https://github.com/Nightonke/JellyToggleButton#listener
         //JellyToggleButton server_Switch = findViewById(R.id.server_switch);
         //server_Switch.setJelly(Jelly.LAZY_TREMBLE_TAIL_SLIM_JIM);
         viewModel = new ViewModelProvider(this).get(Current_status_Data.class);
         viewModel.getFor_char().observe(this,item->{
+            Gex.broadcast(item, Gex.getConnections());
+            System.out.println("Broadcast has been called");
+            //Gex.broadcast("pls send", Gex.getConnections());
             System.out.println(item);
-            Gex.broadcast(item);
             // Works for other Mutalables expect for this, change it or fix it
         });
+
+        /*RemoteInput remoteInput = new RemoteInput.Builder("get_me")
+                .setLabel("ans")
+                        .build();
+        Intent replyintetn = new Intent(this,NotificationRecv.class);
+        PendingIntent replyIntent = PendingIntent.getBroadcast(this,0,replyintetn,0);
+        NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(R.drawable.val_1,"mandem",replyIntent).addRemoteInput().build();*/
+
+
+        // Map on Notification
         viewModel.get_map().observe(this,item->{
-            notify_map = item;
+            Intent intent = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            Intent broadcastInt = new Intent(this,NotificationRecv.class);
+            broadcastInt.putExtra("test_1","your mother");
+            PendingIntent actionIntent = PendingIntent.getBroadcast(this,0,broadcastInt,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                manager.createNotificationChannel(channel);
+            }
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                    .setSmallIcon(R.drawable.valo)
+                    .setContentTitle("Game Status")
+                    .setContentText("MATCH FOUND")
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .addAction(R.drawable.riot,"Dodge",actionIntent)
+                    .addAction(R.drawable.riot,"Select Agent",actionIntent)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(item+" Map"))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
+            managerCompact.notify(1,builder.build());
         });
+
+        /**/
         // STARTS HERE *  Bottom Navigation Bar https://github.com/Ashok-Varma/BottomNavigation
         BottomNavigationBar bottomNavigationBar = (BottomNavigationBar)findViewById(R.id.bottom_navigation_bar);
         bottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.valo,"GAME"))
                 .addItem(new BottomNavigationItem(R.drawable.riot, "STORE"))
-                .addItem(new BottomNavigationItem(R.drawable.controller,"Feature"))
+                .addItem(new BottomNavigationItem(R.drawable.controller,"Party"))
                 .setInActiveColor(R.color.Inactive_color_bottom_bar)
                 .setBarBackgroundColor(R.color.Bottom_bar_color)
                 .setActiveColor(R.color.Valo_Color)
@@ -104,14 +146,15 @@ public class MainActivity extends AppCompatActivity {
                 switch (position){
                     case 0:
                         Game_Status_Fragment();
-                        System.out.println("first");
+                        System.out.println("First_fragment");
                         break;
                     case 1:
                         Store_Fragment();
-                        System.out.println("SECOND");
+                        System.out.println("SECOND_fragment");
                         break;
                     case 2:
-                        System.out.println("Third");
+                        party_fragment();
+                        System.out.println("Third_fragment");
                         break;
                 }
             }
@@ -123,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         // ENDS HERE * Bottom Navigation Bar
         // switch here man
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, Game_Status.class, null)
+                .replace(R.id.fragmentContainerView, In_game.class, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)       // name can be null
                 .commit();
@@ -210,6 +253,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public static void party_fragment(){
+        UI_Handler.post(new Runnable() {
+            @Override
+            public void run() {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, party.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null) // name can be null
+                        .commit();
+            }
+        });
+    }
+    @Override
+    public void update(Observable observable, Object o) {
+        System.out.println("called from acitivty");
+        viewModel.for_char("Dodge");
+    }
+
     // Use this three functions incase you want to change a Ui element in the main_activity
 }
 
@@ -238,6 +300,8 @@ class WebsocketServer extends WebSocketServer{
                 .backgroundColor(Color.BLUE)
                 .iconStart(R.drawable.riot)
                 .show();
+
+
     }
 
     @Override
@@ -263,32 +327,33 @@ class WebsocketServer extends WebSocketServer{
 
         viewModel.Selection(message.toString());
 
-        try {
-            JSONObject map_chaeaker = new JSONObject(message.toString());
-            String player_id = map_chaeaker.getJSONObject("me").getString("player_id");
-            viewModel.for_char("get_map:"+player_id);
-            switch (message.toString()){
-                case "Triad":
-                    viewModel.set_map("Haven");
-                case "Duality":
-                    viewModel.set_map("Bind");
-                case "Bonsai":
-                    viewModel.set_map("Split");
-                case "Ascent":
-                    viewModel.set_map("Ascent");
-                case "Port":
-                    viewModel.set_map("Icebox");
-                case "Foxtrot":
-                    viewModel.set_map("Breeze");
-                case "Canyon":
-                    viewModel.set_map("Fracture");
-                case "Pitt":
-                    viewModel.set_map("Pearl");
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        switch (message){
+            case "/Game/Maps/Triad/Triad":
+                viewModel.set_map("Haven");
+                break;
+            case "/Game/Maps/Duality/Duality":
+                viewModel.set_map("Bind");
+                break;
+            case "/Game/Maps/Bonsai/Bonsai":
+                viewModel.set_map("Split");
+                break;
+            case "/Game/Maps/Ascent/Ascent":
+                viewModel.set_map("Ascent");
+                break;
+            case "/Game/Maps/Port/Port":
+                viewModel.set_map("Icebox");
+                break;
+            case "/Game/Maps/Foxtrot/Foxtrot":
+                viewModel.set_map("Breeze");
+                break;
+            case "/Game/Maps/Canyon/Canyon":
+                viewModel.set_map("Fracture");
+                break;
+            case "/Game/Maps/Pitt/Pitt":
+                viewModel.set_map("Pearl");
+                break;
         }
+
 
 
         /*
@@ -315,9 +380,10 @@ class WebsocketServer extends WebSocketServer{
             System.out.println("match started");
             Game_Fragment();
         }else if(message.equals("CharacterSelectPersistentLevel")){
-
             // Create a dodge Class and Intent to open Agent Select Class
-            Intent intent = new Intent(MainActivity.ContextMethod(), Agent_Selection_Menu.class);
+            viewModel.for_char("get_map");
+
+            /*Intent intent = new Intent(MainActivity.ContextMethod(), Agent_Selection_Menu.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -337,7 +403,7 @@ class WebsocketServer extends WebSocketServer{
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notify_map+" Map"))
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
             NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
-            managerCompact.notify(1,builder.build());
+            managerCompact.notify(1,builder.build());*/
 
             Agent_Select_fragment();
         }
@@ -396,4 +462,6 @@ class WebsocketServer extends WebSocketServer{
         broadcast(text, conns);
     }
 
+
 }
+

@@ -12,6 +12,8 @@ public class Current_status_Data extends ViewModel {
     private final MutableLiveData<String> IP_Addr = new MutableLiveData<>();
     private final MutableLiveData<String> Port_Addr = new MutableLiveData<>();
     private final MutableLiveData<String> Map_addr = new MutableLiveData<>();
+
+
     public void Selection(String item) {
         Selection_Menu_json.postValue(item);
     }
@@ -44,9 +46,11 @@ public class Current_status_Data extends ViewModel {
     public LiveData<String> get_map(){
         return  Map_addr;
     }
+
     public LiveData<String> getPort_Addr(){
         return Port_Addr;
     }
+
     public LiveData<String> getSelectedItem() {
 
         return Selection_Menu_json;

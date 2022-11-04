@@ -1,5 +1,7 @@
 package com.gex.gex_riot_take_a_shit;
 
+import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
@@ -8,27 +10,34 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.imageview.ShapeableImageView;
+import com.labo.kaji.fragmentanimations.MoveAnimation;
 
 import org.json.JSONObject;
 
 public class improved_Agent_sel_fragment extends Fragment implements View.OnClickListener {
 
     ImageView Photo_1,Photo_2,Photo_3,Photo_4,Photo_5;
-    TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5;
+    TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5,MapName;
     Current_status_Data viewModel;
-    ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade;
+    ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade,Map;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        return MoveAnimation.create(MoveAnimation.RIGHT,enter,200);
     }
 
     @Override
@@ -96,8 +105,14 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         Photo_4 = (ImageView) v.findViewById(R.id.player_4_improved3);
         Photo_5 = (ImageView) v.findViewById(R.id.player_5_improved4);
 
+        //Map
+        Map = (ShapeableImageView) v.findViewById(R.id.imageView19);
+        MapName = (TextView) v.findViewById(R.id.textView7);
 
+        // View model
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
+
+        // Agent select listener view model
         viewModel.getSelectedItem().observe(requireActivity(),item ->{
             try{
                 // org.json.JSONException: Unterminated array at character 9 of [object Object]
@@ -148,7 +163,43 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             }
         });
 
-
+        // Map select view model listener
+        viewModel.get_map().observe(requireActivity(),item ->{
+            switch (item){
+                case "Haven":
+                    Map.setImageResource(R.drawable.heaven);
+                    MapName.setText(item);
+                    break;
+                case "Bind":
+                    Map.setImageResource(R.drawable.bind);
+                    MapName.setText("BIND");
+                    break;
+                case "Split":
+                    Map.setImageResource(R.drawable.split);
+                    MapName.setText("SPLIT");
+                    break;
+                case "Ascent":
+                    Map.setImageResource(R.drawable.ascent);
+                    MapName.setText("ASCENT");
+                    break;
+                case "Icebox":
+                    Map.setImageResource(R.drawable.heaven);
+                    MapName.setText("ICEBOX");
+                    break;
+                case "Breeze":
+                    Map.setImageResource(R.drawable.ascent);
+                    MapName.setText("BREEZE");
+                    break;
+                case "Fracture":
+                    Map.setImageResource(R.drawable.fracture);
+                    MapName.setText("FRACTURE");
+                    break;
+                case "Pearl":
+                    Map.setImageResource(R.drawable.pearl);
+                    MapName.setText("PEARL");
+                    break;
+            }
+        });
         return v;
     }
 
