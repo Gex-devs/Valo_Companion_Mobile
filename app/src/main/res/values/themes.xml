@@ -13,7 +13,7 @@
 
         <!-- Status bar color.-->
         <item name="android:statusBarColor" tools:targetApi="l">@color/Bottom_bar_color</item>
-
+        <item name="android:navigationBarColor">@color/Bottom_bar_color</item>
         <!-- Customize your theme here. -->
 
     </style>

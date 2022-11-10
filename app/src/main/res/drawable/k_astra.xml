@@ -1,7 +1,7 @@
-?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:drawable="@drawable/killfeed_breach"
+        android:drawable="@drawable/killfeed_astra"
         android:width="45dp"
         android:height="28dp"
         />

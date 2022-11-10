@@ -17,6 +17,7 @@ import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         // ENDS HERE * Bottom Navigation Bar
         // switch here man
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, In_game.class, null)
+                .replace(R.id.fragmentContainerView, fragment_improved_ingame.class, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)       // name can be null
                 .commit();
@@ -382,31 +383,11 @@ class WebsocketServer extends WebSocketServer{
         }else if(message.equals("CharacterSelectPersistentLevel")){
             // Create a dodge Class and Intent to open Agent Select Class
             viewModel.for_char("get_map");
-
-            /*Intent intent = new Intent(MainActivity.ContextMethod(), Agent_Selection_Menu.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
-                NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
-                manager.createNotificationChannel(channel);
-            }
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
-                    .setSmallIcon(R.drawable.valo)
-                    .setContentTitle("Game Status")
-                    .setContentText("MATCH FOUND")
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-                    .addAction(R.drawable.riot,"Dodge",pendingIntent)
-                    .addAction(R.drawable.riot,"Select Agent",pendingIntent)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(notify_map+" Map"))
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-            NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
-            managerCompact.notify(1,builder.build());*/
-
             Agent_Select_fragment();
+        }else if(message.equals("game_end")){
+            Game_Status_Fragment();
         }
+
     }
 
     @Override

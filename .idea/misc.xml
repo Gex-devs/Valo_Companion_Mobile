@@ -3,35 +3,76 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/breach_kill_feed.xml" value="0.194" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/fbreachs.xml" value="0.194" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/grad_color_2.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/greend.xml" value="0.194" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/greenk.xml" value="0.2515" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/greenkill.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2515" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/kill_feed.xml" value="0.194" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/redd.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/redk.xml" value="0.2515" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/rounded.xml" value="0.194" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/tx_hud_volcano_1.xml" value="0.2515" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/vandal.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable-v24/wallbang.xml" value="0.194" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/background.xml" value="0.193" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/border.xml" value="0.219" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/border_2.xml" value="0.352" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/breach_kill_feed.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/breach_test.xml" value="0.2505" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_aries.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_astra.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_bucky.xml" value="0.194" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_bulldog.xml" value="0.194" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_chamber.xml" value="0.194" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_chamber_awp.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_classic.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_deadeye.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_ghost.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_jett.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_knife.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/f_revive.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/fbreach_kill_feed.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/fbreachs.xml" value="0.193" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/gg.xml" value="0.219" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/grad_color.xml" value="0.352" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/grad_color_2.xml" value="0.352" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/green_bg_kf.xml" value="0.2505" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/headshot.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2515" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_astra.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_breach.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_brim.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_chamber.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_cypher.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_fade.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_jett.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_kayo.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_killjoy.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_mage.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_neon.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_omen.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_phx.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_raze.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_reyna.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_sage.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_skyel.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_sova.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_viper.xml" value="0.3355" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/k_yoru.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/kill_feed.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/rounded.xml" value="0.352" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/stinger.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/vandal.xml" value="0.3355" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/drawable/wallbang.xml" value="0.193" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/font/keep_calm.xml" value="0.3182777543267201" />
-        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/activity_main.xml" value="0.14" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_agent__selection__menu.xml" value="0.25" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_blank.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_game__status.xml" value="0.33" />
+        <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_improved_ingame.xml" value="0.5" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_in_game.xml" value="0.5" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_party.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/dgexi/OneDrive/Documents/Code/Java/Gex_Riot_Take_A_Shit/app/src/main/res/layout/fragment_scrolling.xml" value="0.2975630611372381" />
