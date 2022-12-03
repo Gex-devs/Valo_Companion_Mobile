@@ -56,6 +56,7 @@
         app:layout_constraintVertical_bias="0.909"
         app:shapeAppearanceOverlay="@style/ScoreBoards" />
 
+
     <com.hanks.htextview.scale.ScaleTextView
         android:id="@+id/IP_TEXT"
         android:layout_width="40dp"

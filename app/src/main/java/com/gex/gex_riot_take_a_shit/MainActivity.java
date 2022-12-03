@@ -2,9 +2,11 @@ package com.gex.gex_riot_take_a_shit;
 
 import static com.gex.gex_riot_take_a_shit.MainActivity.*;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,6 +16,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.RemoteInput;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,6 +26,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
     // Might not need it in Main Activity, Need to go to Fragments
+
     static Handler UI_Handler = new Handler();
     static FragmentManager fragmentManager;
     {
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Context context = App.getContext();
         return context;
     }
-
+    static WebsocketServer Gex = new WebsocketServer();
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         ObservableObject.getInstance().addObserver(this);
         // Web socket server
-        WebsocketServer Gex = new WebsocketServer();
+        //WebsocketServer Gex = new WebsocketServer();
         setContentView(R.layout.activity_main);
         // Main Activity background color
         getWindow().getDecorView().setBackgroundColor(Color.argb(255,255,71,85));
@@ -92,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             // Works for other Mutalables expect for this, change it or fix it
         });
 
+
         /*RemoteInput remoteInput = new RemoteInput.Builder("get_me")
                 .setLabel("ans")
                         .build();
@@ -99,34 +105,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         PendingIntent replyIntent = PendingIntent.getBroadcast(this,0,replyintetn,0);
         NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(R.drawable.val_1,"mandem",replyIntent).addRemoteInput().build();*/
 
-
-        // Map on Notification
-        viewModel.get_map().observe(this,item->{
-            Intent intent = new Intent(this, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            Intent broadcastInt = new Intent(this,NotificationRecv.class);
-            broadcastInt.putExtra("test_1","your mother");
-            PendingIntent actionIntent = PendingIntent.getBroadcast(this,0,broadcastInt,PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
-                NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
-                manager.createNotificationChannel(channel);
-            }
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
-                    .setSmallIcon(R.drawable.valo)
-                    .setContentTitle("Game Status")
-                    .setContentText("MATCH FOUND")
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-                    .addAction(R.drawable.riot,"Dodge",actionIntent)
-                    .addAction(R.drawable.riot,"Select Agent",actionIntent)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(item+" Map"))
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-            NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
-            managerCompact.notify(1,builder.build());
-        });
 
         /**/
         // STARTS HERE *  Bottom Navigation Bar https://github.com/Ashok-Varma/BottomNavigation
@@ -167,50 +145,40 @@ public class MainActivity extends AppCompatActivity implements Observer {
         // ENDS HERE * Bottom Navigation Bar
         // switch here man
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, fragment_improved_ingame.class, null)
+                .replace(R.id.fragmentContainerView, menuSelection.class, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)       // name can be null
                 .commit();
-        // change this to the switch button
-        /*
-        server_Switch.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
-            @Override
-            public void onStateChange(float process, State state, JellyToggleButton jtb) {
-                // add logic with State variable
-                if(state.equals(State.RIGHT)){
-                    new StyleableToast
-                            .Builder(ContextMethod())
-                            .text("Hosted")
-                            .length(2)
-                            .textColor(Color.WHITE)
-                            .backgroundColor(Color.BLUE)
-                            .iconStart(R.drawable.riot)
-                            .show();
-                    viewModel.Game_state("Connected");
-                    Gex.start();
-                }else if (state.equals(State.LEFT)){
-                    new StyleableToast
-                            .Builder(ContextMethod())
-                            .text("Disabled")
-                            .length(1)
-                            .textColor(Color.WHITE)
-                            .backgroundColor(Color.RED)
-                            .iconStart(R.drawable.riot)
-                            .show();
-                }
-            }
-        });
-
-         */
     }
 
     public static void Agent_Select_fragment(){
         UI_Handler.post(new Runnable() {
             @Override
             public void run() {
+                Intent intent = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                MainActivity.ContextMethod().startActivity(intent);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, improved_Agent_sel_fragment.class, null)
+                                .setReorderingAllowed(true)
+                                .addToBackStack(null) // name can be null
+                                .commit();
+
+                    }
+                }, 2000);
+            }
+        });
+    }
+    public static void Qeue_Menu(){
+        UI_Handler.post(new Runnable() {
+            @Override
+            public void run() {
                 fragmentManager.beginTransaction()
-                        //.replace(R.id.fragmentContainerView, Agent_Selection_Menu.class, null)
-                        .replace(R.id.fragmentContainerView, improved_Agent_sel_fragment.class, null)
+                        .replace(R.id.fragmentContainerView, menuSelection.class, null)
                         .setReorderingAllowed(true)
                         .addToBackStack(null) // name can be null
                         .commit();
@@ -247,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             @Override
             public void run() {
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, In_game.class, null)
+                        .replace(R.id.fragmentContainerView, fragment_improved_ingame.class, null)
                         .setReorderingAllowed(true)
                         .addToBackStack(null) // name can be null
                         .commit();
@@ -308,7 +276,8 @@ class WebsocketServer extends WebSocketServer{
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         conns.remove(conn);
-        System.out.println("Closed connection to " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+        Log.d("Socket","Closed connection to " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+        Game_Status_Fragment();
         new StyleableToast
                 .Builder(ContextMethod())
                 .text("Disconnected")
@@ -331,50 +300,217 @@ class WebsocketServer extends WebSocketServer{
         switch (message){
             case "/Game/Maps/Triad/Triad":
                 viewModel.set_map("Haven");
+                Intent intent = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent, 0);
+                Intent broadcastInt = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
+                broadcastInt.putExtra("test_1","your mother");
+                PendingIntent actionIntent = PendingIntent.getBroadcast(MainActivity.ContextMethod(),0,broadcastInt,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+                }
+                @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                        .setSmallIcon(R.drawable.valo)
+                        .setContentTitle("Game Status")
+                        .setContentText("MATCH FOUND")
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true)
+                        .addAction(R.drawable.riot,"Dodge",actionIntent)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Haven"+" Map"))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
+                managerCompact.notify(1,builder.build());
                 break;
             case "/Game/Maps/Duality/Duality":
                 viewModel.set_map("Bind");
+                Intent intent2 = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                PendingIntent pendingIntent2 = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent2, 0);
+                Intent broadcastInt2 = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
+                broadcastInt2.putExtra("test_1","your mother");
+                PendingIntent actionIntent2 = PendingIntent.getBroadcast(MainActivity.ContextMethod(),0,broadcastInt2,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+                }
+                @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder2 = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                        .setSmallIcon(R.drawable.valo)
+                        .setContentTitle("Game Status")
+                        .setContentText("MATCH FOUND")
+                        .setContentIntent(pendingIntent2)
+                        .setAutoCancel(true)
+                        .addAction(R.drawable.riot,"Dodge",actionIntent2)
+                        .addAction(R.drawable.riot,"Select Agent",actionIntent2)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Bind"+" Map"))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat managerCompact2 = NotificationManagerCompat.from(MainActivity.ContextMethod());
+                managerCompact2.notify(1,builder2.build());
                 break;
             case "/Game/Maps/Bonsai/Bonsai":
                 viewModel.set_map("Split");
+                Intent intent3 = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                PendingIntent pendingIntent3 = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent3, 0);
+                Intent broadcastInt3 = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
+                broadcastInt3.putExtra("test_1","your mother");
+                PendingIntent actionIntent3 = PendingIntent.getBroadcast(MainActivity.ContextMethod(),0,broadcastInt3,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+                }
+                @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder3 = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                        .setSmallIcon(R.drawable.valo)
+                        .setContentTitle("Game Status")
+                        .setContentText("MATCH FOUND")
+                        .setContentIntent(pendingIntent3)
+                        .setAutoCancel(true)
+                        .addAction(R.drawable.riot,"Dodge",actionIntent3)
+                        .addAction(R.drawable.riot,"Select Agent",actionIntent3)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Split"+" Map"))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat managerCompact3 = NotificationManagerCompat.from(MainActivity.ContextMethod());
+                managerCompact3.notify(1,builder3.build());
                 break;
             case "/Game/Maps/Ascent/Ascent":
                 viewModel.set_map("Ascent");
+                Intent intent4 = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                PendingIntent pendingIntent4 = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent4, 0);
+                Intent broadcastInt4 = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
+                broadcastInt4.putExtra("test_1","your mother");
+                PendingIntent actionIntent4 = PendingIntent.getBroadcast(MainActivity.ContextMethod(),0,broadcastInt4,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+                }
+                @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder4 = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                        .setSmallIcon(R.drawable.valo)
+                        .setContentTitle("Game Status")
+                        .setContentText("MATCH FOUND")
+                        .setContentIntent(pendingIntent4)
+                        .setAutoCancel(true)
+                        .addAction(R.drawable.riot,"Dodge",actionIntent4)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Ascent"+" Map"))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat managerCompact4 = NotificationManagerCompat.from(MainActivity.ContextMethod());
+                managerCompact4.notify(1,builder4.build());
                 break;
             case "/Game/Maps/Port/Port":
                 viewModel.set_map("Icebox");
+                Intent intent5 = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                PendingIntent pendingIntent5 = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent5, 0);
+                Intent broadcastInt5 = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
+                broadcastInt5.putExtra("test_1","your mother");
+                PendingIntent actionIntent5 = PendingIntent.getBroadcast(MainActivity.ContextMethod(),0,broadcastInt5,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+                }
+                @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder5 = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                        .setSmallIcon(R.drawable.valo)
+                        .setContentTitle("Game Status")
+                        .setContentText("MATCH FOUND")
+                        .setContentIntent(pendingIntent5)
+                        .setAutoCancel(true)
+                        .addAction(R.drawable.riot,"Dodge",actionIntent5)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Icebox"+" Map"))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat managerCompact5 = NotificationManagerCompat.from(MainActivity.ContextMethod());
+                managerCompact5.notify(1,builder5.build());
                 break;
             case "/Game/Maps/Foxtrot/Foxtrot":
                 viewModel.set_map("Breeze");
+                Intent intent6 = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                PendingIntent pendingIntent6 = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent6, 0);
+                Intent broadcastInt6 = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
+                broadcastInt6.putExtra("test_1",-1);
+                PendingIntent actionIntent6 = PendingIntent.getBroadcast(MainActivity.ContextMethod(),0,broadcastInt6,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+                }
+                @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder6 = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                        .setSmallIcon(R.drawable.valo)
+                        .setContentTitle("Game Status")
+                        .setContentText("MATCH FOUND")
+                        .setContentIntent(pendingIntent6)
+                        .setAutoCancel(true)
+                        .addAction(R.drawable.riot,"Dodge",actionIntent6)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Breeze"+" Map"))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat managerCompact6 = NotificationManagerCompat.from(MainActivity.ContextMethod());
+                managerCompact6.notify(1,builder6.build());
                 break;
             case "/Game/Maps/Canyon/Canyon":
                 viewModel.set_map("Fracture");
+                Intent intent7 = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                PendingIntent pendingIntent7 = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent7, 0);
+                Intent broadcastInt7 = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
+                broadcastInt7.putExtra("test_1","your mother");
+                PendingIntent actionIntent7 = PendingIntent.getBroadcast(MainActivity.ContextMethod(),0,broadcastInt7,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+                }
+                @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder7 = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                        .setSmallIcon(R.drawable.valo)
+                        .setContentTitle("Game Status")
+                        .setContentText("MATCH FOUND")
+                        .setContentIntent(pendingIntent7)
+                        .setAutoCancel(true)
+                        .addAction(R.drawable.riot,"Dodge",actionIntent7)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Fracture"+" Map"))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat managerCompact7 = NotificationManagerCompat.from(MainActivity.ContextMethod());
+                managerCompact7.notify(1,builder7.build());
                 break;
             case "/Game/Maps/Pitt/Pitt":
                 viewModel.set_map("Pearl");
+                Intent intent8 = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                PendingIntent pendingIntent8 = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent8, 0);
+                Intent broadcastInt8 = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
+                broadcastInt8.putExtra("test_1","your mother");
+                PendingIntent actionIntent8 = PendingIntent.getBroadcast(MainActivity.ContextMethod(),0,broadcastInt8,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+                }
+                @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder8 = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
+                        .setSmallIcon(R.drawable.valo)
+                        .setContentTitle("Game Status")
+                        .setContentText("MATCH FOUND")
+                        .setContentIntent(pendingIntent8)
+                        .setAutoCancel(true)
+                        .addAction(R.drawable.riot,"Dodge",actionIntent8)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Pearl"+" Map"))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat managerCompact8 = NotificationManagerCompat.from(MainActivity.ContextMethod());
+                managerCompact8.notify(1,builder8.build());
                 break;
         }
 
-
-
-        /*
-        switch (message) {
-            case "MainMenu":
-                viewModel.Game_state("MainMenu");
-            case "CharacterSelectPersistentLevel":
-                System.out.println("Agent select");
-                Agent_Select_fragment();
-            case "Game starting":
-                System.out.println("Game Starting");
-            case "match_start":
-                System.out.println("Match Started");
-            case "sup":
-                System.out.println("Real game started");
-                //Game_Fragment();
-            default:
-                viewModel.Selection(message.toString());
-        }
-        */
 
 
         if(message.equals("Game starting")){
@@ -382,12 +518,16 @@ class WebsocketServer extends WebSocketServer{
             Game_Fragment();
         }else if(message.equals("CharacterSelectPersistentLevel")){
             // Create a dodge Class and Intent to open Agent Select Class
-            viewModel.for_char("get_map");
+            Log.d("Fragment","Agent select fragment");
+            //viewModel.for_char("get_map");
+            broadcast("get_map",getConnections());
+            System.out.println("Norification map has been called");
             Agent_Select_fragment();
         }else if(message.equals("game_end")){
             Game_Status_Fragment();
+        }else if(message.equals("MainMenu")) {
+            Qeue_Menu();
         }
-
     }
 
     @Override

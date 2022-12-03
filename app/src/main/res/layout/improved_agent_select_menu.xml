@@ -352,8 +352,8 @@
 
     <TextView
         android:id="@+id/Player_1_Name_Improved"
-        android:layout_width="104dp"
-        android:layout_height="27dp"
+        android:layout_width="155dp"
+        android:layout_height="25dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Player_1"
         android:textColor="#FFFFFF"
@@ -367,51 +367,51 @@
 
     <TextView
         android:id="@+id/Player_1_Agent_Improved"
-        android:layout_width="94dp"
-        android:layout_height="30dp"
+        android:layout_width="153dp"
+        android:layout_height="27dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Agent"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/Player_1_improved"
         app:layout_constraintEnd_toStartOf="@+id/Lock_in_button"
-        app:layout_constraintHorizontal_bias="0.102"
+        app:layout_constraintHorizontal_bias="0.152"
         app:layout_constraintStart_toStartOf="@+id/Player_1_improved"
         app:layout_constraintTop_toTopOf="@+id/Player_1_improved"
-        app:layout_constraintVertical_bias="0.773" />
+        app:layout_constraintVertical_bias="0.745" />
 
     <TextView
         android:id="@+id/Player_2_Name_improved"
-        android:layout_width="104dp"
-        android:layout_height="18dp"
+        android:layout_width="111dp"
+        android:layout_height="16dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Player_2"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_2_improved"
         app:layout_constraintEnd_toEndOf="@+id/player_2_improved"
-        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintHorizontal_bias="0.166"
         app:layout_constraintStart_toStartOf="@+id/player_2_improved"
         app:layout_constraintTop_toTopOf="@+id/player_2_improved"
-        app:layout_constraintVertical_bias="0.637" />
+        app:layout_constraintVertical_bias="0.662" />
 
     <TextView
         android:id="@+id/Player_2_Agent_Improved"
-        android:layout_width="60dp"
+        android:layout_width="111dp"
         android:layout_height="21dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Agent"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/player_2_improved"
         app:layout_constraintEnd_toEndOf="@+id/player_2_improved"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.172"
         app:layout_constraintStart_toStartOf="@+id/player_2_improved"
         app:layout_constraintTop_toTopOf="@+id/player_2_improved"
-        app:layout_constraintVertical_bias="0.909" />
+        app:layout_constraintVertical_bias="0.922" />
 
     <TextView
         android:id="@+id/Player_3_Name_Improved"
-        android:layout_width="104dp"
+        android:layout_width="114dp"
         android:layout_height="18dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Player_3"
@@ -419,57 +419,57 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_3_improved2"
         app:layout_constraintEnd_toEndOf="@+id/player_3_improved2"
-        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintHorizontal_bias="0.307"
         app:layout_constraintStart_toStartOf="@+id/player_3_improved2"
         app:layout_constraintTop_toTopOf="@+id/player_3_improved2"
-        app:layout_constraintVertical_bias="0.623" />
+        app:layout_constraintVertical_bias="0.625" />
 
     <TextView
         android:id="@+id/Player_3_Agent_Improved"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
+        android:layout_width="111dp"
+        android:layout_height="24dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Agent"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/player_3_improved2"
         app:layout_constraintEnd_toEndOf="@+id/player_3_improved2"
-        app:layout_constraintHorizontal_bias="0.072"
+        app:layout_constraintHorizontal_bias="0.275"
         app:layout_constraintStart_toStartOf="@+id/player_3_improved2"
         app:layout_constraintTop_toTopOf="@+id/player_3_improved2"
         app:layout_constraintVertical_bias="0.918" />
 
     <TextView
         android:id="@+id/Player_4_Agent_Improved"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
+        android:layout_width="111dp"
+        android:layout_height="20dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Agent"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/player_4_improved3"
         app:layout_constraintEnd_toEndOf="@+id/player_4_improved3"
-        app:layout_constraintHorizontal_bias="0.083"
+        app:layout_constraintHorizontal_bias="0.275"
         app:layout_constraintStart_toStartOf="@+id/player_4_improved3"
         app:layout_constraintTop_toTopOf="@+id/player_4_improved3"
-        app:layout_constraintVertical_bias="0.932" />
+        app:layout_constraintVertical_bias="0.935" />
 
     <TextView
         android:id="@+id/Player_4_Name_Improved"
-        android:layout_width="104dp"
-        android:layout_height="18dp"
+        android:layout_width="112dp"
+        android:layout_height="21dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Player_4"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_4_improved3"
         app:layout_constraintEnd_toEndOf="@+id/player_4_improved3"
-        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintHorizontal_bias="0.285"
         app:layout_constraintStart_toStartOf="@+id/player_4_improved3"
         app:layout_constraintTop_toTopOf="@+id/player_4_improved3"
-        app:layout_constraintVertical_bias="0.637" />
+        app:layout_constraintVertical_bias="0.623" />
 
     <TextView
         android:id="@+id/Player_5_Name_Improved"
-        android:layout_width="104dp"
+        android:layout_width="112dp"
         android:layout_height="18dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Player_5"
@@ -477,24 +477,24 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_5_improved4"
         app:layout_constraintEnd_toEndOf="@+id/player_5_improved4"
-        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintHorizontal_bias="0.285"
         app:layout_constraintStart_toStartOf="@+id/player_5_improved4"
         app:layout_constraintTop_toTopOf="@+id/player_5_improved4"
         app:layout_constraintVertical_bias="0.637" />
 
     <TextView
         android:id="@+id/Player_5_Agent_Improved"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="23dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Agent"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/player_5_improved4"
         app:layout_constraintEnd_toEndOf="@+id/player_5_improved4"
-        app:layout_constraintHorizontal_bias="0.083"
+        app:layout_constraintHorizontal_bias="0.266"
         app:layout_constraintStart_toStartOf="@+id/player_5_improved4"
         app:layout_constraintTop_toTopOf="@+id/player_5_improved4"
-        app:layout_constraintVertical_bias="0.932" />
+        app:layout_constraintVertical_bias="0.933" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView19"

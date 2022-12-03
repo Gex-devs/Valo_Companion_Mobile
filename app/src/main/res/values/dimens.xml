@@ -13,4 +13,8 @@
     <dimen name="text_View_padding">18dp</dimen>
     <dimen name="text2_View_padding">1dp</dimen>
     <dimen name="padding_dimen">8dp</dimen>
+    <dimen name="ingame_imageview_width">53dp</dimen>
+    <dimen name="ingame_imageview_height">50dp</dimen>
+    <dimen name="table_row_width">175dp</dimen>
+    <dimen name="text_chat_widtg">406dp</dimen>
 </resources>
