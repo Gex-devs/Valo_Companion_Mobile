@@ -9,6 +9,8 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationManagerCompat;
 
+import java.io.IOException;
+
 
 public class NotificationRecv extends BroadcastReceiver  {
 
@@ -26,7 +28,11 @@ public class NotificationRecv extends BroadcastReceiver  {
         //viewModel.for_char("Dodge");
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         manager.cancel(1);
-        game_status.WebServer.broadcast("Dodge",game_status.WebServer.getConnections());
+        try {
+            pythonRestApi.Dodge();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         MainActivity.ContextMethod().startActivity(intent);

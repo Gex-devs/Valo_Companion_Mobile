@@ -8,113 +8,52 @@
     android:background="@android:color/background_dark"
     tools:context=".Game_Status">
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/vbg"
+        android:paddingTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
 
-    <com.hanks.htextview.scale.ScaleTextView
-        android:id="@+id/Host_btn_txt"
-        android:layout_width="128dp"
-        android:layout_height="61dp"
-        android:elevation="11px"
-        android:fontFamily="@font/gsm"
-        android:text="HOST"
-        android:textColor="#0F1923"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.901" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.imageview.ShapeableImageView
+        <TableLayout
+            android:id="@+id/discovery_table"
+            android:layout_width="297dp"
+            android:layout_height="454dp"
+            android:background="#1EBD2828"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/Host_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.38">
 
-        android:id="@+id/Host_btn"
-        android:layout_width="151dp"
-        android:layout_height="54dp"
-        android:layout_weight="1"
-        android:background="@color/Valo_Color"
-        android:elevation="10px"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.909"
-        app:shapeAppearanceOverlay="@style/ScoreBoards" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/white">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/computer_ico" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="My Computer" />
+            </TableRow>
+
+        </TableLayout>
 
 
-    <com.hanks.htextview.scale.ScaleTextView
-        android:id="@+id/IP_TEXT"
-        android:layout_width="40dp"
-        android:layout_height="42dp"
-        android:fontFamily="@font/gsm"
-        android:text="IP:"
-        android:textColor="@color/Valo_Color"
-        android:textSize="30sp"
-        app:guidelineUseRtl="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.156" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.hanks.htextview.scale.ScaleTextView
-        android:id="@+id/PORT_TEXT"
-        android:layout_width="102dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="0.0dp"
-        android:fontFamily="@font/gsm"
-        android:text="PORT:"
-        android:textColor="@color/Valo_Color"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.181"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.223" />
-
-    <com.hanks.htextview.scale.ScaleTextView
-        android:id="@+id/PORT_output"
-        android:layout_width="142dp"
-        android:layout_height="45dp"
-        android:fontFamily="@font/gsm"
-        android:textColor="@color/Valo_Color"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.676"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.224" />
-
-    <com.hanks.htextview.scale.ScaleTextView
-        android:id="@+id/IP_output"
-        android:layout_width="223dp"
-        android:layout_height="44dp"
-        android:fontFamily="@font/gsm"
-        android:textColor="@color/Valo_Color"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.617"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.157" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

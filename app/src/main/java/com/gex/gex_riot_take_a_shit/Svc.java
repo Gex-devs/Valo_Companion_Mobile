@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 public class Svc extends Service  {
 
     public static Current_status_Data viewModel;
-    public WebsocketServer WebServer = new WebsocketServer();
+    //public WebsocketServer WebServer = new WebsocketServer();
     public Svc() {
         super();
     }
@@ -23,7 +23,7 @@ public class Svc extends Service  {
     public int onStartCommand(Intent intent, int flags, int startId) {
         System.out.println("service called");
 
-        WebServer.start();
+        //WebServer.start();
         //modify this method, more than 10 seconds are hard-coded set
         // If we get killed, after returning from here, restart
         return START_STICKY;

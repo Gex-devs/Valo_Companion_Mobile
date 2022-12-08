@@ -3,8 +3,15 @@ package com.gex.gex_riot_take_a_shit;
 import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -21,13 +28,16 @@ import com.labo.kaji.fragmentanimations.MoveAnimation;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 public class improved_Agent_sel_fragment extends Fragment implements View.OnClickListener {
 
     ImageView Photo_1,Photo_2,Photo_3,Photo_4,Photo_5;
-    TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5,MapName;
+    TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5,MapName,server_name,game_mode;
     Current_status_Data viewModel;
     ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade,Map;
-
+    String selected_agent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +93,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         sova.setOnClickListener(this);
         reyna = (ShapeableImageView) v.findViewById(R.id.Reyna_button);
         reyna.setOnClickListener(this);
-        viper = (ShapeableImageView) v.findViewById(R.id.Attacking_Ad);
+        viper = (ShapeableImageView) v.findViewById(R.id.Viper_button);
         viper.setOnClickListener(this);
         fade = (ShapeableImageView) v.findViewById(R.id.Fade_button);
         fade.setOnClickListener(this);
@@ -108,6 +118,10 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         //Map
         Map = (ShapeableImageView) v.findViewById(R.id.imageView19);
         MapName = (TextView) v.findViewById(R.id.textView7);
+        // Server and game mode
+        server_name = (TextView) v.findViewById(R.id.server_name);
+        game_mode = (TextView) v.findViewById(R.id.textView5);
+
 
         // View model
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
@@ -163,6 +177,14 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             }
         });
 
+
+        try {
+            MapName.setText(get_respective_map(pythonRestApi.get_map_name()));
+            server_name.setText(pythonRestApi.get_server());
+            game_mode.setText("unknown");
+        } catch (IOException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         // Map select view model listener
         viewModel.get_map().observe(requireActivity(),item ->{
             switch (item){
@@ -292,7 +314,27 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         }
         return "Agent";
     }
-
+    public String get_respective_map(String map){
+        switch (map){
+            case "/Game/Maps/Triad/Triad":
+                return "Haven";
+            case "/Game/Maps/Duality/Duality":
+                return ("Bind");
+            case "/Game/Maps/Bonsai/Bonsai":
+                return ("Split");
+            case "/Game/Maps/Ascent/Ascent":
+                return("Ascent");
+            case "/Game/Maps/Port/Port":
+                return("Icebox");
+            case "/Game/Maps/Foxtrot/Foxtrot":
+                return("Breeze");
+            case "/Game/Maps/Canyon/Canyon":
+                return("Fracture");
+            case "/Game/Maps/Pitt/Pitt":
+                return("Pearl");
+        }
+        return null;
+    }
     public void add_stroke(int ID){
         ShapeableImageView Temp = (ShapeableImageView) getView().findViewById(ID);
         Temp.setStrokeColorResource(R.color.Agent_selected_color);
@@ -329,7 +371,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         sova = (ShapeableImageView) getView().findViewById(R.id.Sova_button);
         sova.setStrokeColorResource(android.R.color.transparent);
         reyna.setStrokeColorResource(android.R.color.transparent);
-        viper = (ShapeableImageView) getView().findViewById(R.id.Attacking_Ad);
+        viper = (ShapeableImageView) getView().findViewById(R.id.Viper_button);
         viper.setStrokeColorResource(android.R.color.transparent);
         fade = (ShapeableImageView) getView().findViewById(R.id.Fade_button);
         fade.setStrokeColorResource(android.R.color.transparent);
@@ -337,118 +379,237 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
+        String agent = null;
         switch (view.getId()){
             case R.id.Astra_button:
+                agent = "41fb69c1-4189-7b37-f117-bcaf1e96f1bf";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("astra was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Astra");
                 break;
             case R.id.Breach_button:
+                agent = "5f8d3a7f-467b-97f3-062c-13acf203c006";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Breach was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
                 viewModel.for_char("Breach");
                 break;
             case R.id.brimstone_button:
+                agent = "9f0d8ba9-4140-b941-57d3-a7ad57c6b417";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
+
                 System.out.println("Brimstone was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
                 viewModel.for_char("Brimstone");
                 break;
             case R.id.chamber_button:
+                agent = "22697a3d-45bf-8dd7-4fec-84a9e28c69d7";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Chamber was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
                 viewModel.for_char("Chamber");
                 break;
             case R.id.cypher_button:
+                agent = "117ed9e3-49f3-6512-3ccf-0cada7e3823b";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Cypher was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
                 viewModel.for_char("Cypher");
                 break;
             case R.id.Fade_button:
+                agent = "dade69b4-4f5a-8528-247b-219e5a1facd6";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Fade was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
                 viewModel.for_char("Fade");
                 break;
             case R.id.Killjoy_button:
+                agent = "1e58de9c-4950-5125-93e9-a0aee9f98746";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Kj was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Killjoy");
                 break;
             case R.id.neon_button:
+                agent = "bb2a4828-46eb-8cd1-e765-15848195d751";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("neon was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Neon");
                 break;
             case R.id.jett_button:
+                agent = "add6443a-41bd-e414-f6ad-e58d267f4e95";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("jett was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Jett");
                 break;
             case R.id.Phoenix_button:
+                agent = "eb93336a-449b-9c1b-0a54-a891f7921d69";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("phx was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Phx");
                 break;
             case R.id.Raze_button:
+                agent = "f94c3b30-42be-e959-889c-5aa313dba261";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Raze was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Raze");
                 break;
             case R.id.omen_button:
+                agent = "8e253930-4c05-31dd-1b6c-968525494517";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("omen was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Omen");
                 break;
             case R.id.Reyna_button:
+                agent = "a3bfb853-43b2-7238-a4f1-ad90e9e46bcc";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Reyna was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Reyna");
                 break;
             case R.id.Sage_button:
+                agent = "569fdd95-4d10-43ab-ca70-79becc718b46";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("sage was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Sage");
                 break;
             case R.id.kayo_button:
+                agent = "601dbbe7-43ce-be57-2a40-4abd24953621";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("kayo was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Kayo");
                 break;
             case R.id.Skye_button:
+                agent = "6f2a04ca-43e0-be17-7f36-b3908627744d";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Skye was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Skye");
                 break;
             case R.id.Sova_button:
+                agent = "320b2a48-4d9b-a075-30f1-1f93a9b638fa";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Sova was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Sova");
                 break;
-            case R.id.Attacking_Ad:
+            case R.id.Viper_button:
+                agent = "707eab51-4836-f488-046a-cda6bf494859";
+                try {
+                    pythonRestApi.SelectAgent(agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected_agent = agent;
                 System.out.println("Viper was clicked");
                 remove_stroke_from_all();
                 add_stroke(view.getId());
-                viewModel.for_char("Viper");
                 break;
             case R.id.Lock_in_button:
                 System.out.println("Lock In button was clicked");
-                viewModel.for_char("Lock");
+                try {
+                    pythonRestApi.LockAgent(selected_agent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
         }
     }
 

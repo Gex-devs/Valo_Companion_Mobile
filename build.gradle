@@ -4,7 +4,7 @@ buildscript {
         google()
         mavenCentral()
         maven {
-            url 'https://dl.bintray.com/spark/maven'
+            url 'https://jitpack.io'
         }
     }
     dependencies {

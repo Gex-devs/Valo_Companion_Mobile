@@ -32,17 +32,23 @@ import android.util.Log;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muddz.styleabletoast.StyleableToast;
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Context context = App.getContext();
         return context;
     }
-    static WebsocketServer Gex = new WebsocketServer();
+    //static WebsocketServer Gex = new WebsocketServer();
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -84,13 +90,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_main);
         // Main Activity background color
         getWindow().getDecorView().setBackgroundColor(Color.argb(255,255,71,85));
-        Gex.start();
+        //Gex.start();
         // https://github.com/Nightonke/JellyToggleButton#listener
         //JellyToggleButton server_Switch = findViewById(R.id.server_switch);
         //server_Switch.setJelly(Jelly.LAZY_TREMBLE_TAIL_SLIM_JIM);
         viewModel = new ViewModelProvider(this).get(Current_status_Data.class);
         viewModel.getFor_char().observe(this,item->{
-            Gex.broadcast(item, Gex.getConnections());
+            //Gex.broadcast(item, Gex.getConnections());
             System.out.println("Broadcast has been called");
             //Gex.broadcast("pls send", Gex.getConnections());
             System.out.println(item);
@@ -145,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         // ENDS HERE * Bottom Navigation Bar
         // switch here man
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, menuSelection.class, null)
+                .replace(R.id.fragmentContainerView, Game_Status.class, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)       // name can be null
                 .commit();
@@ -244,24 +250,31 @@ public class MainActivity extends AppCompatActivity implements Observer {
     // Use this three functions incase you want to change a Ui element in the main_activity
 }
 
-class WebsocketServer extends WebSocketServer{
+class WebsocketServer extends WebSocketClient {
 
     WifiManager wifiMgr = (WifiManager) MainActivity.ContextMethod().getApplicationContext().getSystemService(WIFI_SERVICE);
-    private static int TCP_PORT = 4444;
-    private Set<WebSocket> conns;
-    public WebsocketServer() {
-        super(new InetSocketAddress(TCP_PORT));
-        conns = new HashSet<>();
+    public WebsocketServer(URI serverUri, Draft draft) {
+        super(serverUri, draft);
     }
 
     @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        conns.add(conn);
+    public void onOpen(ServerHandshake handshakedata) {
         Log.d("Websocket","Connection Opened");
-        Log.d("Websocket","Host Name: "+ conn.getLocalSocketAddress().getHostString());
-        Log.d("Websocket","Port: "+TCP_PORT);
-        System.out.println("New connection from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
-        viewModel.setIP_Addr("Connected");
+        try {
+            switch (pythonRestApi.current_state()){
+                case "MainMenu":
+                    Qeue_Menu();
+                    break;
+                case "Agent_sel":
+                    Agent_Select_fragment();
+                    break;
+                case "In_Game":
+                    Game_Fragment();
+            }
+
+        } catch (IOException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         new StyleableToast
                 .Builder(ContextMethod())
                 .text("Connected")
@@ -274,9 +287,8 @@ class WebsocketServer extends WebSocketServer{
     }
 
     @Override
-    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        conns.remove(conn);
-        Log.d("Socket","Closed connection to " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+    public void onClose(int code, String reason, boolean remote) {
+        Log.d("Socket","Closed connection ");
         Game_Status_Fragment();
         new StyleableToast
                 .Builder(ContextMethod())
@@ -289,14 +301,9 @@ class WebsocketServer extends WebSocketServer{
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onMessage(WebSocket conn, String message) {
+    public void onMessage(String message) {
         System.out.println("Game Log: " + message);
-        for (WebSocket sock : conns) {
-            sock.send(message);
-        }
-
         viewModel.Selection(message.toString());
-
         switch (message){
             case "/Game/Maps/Triad/Triad":
                 viewModel.set_map("Haven");
@@ -520,7 +527,7 @@ class WebsocketServer extends WebSocketServer{
             // Create a dodge Class and Intent to open Agent Select Class
             Log.d("Fragment","Agent select fragment");
             //viewModel.for_char("get_map");
-            broadcast("get_map",getConnections());
+            send("get_map");
             System.out.println("Norification map has been called");
             Agent_Select_fragment();
         }else if(message.equals("game_end")){
@@ -531,56 +538,10 @@ class WebsocketServer extends WebSocketServer{
     }
 
     @Override
-    public void onError(WebSocket conn, Exception ex) {
+    public void onError(Exception ex) {
         //ex.printStackTrace();
-        if (conn != null) {
-            conns.remove(conn);
-            // do some thing if required
-        }
+
         System.out.println(ex);
-    }
-
-    @Override
-    public void onStart() {
-        Log.d("Websocket","Started");
-        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-        int ip = wifiInfo.getIpAddress();
-        String ipString = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
-        viewModel.setIP_Addr(ipString);
-        viewModel.setPort_Addr(Integer.toString(TCP_PORT));
-        /*
-        Intent intent = new Intent(MainActivity.ContextMethod(), Agent_Selection_Menu.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("valo_Start","valo_Start", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = MainActivity.ContextMethod().getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_Start")
-                .setSmallIcon(R.drawable.valo)
-                .setContentTitle("Game Status")
-                .setContentText("MATCH FOUND")
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .addAction(R.drawable.riot,"Dodge",pendingIntent)
-                .addAction(R.drawable.riot,"Select Agent",pendingIntent)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(notify_map))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
-        managerCompact.notify(1,builder.build());*/
-
-    }
-
-    @Override
-    public  void stop(){
-
-    }
-    @Override
-    public void broadcast(String text) {
-        broadcast(text, conns);
     }
 
 
