@@ -1,6 +1,9 @@
 package com.gex.gex_riot_take_a_shit;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,9 +12,12 @@ import android.media.Image;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +30,22 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.dexafree.materialList.card.Card;
+import com.dexafree.materialList.card.CardProvider;
+import com.dexafree.materialList.card.OnActionClickListener;
+import com.dexafree.materialList.card.action.TextViewAction;
+import com.dexafree.materialList.view.MaterialListView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.hanks.htextview.base.HTextView;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
+import com.squareup.picasso.RequestCreator;
 import com.unstoppable.submitbuttonview.SubmitButton;
 
 import org.apache.commons.io.compress.tar.TarEntry;
@@ -49,6 +63,7 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -58,8 +73,12 @@ public class Game_Status extends Fragment implements View.OnClickListener{
     Current_status_Data viewModel;
     String myString;
     TableLayout disco;
+    MaterialListView mListView;
+
+
     NsdManager nsdManager = (NsdManager) MainActivity.ContextMethod().getApplicationContext().getSystemService(Context.NSD_SERVICE);
-    //public WebsocketServer WebServer = new WebsocketServer();
+
+
 
     private List<NsdServiceInfo> mDiscoveredServices = new ArrayList<>();
     @Override
@@ -105,47 +124,14 @@ public class Game_Status extends Fragment implements View.OnClickListener{
         swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                System.out.println("refreshed");
-                discoverServices();
+
+                //discoverServices();
                 swiper.setRefreshing(false);
             }
         });
+        //https://github.com/dexafree/MaterialList
+        mListView = (MaterialListView) v.findViewById(R.id.material_listview);
 
-        // Create a JmDNS instance
-        /*new Thread(new Runnable() {
-            public void run() {
-                try {
-                    WifiManager wifi = (WifiManager) MainActivity.ContextMethod().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    final InetAddress deviceIpAddress = InetAddress.getByName(Formatter.formatIpAddress(wifi.getConnectionInfo().getIpAddress()));
-                    WifiManager.MulticastLock multicastLock = wifi.createMulticastLock(getClass().getName());
-                    multicastLock.setReferenceCounted(true);
-                    multicastLock.acquire();
-
-                    JmDNS jmDNS = JmDNS.create(deviceIpAddress, "Android Device Discovery");
-                    jmDNS.addServiceListener("_http._tcp.local.", new ServiceListener() {//_services._dns-sd._udp _http._tcp.local. _workstation._tcp.local.
-                        @Override
-                        public void serviceAdded(ServiceEvent serviceEvent) {
-                            jmDNS.requestServiceInfo("", "", 1000);
-                            System.out.println("found some bitch");
-                        }
-
-                        @Override
-                        public void serviceRemoved(ServiceEvent serviceEvent) {
-                            System.out.println("someone left");
-                        }
-
-                        @Override
-                        public void serviceResolved(ServiceEvent serviceEvent) {
-                            System.out.println(serviceEvent.getInfo().getHostAddress());
-                            System.out.println(serviceEvent.getInfo().getName());
-                        }
-                    });
-
-                }catch(IOException e) {
-                    Log.e("sjruf", e.getMessage(), e);
-                }
-            }
-        }).start();*/
 
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
         viewModel.getFor_char().observe(requireActivity(),item->{
@@ -192,20 +178,11 @@ public class Game_Status extends Fragment implements View.OnClickListener{
                 System.out.println(serviceInfo.getServiceName());
                 System.out.println(serviceInfo.getPort());
                 System.out.println(serviceInfo.getServiceType());
-                mDiscoveredServices.add(serviceInfo);
-                add_discov_device(serviceInfo.getServiceName());
+                mDiscoveredServices.add(serviceInfo); // do i really need this?
+                add_discov_device_improved(serviceInfo.getServiceName(),serviceInfo.getHost().toString().substring(1) +":"+ serviceInfo.getPort());
 
-                /*
-                WebsocketServer client = null;
-                try {
-                    client = new WebsocketServer(new URI("ws://192.168.1.19:8765"), new Draft_6455());
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                if (client != null) {
-                    client.connect();
-                }*/
-                // getView().findViewByID();
+
+
             }
         };
 
@@ -240,15 +217,8 @@ public class Game_Status extends Fragment implements View.OnClickListener{
             public void onDiscoveryStopped(String serviceType) {
                 // Discovery stopped
                 System.out.println("discovery stopped");
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        disco = getView().findViewById(R.id.discovery_table);
-                        disco.removeAllViews();
-                    }
-                });
                 for (NsdServiceInfo serviceInfo : mDiscoveredServices) {
-                    add_discov_device(serviceInfo.getServiceName());
+                    System.out.println(serviceInfo.getServiceName());
                 }
             }
 
@@ -256,6 +226,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
             public void onServiceFound(NsdServiceInfo serviceInfo) {
                 // A service was found
                 resolveService(serviceInfo);
+
             }
 
             @Override
@@ -268,47 +239,75 @@ public class Game_Status extends Fragment implements View.OnClickListener{
         // Start discovery
         nsdManager.discoverServices("_http._tcp.", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
     }
-    public void add_discov_device(String DeviceName){
+    public void add_discov_device_improved(String DeviceName,String IP_PORT){
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                disco = getView().findViewById(R.id.discovery_table);
+                /*Card card = new Card.Builder(MainActivity.ContextMethod())
+                        .withProvider(new CardProvider())
+                        .setLayout(R.layout.material_basic_buttons_card)
+                        .setTitle(DeviceName)
+                        .setDescription(IP_PORT)
+                        .addAction(R.id.left_text_button, new TextViewAction(MainActivity.ContextMethod())
+                                .setText("Connect")
+                                .setTextResourceColor(R.color.black_button)
+                                .setListener(new OnActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(View view, Card card) {
+                                        Toasty.info(MainActivity.ContextMethod(), card.getProvider().getDescription().split(":")[0]+card.getProvider().getDescription().split(":")[1], Toast.LENGTH_SHORT, true).show();
+                                        WebsocketServer client = null;
+                                        try {
+                                            client = new WebsocketServer(new URI("ws://"+card.getProvider().getDescription().split(":")[0]+ ":"+card.getProvider().getDescription().split(":")[1]), new Draft_6455());
+                                        } catch (URISyntaxException e) {
+                                            e.printStackTrace();
+                                        }
+                                        if (client != null) {
+                                            client.connect();
+                                        }
+                                    }
+                                }))
+                        .endConfig()
+                        .build();*/
+                Card card = new Card.Builder(MainActivity.ContextMethod())
+                        .withProvider(new CardProvider())
+                        .setLayout(R.layout.material_basic_image_buttons_card_layout)
+                        .setTitle(DeviceName)
+                        .setTitleGravity(Gravity.LEFT)
+                        .setDescription(IP_PORT)
+                        .setDescriptionGravity(Gravity.LEFT)
+                        .setDrawable(R.drawable.computer_ico)
+                        .setDrawableConfiguration(new CardProvider.OnImageConfigListener() {
+                            @Override
+                            public void onImageConfigure(@NonNull RequestCreator requestCreator) {
+                                requestCreator.resize(200,200);
+                            }
+                        })
+                        .addAction(R.id.left_text_button, new TextViewAction(MainActivity.ContextMethod())
+                                .setText("Connect")
+                                .setTextResourceColor(R.color.Button_Color)
+                                .setTextResourceColor(R.color.black_button)
+                                .setListener(new OnActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(View view, Card card) {
+                                        Toasty.info(MainActivity.ContextMethod(), card.getProvider().getDescription().split(":")[0]+card.getProvider().getDescription().split(":")[1], Toast.LENGTH_SHORT, true).show();
+                                        WebsocketServer client = null;
+                                        try {
+                                            client = new WebsocketServer(new URI("ws://"+card.getProvider().getDescription().split(":")[0]+ ":"+card.getProvider().getDescription().split(":")[1]), new Draft_6455());
+                                        } catch (URISyntaxException e) {
+                                            e.printStackTrace();
+                                        }
+                                        if (client != null) {
+                                            client.connect();
+                                        }
+                                    }
+                                }))
+                        .endConfig()
+                        .build();
 
-                disco.removeAllViews();
-                TableRow Placement_TableRow = new TableRow(MainActivity.ContextMethod());
-                Placement_TableRow.setBackgroundColor(Color.WHITE);
-                Placement_TableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
-
-                ImageView comp_image = new ImageView(MainActivity.ContextMethod());
-                comp_image.setImageResource(R.drawable.computer_ico);
-
-                TextView Device_Name = new TextView(MainActivity.ContextMethod());
-                Device_Name.setText(DeviceName);
-                Typeface typeface = ResourcesCompat.getFont(MainActivity.ContextMethod(), R.font.poppins_bold);
-                Device_Name.setTypeface(typeface);
-
-                Placement_TableRow.addView(comp_image);
-                Placement_TableRow.addView(Device_Name);
-                Placement_TableRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        WebsocketServer client = null;
-                        try {
-                            client = new WebsocketServer(new URI("ws://192.168.1.19:8765"), new Draft_6455());
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                        if (client != null) {
-                            client.connect();
-                        }
-                    }
-                });
-
-                disco.addView(Placement_TableRow);
+                mListView.getAdapter().add(card);
             }
         });
 
     }
-
 
 }

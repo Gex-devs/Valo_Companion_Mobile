@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ import com.android.volley.toolbox.Volley;
 import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.IOUtils;
+import com.labo.kaji.fragmentanimations.MoveAnimation;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.JellyTypes.Jelly;
 import com.nightonke.jellytogglebutton.State;
@@ -68,11 +70,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
     private SmartMaterialSpinner<String> spEmptyItem;
     private List<String> provinceList;
 
-    static Handler UI_Handler = new Handler();
 
-    public menuSelection() throws JSONException, IOException {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -80,6 +78,12 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
     }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        return MoveAnimation.create(MoveAnimation.RIGHT,enter,200);
+    }
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -257,6 +261,8 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         Start.setText("In Queue");
                         Start.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Button_Color)));
                         break;
+                    case "MATCHMADE_GAME_STARTING":
+                        break;
                 }
 
                 StringRequest request = null;
@@ -276,7 +282,9 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                         System.out.println(string);
                                         try {
                                             JSONObject json = new JSONObject(string);
-                                            Picasso.get().load(json.getJSONObject("data").getString("wideArt")).into(p1);
+                                            Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("wideArt")).into(p1);
+                                            // Downgraded to 2.0.0 to make cardlist work
+                                            //Picasso.get().load(json.getJSONObject("data").getString("wideArt")).into(p1);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -320,7 +328,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                         System.out.println(string);
                                         try {
                                             JSONObject json = new JSONObject(string);
-                                            Picasso.get().load(json.getJSONObject("data").getString("smallArt")).into(p2);
+                                            Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("smallArt")).into(p2);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -364,7 +372,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                         System.out.println(string);
                                         try {
                                             JSONObject json = new JSONObject(string);
-                                            Picasso.get().load(json.getJSONObject("data").getString("smallArt")).into(p3);
+                                            Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("smallArt")).into(p3);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -408,7 +416,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                         System.out.println(string);
                                         try {
                                             JSONObject json = new JSONObject(string);
-                                            Picasso.get().load(json.getJSONObject("data").getString("smallArt")).into(p4);
+                                            Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("smallArt")).into(p4);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -452,7 +460,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                         System.out.println(string);
                                         try {
                                             JSONObject json = new JSONObject(string);
-                                            Picasso.get().load(json.getJSONObject("data").getString("smallArt")).into(p5);
+                                            Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("smallArt")).into(p5);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -556,6 +564,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+
                         break;
 
                 }

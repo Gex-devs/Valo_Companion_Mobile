@@ -1,17 +1,8 @@
 package com.gex.gex_riot_take_a_shit;
 
-import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
-
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -55,6 +46,8 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.improved_agent_select_menu, container, false);
+
+
 
         // Lock in button
         Button Lock_In = (Button) v.findViewById(R.id.Lock_in_button);
@@ -118,7 +111,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         //Map
         Map = (ShapeableImageView) v.findViewById(R.id.imageView19);
         MapName = (TextView) v.findViewById(R.id.textView7);
-        // Server and game mode
+        // Server,game mode and
         server_name = (TextView) v.findViewById(R.id.server_name);
         game_mode = (TextView) v.findViewById(R.id.textView5);
 
@@ -139,31 +132,31 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                         switch (i){
                             case 0:
                                 System.out.println("case 0 active");
-                                P_1.setText(Player_Json_Object.getString("name"));
+                                P_1.setText(Player_Json_Object.getString("name").split("#")[0]);
                                 Photo_1.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
                                 A_1.setText(get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 1:
                                 System.out.println("case 1 active");
                                 Photo_2.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
-                                P_2.setText(Player_Json_Object.getString("name"));
+                                P_2.setText(Player_Json_Object.getString("name").split("#")[0]);
                                 A_2.setText(get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 2:
                                 System.out.println("case 2 active");
-                                P_3.setText(Player_Json_Object.getString("name"));
+                                P_3.setText(Player_Json_Object.getString("name").split("#")[0]);
                                 Photo_3.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
                                 A_3.setText(get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 3:
                                 System.out.println("case 3 active");
-                                P_4.setText(Player_Json_Object.getString("name"));
+                                P_4.setText(Player_Json_Object.getString("name").split("#")[0]);
                                 Photo_4.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
                                 A_4.setText(get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 4:
                                 System.out.println("case 4 active");
-                                P_5.setText(Player_Json_Object.getString("name"));
+                                P_5.setText(Player_Json_Object.getString("name").split("#")[0]);
                                 Photo_5.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
                                 A_5.setText(get_respective_name(Player_Json_Object.getString("character")));
                                 break;
@@ -179,9 +172,11 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
 
 
         try {
-            MapName.setText(get_respective_map(pythonRestApi.get_map_name()));
+            String map_now = pythonRestApi.get_map_name();
+            MapName.setText(get_respective_map_name(map_now));
             server_name.setText(pythonRestApi.get_server());
-            game_mode.setText("unknown");
+            game_mode.setText(pythonRestApi.get_gamemode());
+            Map.setImageResource(get_respective_map_image(map_now));
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -314,7 +309,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         }
         return "Agent";
     }
-    public String get_respective_map(String map){
+    public String get_respective_map_name(String map){
         switch (map){
             case "/Game/Maps/Triad/Triad":
                 return "Haven";
@@ -334,6 +329,27 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                 return("Pearl");
         }
         return null;
+    }
+    public int get_respective_map_image(String map){
+        switch (map){
+            case "/Game/Maps/Triad/Triad":
+                return R.drawable.heaven;
+            case "/Game/Maps/Duality/Duality":
+                return R.drawable.bind;
+            case "/Game/Maps/Bonsai/Bonsai":
+                return R.drawable.split;
+            case "/Game/Maps/Ascent/Ascent":
+                return R.drawable.ascent;
+            case "/Game/Maps/Port/Port":
+                return R.drawable.icebox_1;
+            case "/Game/Maps/Foxtrot/Foxtrot":
+                return R.drawable.breeze;
+            case "/Game/Maps/Canyon/Canyon":
+                return R.drawable.fracture;
+            case "/Game/Maps/Pitt/Pitt":
+                return R.drawable.pearl;
+        }
+        return 0;
     }
     public void add_stroke(int ID){
         ShapeableImageView Temp = (ShapeableImageView) getView().findViewById(ID);

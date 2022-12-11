@@ -19,38 +19,11 @@
 
         app:layout_constraintTop_toTopOf="parent">
 
-        <TableLayout
-            android:id="@+id/discovery_table"
-            android:layout_width="297dp"
-            android:layout_height="454dp"
-            android:background="#1EBD2828"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/Host_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.38">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@color/white">
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/computer_ico" />
-
-                <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="My Computer" />
-            </TableRow>
-
-        </TableLayout>
+        <com.dexafree.materialList.view.MaterialListView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/material_listview"
+            app:column_count="1"/>
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

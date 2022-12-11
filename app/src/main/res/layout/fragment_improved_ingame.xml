@@ -8,6 +8,7 @@
     android:background="@drawable/new_mf"
     tools:context=".In_game">
 
+
     <TableLayout
         android:id="@+id/enemy"
         android:layout_width="203dp"
@@ -48,7 +49,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <TableRow
             android:layout_width="match_parent"
@@ -224,13 +225,14 @@
 
     <ScrollView
         android:id="@+id/kill_feed"
-        android:layout_width="399dp"
-        android:layout_height="109dp"
+        android:layout_width="397dp"
+        android:layout_height="88dp"
         android:paddingTop="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/Player_1_improved"
         app:layout_constraintEnd_toEndOf="@+id/Player_1_improved"
         app:layout_constraintStart_toStartOf="@+id/Player_1_improved"
-        app:layout_constraintTop_toTopOf="@+id/Player_1_improved">
+        app:layout_constraintTop_toTopOf="@+id/Player_1_improved"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:id="@+id/inner_kill_feed"
@@ -244,7 +246,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:background="@drawable/empty"
-                android:orientation="horizontal"></LinearLayout>
+                android:orientation="horizontal">
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

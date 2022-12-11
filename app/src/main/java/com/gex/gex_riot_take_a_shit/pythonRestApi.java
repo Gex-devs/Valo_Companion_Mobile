@@ -306,8 +306,60 @@ public class pythonRestApi {
 
         // Submit the Callable object to the ExecutorService to run in a separate thread
         return executor.submit(callable).get();
-
     }
+    public static String get_gamemode() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    OkHttpClient client = new OkHttpClient();
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http://192.168.1.19:7979/get_gamemode/pre_game")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+    }
+    public static String get_players_Current_game() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    OkHttpClient client = new OkHttpClient();
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http://192.168.1.19:7979/current_game/players")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+    }
+
 }
 
 

@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.563"
         app:shapeAppearanceOverlay="@style/roundedImageView"
-        app:srcCompat="@drawable/val_1" />
+        app:srcCompat="@drawable/valo_place_holder" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/player_2_improved"
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.563"
         app:shapeAppearanceOverlay="@style/roundedImageView"
-        app:srcCompat="@drawable/val_1" />
+        app:srcCompat="@drawable/valo_place_holder" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/player_4_improved3"
@@ -71,7 +71,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.793"
         app:shapeAppearanceOverlay="@style/roundedImageView"
-        app:srcCompat="@drawable/val_1" />
+        app:srcCompat="@drawable/valo_place_holder" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/player_5_improved4"
@@ -87,7 +87,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.793"
         app:shapeAppearanceOverlay="@style/roundedImageView"
-        app:srcCompat="@drawable/val_1" />
+        app:srcCompat="@drawable/valo_place_holder" />
 
     <HorizontalScrollView
         android:layout_width="412dp"
@@ -355,7 +355,6 @@
         android:layout_width="155dp"
         android:layout_height="25dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Player_1"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/Player_1_improved"
@@ -370,7 +369,6 @@
         android:layout_width="153dp"
         android:layout_height="27dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Agent"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/Player_1_improved"
@@ -385,7 +383,6 @@
         android:layout_width="111dp"
         android:layout_height="16dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Player_2"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_2_improved"
@@ -400,7 +397,6 @@
         android:layout_width="111dp"
         android:layout_height="21dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Agent"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/player_2_improved"
         app:layout_constraintEnd_toEndOf="@+id/player_2_improved"
@@ -414,7 +410,6 @@
         android:layout_width="114dp"
         android:layout_height="18dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Player_3"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_3_improved2"
@@ -429,7 +424,6 @@
         android:layout_width="111dp"
         android:layout_height="24dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Agent"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/player_3_improved2"
         app:layout_constraintEnd_toEndOf="@+id/player_3_improved2"
@@ -443,7 +437,6 @@
         android:layout_width="111dp"
         android:layout_height="20dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Agent"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/player_4_improved3"
         app:layout_constraintEnd_toEndOf="@+id/player_4_improved3"
@@ -457,7 +450,6 @@
         android:layout_width="112dp"
         android:layout_height="21dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Player_4"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_4_improved3"
@@ -472,7 +464,6 @@
         android:layout_width="112dp"
         android:layout_height="18dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Player_5"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_5_improved4"
@@ -487,7 +478,6 @@
         android:layout_width="110dp"
         android:layout_height="23dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Agent"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/player_5_improved4"
         app:layout_constraintEnd_toEndOf="@+id/player_5_improved4"

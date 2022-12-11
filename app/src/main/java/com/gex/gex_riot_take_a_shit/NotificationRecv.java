@@ -25,7 +25,6 @@ public class NotificationRecv extends BroadcastReceiver  {
         String m = intent.getStringExtra("test_1");
         System.out.println("Pls call me son of bitch");
         ObservableObject.getInstance().updateValue(intent);
-        //viewModel.for_char("Dodge");
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         manager.cancel(1);
         try {
