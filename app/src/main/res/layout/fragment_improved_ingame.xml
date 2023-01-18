@@ -97,6 +97,22 @@
 
     </TableLayout>
 
+    <com.nightonke.jellytogglebutton.JellyToggleButton
+        android:id="@+id/party_Switch"
+        android:layout_width="57dp"
+        android:layout_height="30dp"
+        app:jtbJelly="itself"
+        app:jtbLeftBackgroundColor="@color/Valo_Color"
+        app:jtbLeftTextTypeface="@font/poppins_bold"
+        app:jtbRightBackgroundColor="@color/teal_700"
+        app:jtbRightTextTypeface="@font/poppins_bold"
+        app:layout_constraintBottom_toTopOf="@+id/Player_1_improved"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/teammates"
+        app:layout_constraintVertical_bias="0.273" />
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView19"
         android:layout_width="434dp"
@@ -106,7 +122,7 @@
         android:src="@drawable/ascent_blur"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintHorizontal_bias="0.521"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
@@ -188,7 +204,7 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView19"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.669"
+        app:layout_constraintHorizontal_bias="0.661"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView19"
         app:layout_constraintVertical_bias="0.956" />
@@ -204,7 +220,7 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView19"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintHorizontal_bias="0.44"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView19"
         app:layout_constraintVertical_bias="0.956" />
@@ -252,6 +268,20 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Anti-Afk"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/Player_1_improved"
+        app:layout_constraintEnd_toStartOf="@+id/party_Switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/teammates"
+        app:layout_constraintVertical_bias="0.264" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

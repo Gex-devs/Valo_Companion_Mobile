@@ -11,6 +11,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -24,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -31,9 +33,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 public class pythonRestApi {
 
@@ -209,23 +213,32 @@ public class pythonRestApi {
             }
         }).start();
     }
-    public static void LockAgent(String agent) throws IOException {
-        new Thread(new Runnable() {
-            public void run() {
+
+    public static String LockAgent(String agent) throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
                 try {
+                    System.out.println("called from python Rest Api");
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
                             .url("http://192.168.1.19:7979/lock_agent/"+agent)
                             .build();
-
                     Response response = client.newCall(request).execute();
-                    System.out.println(response);
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return "null";
                 }
+
             }
-        }).start();
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
     }
     public static String get_map_name() throws IOException, ExecutionException, InterruptedException {
         Callable<String> callable = new Callable<String>() {
@@ -358,6 +371,33 @@ public class pythonRestApi {
 
         // Submit the Callable object to the ExecutorService to run in a separate thread
         return executor.submit(callable).get();
+    }
+    public static String get_party() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    OkHttpClient client = new OkHttpClient();
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http://192.168.1.19:7979/get_party")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
     }
 
 }

@@ -22,6 +22,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class improved_Agent_sel_fragment extends Fragment implements View.OnClickListener {
 
     ImageView Photo_1,Photo_2,Photo_3,Photo_4,Photo_5;
@@ -622,8 +624,14 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Lock_in_button:
                 System.out.println("Lock In button was clicked");
                 try {
-                    pythonRestApi.LockAgent(selected_agent);
-                } catch (IOException e) {
+                    if (pythonRestApi.LockAgent(selected_agent).equals("409")){
+                        new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("AGENT")
+                                .setContentText("LOCKED AGENT")
+                                .show();
+                    }
+
+                } catch (IOException | ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
         }

@@ -10,3 +10,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Gex_Riot_Take_A_Shit"
 include ':app'
+include ':fancydialoglib'

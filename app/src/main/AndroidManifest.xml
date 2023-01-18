@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.gex.gex_riot_take_a_shit">
 
     <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
@@ -9,7 +10,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
+        tools:replace="android:icon"
         android:name="com.gex.gex_riot_take_a_shit.App"
         android:allowBackup="true"
         android:icon="@drawable/valo"

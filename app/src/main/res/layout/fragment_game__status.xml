@@ -5,28 +5,56 @@
     android:id="@+id/new_tag"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_dark"
+    android:background="@drawable/marketbg"
     tools:context=".Game_Status">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swiper"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="match_parent">
 
-        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <com.dexafree.materialList.view.MaterialListView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/material_listview"
-            app:column_count="1"/>
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="101dp"
+                android:autoSizeTextType="uniform"
+                android:fontFamily="@font/poppins_bold"
+                android:gravity="left"
+                android:text="Devices"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="67dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="12dp"
+                android:text="cam" />
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swiper"
+                android:layout_width="410dp"
+                android:layout_height="795dp"
+                android:paddingTop="12dp"
+
+                >
+
+                <com.dexafree.materialList.view.MaterialListView
+                    android:id="@+id/material_listview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="#811976D2"
+                    app:column_count="1" />
 
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

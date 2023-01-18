@@ -3,6 +3,8 @@ package com.gex.gex_riot_take_a_shit;
 import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -52,6 +54,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
 
 
@@ -65,7 +68,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
     JellyToggleButton server_Switch;
     TextView p1_title,p2_title,p3_title,p4_title,p5_title;
     TextView p1_name,p2_name,p3_name,p4_name,p5_name;
-
+    SweetAlertDialog pDialog;
     private SmartMaterialSpinner<String> spProvince;
     private SmartMaterialSpinner<String> spEmptyItem;
     private List<String> provinceList;
@@ -92,6 +95,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
          View v = inflater.inflate(R.layout.fragment_menu_selection, container, false);
 
+        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
          //buttons
          Start = (Button) v.findViewById(R.id.start_btn);
          Start.setOnClickListener(this);
@@ -206,32 +210,42 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         });
 
 
+
         viewModel.getSelectedItem().observe(requireActivity(),item ->{
             try {
 
                 JSONObject jsob = new JSONObject(item);
                 // Current Queue
-                switch (jsob.getJSONObject("MatchmakingData").getString("QueueID")){
-                    case "unrated":
-                        spProvince.setSelection(1);
-                        break;
-                    case "spikerush":
-                        spProvince.setSelection(3);
-                        break;
-                    case "deathmatch":
-                        spProvince.setSelection(2);
-                        break;
-                    case "ggteam":
-                        // wtf is ggteam
-                        break;
-                    case "onefa":
-                        spProvince.setSelection(4);
-                        break;
-                    case "competitive":
-                        spProvince.setSelection(0);
-                        break;
-
+                try {
+                    switch (jsob.getJSONObject("MatchmakingData").getString("QueueID")){
+                        case "unrated":
+                            spProvince.setSelection(1);
+                            break;
+                        case "spikerush":
+                            spProvince.setSelection(3);
+                            break;
+                        case "deathmatch":
+                            spProvince.setSelection(2);
+                            break;
+                        case "ggteam":
+                            // wtf is ggteam
+                            break;
+                        case "onefa":
+                            spProvince.setSelection(4);
+                            break;
+                        case "competitive":
+                            spProvince.setSelection(0);
+                            break;
+                        case "swiftplay":
+                            spProvince.setSelection(5);
+                            break;
+                        default:
+                            spProvince.setSelection(0);
+                    }
+                }catch (Exception e){
+                    System.out.println("not ready yet");
                 }
+
                 JSONArray party_members = jsob.getJSONArray("Members");
                 switch (jsob.getString("Accessibility")){
                     case "CLOSED":
@@ -250,6 +264,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         break;
                 }
 
+
                 switch (jsob.getString("State")){
                     case "DEFAULT":
                         Log.d("Start_Button", "Set the button to Start");
@@ -262,6 +277,9 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         Start.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Button_Color)));
                         break;
                     case "MATCHMADE_GAME_STARTING":
+                        new SweetAlertDialog(getContext())
+                                .setTitleText("MATCH FOUND")
+                                .show();
                         break;
                 }
 
@@ -518,6 +536,8 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         provinceList.add("DEATH MATCH");
         provinceList.add("SPIKE RUSH");
         provinceList.add("ESCALATION");
+        provinceList.add("Swift Play");
+        provinceList.add("Replication");
 
         spProvince.setItem(provinceList);
         spProvince.setItemListBackground(R.color.Valo_Color);

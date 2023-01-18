@@ -40,6 +40,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.github.muddz.styleabletoast.StyleableToast;
 
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     // Might not need it in Main Activity, Need to go to Fragments
 
     static FragmentManager fragmentManager;
+    boolean  netOpen;
     private static ViewGroup container;
 
     {
@@ -96,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         // Fragment container
         container = (ViewGroup) findViewById(R.id.fragmentContainerView);
+
+
+
         /*RemoteInput remoteInput = new RemoteInput.Builder("get_me")
                 .setLabel("ans")
                         .build();
@@ -197,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 class WebsocketServer extends WebSocketClient {
     // This is the NotificationManager
     private NotificationManager mNotificationManager;
-
+    improved_Agent_sel_fragment Agent_sel_frag = new improved_Agent_sel_fragment();
     WifiManager wifiMgr = (WifiManager) MainActivity.ContextMethod().getApplicationContext().getSystemService(WIFI_SERVICE);
     public WebsocketServer(URI serverUri, Draft draft) {
         super(serverUri, draft);
@@ -206,7 +211,7 @@ class WebsocketServer extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         Log.d("Websocket","Connection Opened");
-        send("from phone");
+        send("from_phone");
         UI_Handler.post(new Runnable() {
             @Override
             public void run() {
@@ -218,8 +223,8 @@ class WebsocketServer extends WebSocketClient {
                 @SuppressLint("NotificationTrampoline") NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.ContextMethod(), "valo_connection")
                         .setSmallIcon(R.drawable.valo)
                         .setContentTitle("Connected")
-                        .setContentText("Your WebSocket client is connected")
-                        .setAutoCancel(true)
+                        .setContentText("Your Device is connected to Valorant")
+                        .setAutoCancel(false)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
                 managerCompact.notify(2,builder.build());
@@ -228,6 +233,7 @@ class WebsocketServer extends WebSocketClient {
         try {
             switch (pythonRestApi.current_state()){
                 case "MainMenu":
+                    System.out.println("ya main menu");
                     Qeue_Menu();
                     break;
                 case "Agent_sel":
@@ -255,10 +261,16 @@ class WebsocketServer extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        Log.d("Socket","Closed connection ");
+        Log.d("Socket","Closed connection: "+reason+code    );
         Game_Status_Fragment();
         NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
         managerCompact.cancel(2);
+        try{
+            managerCompact.cancel(1);
+        }catch (Exception e){
+            System.out.println("Notification most likely doesn't exist");
+        }
+
     }
 
     @SuppressLint({"SetTextI18n", "NotificationTrampoline"})
@@ -315,8 +327,8 @@ class WebsocketServer extends WebSocketClient {
                 Game_Fragment();
                 break;
             case "CharacterSelectPersistentLevel":
-                improved_Agent_sel_fragment g = new improved_Agent_sel_fragment();
                 Intent intent = new Intent(MainActivity.ContextMethod(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.ContextMethod(), 0, intent, 0);
                 Intent broadcastInt = new Intent(MainActivity.ContextMethod(),NotificationRecv.class);
                 broadcastInt.putExtra("test_1","your mother");
@@ -335,7 +347,7 @@ class WebsocketServer extends WebSocketClient {
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true)
                             .addAction(R.drawable.riot,"Dodge",actionIntent)
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(g.get_respective_map_name(pythonRestApi.get_map_name())))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(Agent_sel_frag.get_respective_map_name(pythonRestApi.get_map_name())))
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 } catch (IOException | ExecutionException | InterruptedException e) {
                     e.printStackTrace();
@@ -346,7 +358,7 @@ class WebsocketServer extends WebSocketClient {
                 Agent_Select_fragment();
                 break;
             case "game_end":
-                Game_Status_Fragment();
+                //Game_Status_Fragment();
                 break;
             case "MainMenu":
                 try {

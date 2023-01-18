@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.CardProvider;
 import com.dexafree.materialList.view.MaterialListView;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.squareup.picasso.RequestCreator;
 
 import org.json.JSONArray;
@@ -44,6 +46,7 @@ public class fragment_improved_ingame extends Fragment {
     TextView yourScore,enemyScore,roundnumb;
     ArrayList<Integer> exclude_ints = new ArrayList<>();
     LinearLayout killfeed;
+    ShapeableImageView map;
     ScrollView killfeed_container;
     public fragment_improved_ingame() {
         // Required empty public constructor
@@ -64,6 +67,8 @@ public class fragment_improved_ingame extends Fragment {
         killfeed_container = (ScrollView) v.findViewById(R.id.kill_feed);
         killfeed = (LinearLayout) v.findViewById(R.id.inner_kill_feed);
 
+        map = (ShapeableImageView) v.findViewById(R.id.imageView19) ;
+
         YourTeam = v.findViewById(R.id.teammates);
         Enemy = v.findViewById(R.id.enemy);
 
@@ -71,6 +76,13 @@ public class fragment_improved_ingame extends Fragment {
         enemyScore = v.findViewById(R.id.defender_score);
         roundnumb = v.findViewById(R.id.Round);
 
+        // On Create of fragment del notification
+        try {
+            NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
+            managerCompact.cancel(1);
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
 
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
@@ -87,7 +99,7 @@ public class fragment_improved_ingame extends Fragment {
                                 (207, 186, 0.0f);
 
                         LinearLayout.LayoutParams playernameparam = new LinearLayout.LayoutParams
-                                (240, 100, 0.0f);
+                                (2w, 100, 0.0f);
 
 
                         TableRow Placement_TableRow = new TableRow(MainActivity.ContextMethod());
@@ -331,7 +343,7 @@ public class fragment_improved_ingame extends Fragment {
                 return R.drawable.killjoy;
             case "6f2a04ca-43e0-be17-7f36-b3908627744d":
                 return R.drawable.skye;
-            case "Stealth":
+            case "7f94d92c-4234-0a36-9646-3a87eb8b5c89":
                 // fix this nigga
                 return R.drawable.yoru;
             case "41fb69c1-4189-7b37-f117-bcaf1e96f1bf":
