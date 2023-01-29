@@ -42,6 +42,7 @@ import java.util.List;
 public class Game_Status extends Fragment implements View.OnClickListener{
     Current_status_Data viewModel;
     String myString;
+    public String ip_addrs;
     TableLayout disco;
     MaterialListView mListView;
     Button cam;
@@ -181,7 +182,8 @@ public class Game_Status extends Fragment implements View.OnClickListener{
                 System.out.println(serviceInfo.getServiceName());
                 System.out.println(serviceInfo.getPort());
                 System.out.println(serviceInfo.getServiceType());
-                mDiscoveredServices.add(serviceInfo); // do i really need this?
+                mDiscoveredServices.add(serviceInfo); // do i really need this? Good Question Past me!
+                ip_addrs = serviceInfo.getHost().toString().substring(1);
                 add_discov_device_improved(serviceInfo.getServiceName(),serviceInfo.getHost().toString().substring(1) +":"+ serviceInfo.getPort());
 
 

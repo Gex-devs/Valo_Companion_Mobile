@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         bottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.valo,"GAME"))
                 .addItem(new BottomNavigationItem(R.drawable.riot, "STORE"))
-                .addItem(new BottomNavigationItem(R.drawable.controller,"Party"))
+                .addItem(new BottomNavigationItem(R.drawable.controller,"EXTRA"))
                 .setInActiveColor(R.color.Inactive_color_bottom_bar)
                 .setBarBackgroundColor(R.color.Bottom_bar_color)
                 .setActiveColor(R.color.Valo_Color)
@@ -134,15 +135,19 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void onTabSelected(int position) {
                 switch (position){
                     case 0:
-                        Game_Status_Fragment();
+                        //Game_Status_Fragment();
                         System.out.println("First_fragment");
                         break;
                     case 1:
-                        Store_Fragment();
+                        //Store_Fragment();
+                        // Replace with Toasty if possible
+                        Toast.makeText(MainActivity.this,"Store is still under development",Toast.LENGTH_SHORT).show();
+                        Log.e("Bottom_Tab", "onTabSelected: Store Fragment is Under Development" );
                         System.out.println("Second_fragment");
                         break;
                     case 2:
-                        party_fragment();
+                        //party_fragment();
+                        Toast.makeText(MainActivity.this,"Feature is still under development",Toast.LENGTH_SHORT).show();
                         System.out.println("Third_fragment");
                         break;
                 }
@@ -153,9 +158,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void onTabReselected(int position) {}
         });
         // ENDS HERE * Bottom Navigation Bar
+
+
         // switch here man
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, Game_Status.class, null)
+                .replace(R.id.fragmentContainerView, improved_Agent_sel_fragment.class, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)       // name can be null
                 .commit();

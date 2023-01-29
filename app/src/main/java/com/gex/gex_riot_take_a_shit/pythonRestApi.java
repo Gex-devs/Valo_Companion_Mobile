@@ -1,31 +1,6 @@
 package com.gex.gex_riot_take_a_shit;
-import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 
-import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.Fragment;
-
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -33,15 +8,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 public class pythonRestApi {
 
     public static String getUsername(String puuid) throws IOException, ExecutionException, InterruptedException {
+
+
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
@@ -70,13 +44,14 @@ public class pythonRestApi {
     }
 
     public static void StartQ() throws IOException {
+        Game_Status game_status = new Game_Status();
         new Thread(new Runnable() {
             public void run() {
                 try {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/startQ")
+                            .url("http://"+game_status.ip_addrs+":7979/startQ")
                             .build();
 
                     Response response = client.newCall(request).execute();

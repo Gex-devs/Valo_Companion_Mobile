@@ -32,7 +32,9 @@
                 android:layout_width="67dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="12dp"
-                android:text="cam" />
+                android:text="cam"
+                android:visibility="gone"
+                tools:visibility="gone" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swiper"

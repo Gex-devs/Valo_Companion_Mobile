@@ -5,13 +5,6 @@ import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,11 +18,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.CardProvider;
-import com.dexafree.materialList.view.MaterialListView;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.android.material.imageview.ShapeableImageView;
-import com.squareup.picasso.RequestCreator;
+import com.nightonke.jellytogglebutton.JellyToggleButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +43,7 @@ public class fragment_improved_ingame extends Fragment {
     LinearLayout killfeed;
     ShapeableImageView map;
     ScrollView killfeed_container;
+    JellyToggleButton switch_button;
     public fragment_improved_ingame() {
         // Required empty public constructor
     }
