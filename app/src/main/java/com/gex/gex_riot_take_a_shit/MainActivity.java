@@ -1,15 +1,13 @@
 package com.gex.gex_riot_take_a_shit;
 
-import static com.gex.gex_riot_take_a_shit.MainActivity.*;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
-
+import static com.gex.gex_riot_take_a_shit.MainActivity.Agent_Select_fragment;
+import static com.gex.gex_riot_take_a_shit.MainActivity.ContextMethod;
+import static com.gex.gex_riot_take_a_shit.MainActivity.Game_Fragment;
+import static com.gex.gex_riot_take_a_shit.MainActivity.Game_Status_Fragment;
+import static com.gex.gex_riot_take_a_shit.MainActivity.Qeue_Menu;
+import static com.gex.gex_riot_take_a_shit.MainActivity.UI_Handler;
+import static com.gex.gex_riot_take_a_shit.MainActivity.WIFI_SERVICE;
+import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
@@ -26,6 +24,14 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
@@ -40,13 +46,13 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.flutter.embedding.android.FlutterFragment;
 import io.github.muddz.styleabletoast.StyleableToast;
 
 
 public class MainActivity extends AppCompatActivity implements Observer {
 
-
+    public static FlutterFragment flutterFragment;
     // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
     static Handler UI_Handler = new Handler();
     // Might not need it in Main Activity, Need to go to Fragments
@@ -100,7 +106,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
         container = (ViewGroup) findViewById(R.id.fragmentContainerView);
 
 
-
+        flutterFragment = (FlutterFragment) fragmentManager
+                .findFragmentByTag("flutter_fragment");
         /*RemoteInput remoteInput = new RemoteInput.Builder("get_me")
                 .setLabel("ans")
                         .build();
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                         break;
                     case 1:
                         Store_Fragment();
-                        System.out.println("SECOND_fragment");
+                        System.out.println("Second_fragment");
                         break;
                     case 2:
                         party_fragment();
@@ -178,9 +185,14 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Fragment fragment = new Game_Status();
         new FragmentTransactionTask(fragmentManager, container, fragment).execute();
     }
-    public static void Store_Fragment(){
-        Fragment fragment = new Store_Fragment();
-        new FragmentTransactionTask(fragmentManager, container, fragment).execute();
+    public  static void Store_Fragment(){
+        //Fragment fragment = new Store_Fragment();
+        //new FragmentTransactionTask(fragmentManager, container, fragment).execute();
+        if(flutterFragment == null){
+            flutterFragment = FlutterFragment.createDefault();
+        }
+        new FragmentTransactionTask(fragmentManager, container, flutterFragment).execute();
+
     }
     public static void Game_Fragment(){
         Fragment fragment = new fragment_improved_ingame();

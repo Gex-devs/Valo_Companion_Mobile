@@ -4,27 +4,15 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-
-import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelStoreOwner;
-
-import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.CardProvider;
-import com.dexafree.materialList.card.OnActionClickListener;
-import com.dexafree.materialList.card.action.TextViewAction;
 
 import org.java_websocket.drafts.Draft_6455;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import es.dmoral.toasty.Toasty;
+
 
 public class Svc extends Service  {
 

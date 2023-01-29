@@ -2,44 +2,22 @@ package com.gex.gex_riot_take_a_shit;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.gex.gex_riot_take_a_shit.MainActivity.UI_Handler;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.media.Image;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.format.Formatter;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -49,33 +27,16 @@ import com.dexafree.materialList.card.CardProvider;
 import com.dexafree.materialList.card.OnActionClickListener;
 import com.dexafree.materialList.card.action.TextViewAction;
 import com.dexafree.materialList.view.MaterialListView;
-import com.google.android.material.imageview.ShapeableImageView;
-import com.hanks.htextview.base.HTextView;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 import com.squareup.picasso.RequestCreator;
-import com.unstoppable.submitbuttonview.SubmitButton;
 
-import org.apache.commons.io.compress.tar.TarEntry;
 import org.java_websocket.drafts.Draft_6455;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceEvent;
-import javax.jmdns.ServiceInfo;
-import javax.jmdns.ServiceListener;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
-import es.dmoral.toasty.Toasty;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 
 public class Game_Status extends Fragment implements View.OnClickListener{
@@ -306,7 +267,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
                                 .setListener(new OnActionClickListener() {
                                     @Override
                                     public void onActionClicked(View view, Card card) {
-                                        Toasty.info(MainActivity.ContextMethod(), card.getProvider().getDescription().split(":")[0]+card.getProvider().getDescription().split(":")[1], Toast.LENGTH_SHORT, true).show();
+                                        //Toasty.info(MainActivity.ContextMethod(), card.getProvider().getDescription().split(":")[0]+card.getProvider().getDescription().split(":")[1], Toast.LENGTH_SHORT, true).show();
 
                                         try {
                                             client = new WebsocketServer(new URI("ws://"+card.getProvider().getDescription().split(":")[0]+ ":"+card.getProvider().getDescription().split(":")[1]), new Draft_6455());

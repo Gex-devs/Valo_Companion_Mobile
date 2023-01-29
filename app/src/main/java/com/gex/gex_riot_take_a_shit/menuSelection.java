@@ -3,16 +3,9 @@ package com.gex.gex_riot_take_a_shit;
 import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +17,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -34,7 +28,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.IOUtils;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.JellyTypes.Jelly;
@@ -46,16 +39,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import es.dmoral.toasty.Toasty;
+
 
 
 public class menuSelection extends Fragment implements View.OnClickListener {
@@ -546,7 +535,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         spProvince.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                Toasty.info(MainActivity.ContextMethod(), provinceList.get(position), Toast.LENGTH_SHORT, true).show();
+                //Toasty.info(MainActivity.ContextMethod(), provinceList.get(position), Toast.LENGTH_SHORT, true).show();
                 switch (position){
                     case 0:
                         try {
@@ -592,7 +581,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                Toasty.info(MainActivity.ContextMethod(), "nothing selected", Toast.LENGTH_SHORT, true).show();
+                //Toasty.info(MainActivity.ContextMethod(), "nothing selected", Toast.LENGTH_SHORT, true).show();
             }
         });
         return v;
@@ -609,7 +598,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Toasty.info(MainActivity.ContextMethod(), "Gex:Text Sent", Toast.LENGTH_SHORT, true).show();
+                //Toasty.info(MainActivity.ContextMethod(), "Gex:Text Sent", Toast.LENGTH_SHORT, true).show();
                 body_value.setText("");
                 break;
            case R.id.start_btn:
