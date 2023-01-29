@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "536806691179",
+    "project_id": "valo-companion",
+    "storage_bucket": "valo-companion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:536806691179:android:d29a5a3f49de007019fc2e",
+        "android_client_info": {
+          "package_name": "com.gex.gex_riot_take_a_shit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "536806691179-avigui7sfpu4ub1tnueb80k9vm67kq25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd5Z8oaKTwjr1d6qDiYsVoDzFv9akmOY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "536806691179-avigui7sfpu4ub1tnueb80k9vm67kq25.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

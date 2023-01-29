@@ -44,14 +44,14 @@ public class pythonRestApi {
     }
 
     public static void StartQ() throws IOException {
-        Game_Status game_status = new Game_Status();
+
         new Thread(new Runnable() {
             public void run() {
                 try {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://"+game_status.ip_addrs+":7979/startQ")
+                            .url("http://192.168.1.19:7979/startQ")
                             .build();
 
                     Response response = client.newCall(request).execute();

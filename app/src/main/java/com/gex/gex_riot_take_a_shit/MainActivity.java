@@ -53,6 +53,7 @@ import io.github.muddz.styleabletoast.StyleableToast;
 
 public class MainActivity extends AppCompatActivity implements Observer {
 
+    public String ma;
     public static FlutterFragment flutterFragment;
     // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
     static Handler UI_Handler = new Handler();
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         // switch here man
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, improved_Agent_sel_fragment.class, null)
+                .replace(R.id.fragmentContainerView, Game_Status.class, null)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)       // name can be null
                 .commit();

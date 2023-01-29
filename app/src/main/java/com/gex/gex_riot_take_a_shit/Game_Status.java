@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -182,8 +183,9 @@ public class Game_Status extends Fragment implements View.OnClickListener{
                 System.out.println(serviceInfo.getServiceName());
                 System.out.println(serviceInfo.getPort());
                 System.out.println(serviceInfo.getServiceType());
-                mDiscoveredServices.add(serviceInfo); // do i really need this? Good Question Past me!
                 ip_addrs = serviceInfo.getHost().toString().substring(1);
+                Log.d("WifiSet", "onServiceResolved: Assigned value Ip");
+                mDiscoveredServices.add(serviceInfo); // do i really need this? Good Question Past me!
                 add_discov_device_improved(serviceInfo.getServiceName(),serviceInfo.getHost().toString().substring(1) +":"+ serviceInfo.getPort());
 
 
