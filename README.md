@@ -1,6 +1,6 @@
 # Gex_Riot_Take_A_Shit
 
-You can Select Agent at the comfort of your toilet.
+You can Select Agent at the comfort of your toilet and many more.
 
 ![](mobile_val.gif)
 
