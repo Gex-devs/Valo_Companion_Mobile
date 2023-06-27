@@ -47,7 +47,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
     TableLayout disco;
     MaterialListView mListView;
     Button cam;
-    WebsocketServer client = null;
+    public static WebsocketServer client;
     NsdManager nsdManager = (NsdManager) MainActivity.ContextMethod().getApplicationContext().getSystemService(Context.NSD_SERVICE);
 
 
@@ -185,7 +185,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
                 System.out.println(serviceInfo.getServiceType());
                 ip_addrs = serviceInfo.getHost().toString().substring(1);
                 Log.d("WifiSet", "onServiceResolved: Assigned value Ip");
-                mDiscoveredServices.add(serviceInfo); // do i really need this? Good Question Past me!
+                mDiscoveredServices.add(serviceInfo); // do i really need this? Good Question Past me! fking retard talking to himself
                 add_discov_device_improved(serviceInfo.getServiceName(),serviceInfo.getHost().toString().substring(1) +":"+ serviceInfo.getPort());
 
 
@@ -247,7 +247,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
         nsdManager.discoverServices("_http._tcp.", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
     }
     public void add_discov_device_improved(String DeviceName,String IP_PORT){
-        getActivity().runOnUiThread(new Runnable() {
+        requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Card card = new Card.Builder(MainActivity.ContextMethod())
@@ -280,16 +280,18 @@ public class Game_Status extends Fragment implements View.OnClickListener{
                                         }
                                         if (client != null) {
                                             client.connect();
+                                            System.out.printf("I am not null "+ client);
                                         }
                                     }
                                 }))
                         .endConfig()
                         .build();
-
+                
                 mListView.getAdapter().add(card);
             }
         });
 
     }
+
 
 }

@@ -8,13 +8,18 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-public class pythonRestApi {
+
+public class RestApiCalls {
+
 
     public static String getUsername(String puuid) throws IOException, ExecutionException, InterruptedException {
-
 
         Callable<String> callable = new Callable<String>() {
             public String call() {
@@ -23,7 +28,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/get_name/"+puuid)
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_name?PUID="+puuid)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -51,7 +56,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/startQ")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/startQ")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -69,7 +74,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/stopQ")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/stopQ")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -87,7 +92,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/leave_party")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/leave_party")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -105,7 +110,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/Dodge")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/Dodge")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -123,7 +128,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/chat/"+text)
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/sendChat?text="+text)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -141,7 +146,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/changeQ/"+Queue)
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/changeQ?queue="+Queue)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -159,7 +164,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/party/"+status)
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/party_accessibility?state="+status)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -177,7 +182,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/select_agent/"+agent)
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/selectagent?agent="+agent)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -197,7 +202,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/lock_agent/"+agent)
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/lockagent?agent="+agent)
                             .build();
                     Response response = client.newCall(request).execute();
                     Log.d("Api Call Response", "call: "+response);
@@ -223,7 +228,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/get_map")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_map")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -248,9 +253,10 @@ public class pythonRestApi {
                 try {
                     System.out.println("called from python Rest Api");
                     OkHttpClient client = new OkHttpClient();
+
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/get_server/pre_game")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_server/pre_game")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -274,17 +280,41 @@ public class pythonRestApi {
             public String call() {
                 try {
                     System.out.println("called from python Rest Api");
-                    OkHttpClient client = new OkHttpClient();
+                    //OkHttpClient client = new OkHttpClient();
                     // code request code here
-                    Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/current_state")
+                    // Create a trust manager that accepts all certificates
+                    TrustManager[] trustAllCerts = new TrustManager[] {
+                            new X509TrustManager() {
+                                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                                    return new java.security.cert.X509Certificate[] {};
+                                }
+                                public void checkClientTrusted(
+                                        java.security.cert.X509Certificate[] certs, String authType) {
+                                }
+                                public void checkServerTrusted(
+                                        java.security.cert.X509Certificate[] certs, String authType) {
+                                }
+                            }
+                    };
+
+                    // Create an SSL context with the custom trust manager
+                    SSLContext sslContext = SSLContext.getInstance("TLS");
+                    sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                            .hostnameVerifier((hostname, session) -> true)
                             .build();
 
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/current_state")
+                            .build();
                     Response response = client.newCall(request).execute();
-                    Log.d("Api Call Response", "call: "+response);
+                    Log.d("Api_Call", "call: "+response);
                     return response.body().string();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    Log.d("Api_Call","Call failed: "+e);
                     return "null";
                 }
 
@@ -303,7 +333,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/get_gamemode/pre_game")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/gamemode")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -329,7 +359,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/current_game/players")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/coregame/players")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -355,7 +385,7 @@ public class pythonRestApi {
                     OkHttpClient client = new OkHttpClient();
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.19:7979/get_party")
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/getParty")
                             .build();
 
                     Response response = client.newCall(request).execute();

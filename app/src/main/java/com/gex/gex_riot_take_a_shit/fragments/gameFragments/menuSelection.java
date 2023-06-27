@@ -1,4 +1,4 @@
-package com.gex.gex_riot_take_a_shit;
+package com.gex.gex_riot_take_a_shit.fragments.gameFragments;
 
 import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 
@@ -27,6 +27,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
+import com.gex.gex_riot_take_a_shit.Current_status_Data;
+import com.gex.gex_riot_take_a_shit.LocalApiHandler;
+import com.gex.gex_riot_take_a_shit.MainActivity;
+import com.gex.gex_riot_take_a_shit.R;
+import com.gex.gex_riot_take_a_shit.RestApiCalls;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
@@ -88,6 +93,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
          //buttons
          Start = (Button) v.findViewById(R.id.start_btn);
          Start.setOnClickListener(this);
+
          Send = (Button) v.findViewById(R.id.button_gchat_send);
          Send.setOnClickListener(this);
 
@@ -140,14 +146,14 @@ public class menuSelection extends Fragment implements View.OnClickListener {
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
                 if (state.equals(State.LEFT)) {
                     try {
-                        pythonRestApi.set_party_status("closed");
+                        RestApiCalls.set_party_status("closed");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 if(state.equals(State.RIGHT)){
                     try {
-                        pythonRestApi.set_party_status("open");
+                        RestApiCalls.set_party_status("open");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -282,7 +288,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                 System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
                                 System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
                                 System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-                                p1_name.setText(pythonRestApi.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
+                                p1_name.setText(RestApiCalls.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
                                 request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String string) {
@@ -328,7 +334,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                 System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
                                 System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
                                 System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-                                p2_name.setText(pythonRestApi.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
+                                p2_name.setText(RestApiCalls.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
                                 request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String string) {
@@ -372,7 +378,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                 System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
                                 System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
                                 System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-                                p3_name.setText(pythonRestApi.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
+                                p3_name.setText(RestApiCalls.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
                                 request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String string) {
@@ -416,7 +422,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                 System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
                                 System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
                                 System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-                                p4_name.setText(pythonRestApi.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
+                                p4_name.setText(RestApiCalls.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
                                 request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String string) {
@@ -460,7 +466,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                                 System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
                                 System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
                                 System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-                                p5_name.setText(pythonRestApi.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
+                                p5_name.setText(RestApiCalls.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
                                 request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String string) {
@@ -524,9 +530,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         provinceList.add("UNRATED");
         provinceList.add("DEATH MATCH");
         provinceList.add("SPIKE RUSH");
-        provinceList.add("ESCALATION");
         provinceList.add("Swift Play");
-        provinceList.add("Replication");
 
         spProvince.setItem(provinceList);
         spProvince.setItemListBackground(R.color.Valo_Color);
@@ -539,21 +543,21 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                 switch (position){
                     case 0:
                         try {
-                            pythonRestApi.Change_Q("competitive");
+                            RestApiCalls.Change_Q("competitive");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         break;
                     case 1:
                         try {
-                            pythonRestApi.Change_Q("unrated");
+                            RestApiCalls.Change_Q("unrated");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         break;
                     case 2:
                         try {
-                            pythonRestApi.Change_Q("deathmatch");
+                            RestApiCalls.Change_Q("deathmatch");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -561,15 +565,15 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                     case 3:
                         Log.d("Spinner", "onItemSelected: Spike Rush");
                         try {
-                            pythonRestApi.Change_Q("spikerush");
+                            RestApiCalls.Change_Q("spikerush");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         break;
                     case 4:
-                        Log.d("Spinner", "onItemSelected: ESCALATION");
+                        Log.d("Spinner", "onItemSelected: Swift Play");
                         try {
-                            pythonRestApi.Change_Q("onefa");
+                            RestApiCalls.Change_Q("swiftplay");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -594,7 +598,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         switch (view.getId()){
             case R.id.button_gchat_send:
                 try {
-                    pythonRestApi.send_text(String.valueOf(body_value.getText()));
+                    LocalApiHandler.send_text(String.valueOf(body_value.getText()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -604,18 +608,17 @@ public class menuSelection extends Fragment implements View.OnClickListener {
            case R.id.start_btn:
                if(Start.getText().equals("In Queue")){
                    try {
-                       pythonRestApi.LeaveQ();
+                       RestApiCalls.LeaveQ();
                    } catch (IOException e) {
                        e.printStackTrace();
                    }
                }else {
                    try {
-                       pythonRestApi.StartQ();
+                       RestApiCalls.StartQ();
                    } catch (IOException e) {
                        e.printStackTrace();
                    }
                }
-
                 break;
             case R.id.exit_party:
                 viewModel.for_char("LeaveParty");

@@ -1,8 +1,5 @@
 package com.gex.gex_riot_take_a_shit;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
-
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +25,7 @@ public class NotificationRecv extends BroadcastReceiver  {
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         manager.cancel(1);
         try {
-            pythonRestApi.Dodge();
+            RestApiCalls.Dodge();
         } catch (IOException e) {
             e.printStackTrace();
         }

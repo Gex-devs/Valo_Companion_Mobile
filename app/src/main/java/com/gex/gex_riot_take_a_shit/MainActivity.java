@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -35,6 +36,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.gex.gex_riot_take_a_shit.Utils.util;
+import com.gex.gex_riot_take_a_shit.fragments.gameFragments.fragment_improved_ingame;
+import com.gex.gex_riot_take_a_shit.fragments.gameFragments.improved_Agent_sel_fragment;
+import com.gex.gex_riot_take_a_shit.fragments.gameFragments.menuSelection;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -43,6 +51,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
@@ -53,7 +63,6 @@ import io.github.muddz.styleabletoast.StyleableToast;
 
 public class MainActivity extends AppCompatActivity implements Observer {
 
-    public String ma;
     public static FlutterFragment flutterFragment;
     // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
     static Handler UI_Handler = new Handler();
@@ -103,6 +112,32 @@ public class MainActivity extends AppCompatActivity implements Observer {
             // Works for other Mutalables expect for this, change it or fix it
         });
 
+        //Create instance of Api Handler
+        try {
+            LocalApiHandler apiHandler = new LocalApiHandler();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("CloudMessaging", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        Log.d("CloudMessaging", token);
+                        Toast.makeText(MainActivity.this, "Got the token", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         // Fragment container
         container = (ViewGroup) findViewById(R.id.fragmentContainerView);
@@ -251,7 +286,7 @@ class WebsocketServer extends WebSocketClient {
             }
         });
         try {
-            switch (pythonRestApi.current_state()){
+            switch (LocalApiHandler.current_state()){
                 case "MainMenu":
                     System.out.println("ya main menu");
                     Qeue_Menu();
@@ -367,7 +402,7 @@ class WebsocketServer extends WebSocketClient {
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true)
                             .addAction(R.drawable.riot,"Dodge",actionIntent)
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(Agent_sel_frag.get_respective_map_name(pythonRestApi.get_map_name())))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(util.get_respective_map_name(RestApiCalls.get_map_name())))
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 } catch (IOException | ExecutionException | InterruptedException e) {
                     e.printStackTrace();
