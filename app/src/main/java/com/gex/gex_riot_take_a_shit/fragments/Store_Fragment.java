@@ -1,4 +1,4 @@
-package com.gex.gex_riot_take_a_shit;
+package com.gex.gex_riot_take_a_shit.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import com.gex.gex_riot_take_a_shit.R;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 
 

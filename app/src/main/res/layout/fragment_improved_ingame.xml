@@ -275,7 +275,7 @@
         android:layout_height="wrap_content"
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/poppins_bold"
-        android:text="Anti-Afk"
+        android:text="Revenge-mode"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/Player_1_improved"
         app:layout_constraintEnd_toStartOf="@+id/party_Switch"

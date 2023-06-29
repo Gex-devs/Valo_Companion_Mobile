@@ -1,10 +1,7 @@
-package com.gex.gex_riot_take_a_shit;
+package com.gex.gex_riot_take_a_shit.fragments.gameFragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +9,14 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.gex.gex_riot_take_a_shit.Current_status_Data;
+import com.gex.gex_riot_take_a_shit.R;
+import com.gex.gex_riot_take_a_shit.LocalApiHandler;
+import com.gex.gex_riot_take_a_shit.Utils.util;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 
@@ -26,12 +29,17 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class improved_Agent_sel_fragment extends Fragment implements View.OnClickListener {
 
-    ImageView Photo_1,Photo_2,Photo_3,Photo_4,Photo_5;
-    TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5,MapName,server_name,game_mode;
-    Current_status_Data viewModel;
-    ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade,Map;
-    String selected_agent;
+    private ImageView Photo_1,Photo_2,Photo_3,Photo_4,Photo_5;
+    private TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5,MapName,server_name,game_mode;
+    private Current_status_Data viewModel;
+    private ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade,Map;
+    private String selected_agent;
 
+    private String gameMode,gameMap,gameServer;
+
+    public  improved_Agent_sel_fragment(){
+
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,36 +139,36 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                         String Key_Element = "roster_"+i;
                         String Match_info_object = jsob.getJSONObject("match_info").getString(Key_Element);
                         JSONObject Player_Json_Object = new JSONObject(Match_info_object);
-                        switch (i){
+                        switch (i) {
                             case 0:
                                 System.out.println("case 0 active");
                                 P_1.setText(Player_Json_Object.getString("name").split("#")[0]);
-                                Photo_1.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
-                                A_1.setText(get_respective_name(Player_Json_Object.getString("character")));
+                                Photo_1.setImageResource(util.get_respective_image(Player_Json_Object.getString("character")));
+                                A_1.setText(util.get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 1:
                                 System.out.println("case 1 active");
-                                Photo_2.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
+                                Photo_2.setImageResource(util.get_respective_image(Player_Json_Object.getString("character")));
                                 P_2.setText(Player_Json_Object.getString("name").split("#")[0]);
-                                A_2.setText(get_respective_name(Player_Json_Object.getString("character")));
+                                A_2.setText(util.get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 2:
                                 System.out.println("case 2 active");
                                 P_3.setText(Player_Json_Object.getString("name").split("#")[0]);
-                                Photo_3.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
-                                A_3.setText(get_respective_name(Player_Json_Object.getString("character")));
+                                Photo_3.setImageResource(util.get_respective_image(Player_Json_Object.getString("character")));
+                                A_3.setText(util.get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 3:
                                 System.out.println("case 3 active");
                                 P_4.setText(Player_Json_Object.getString("name").split("#")[0]);
-                                Photo_4.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
-                                A_4.setText(get_respective_name(Player_Json_Object.getString("character")));
+                                Photo_4.setImageResource(util.get_respective_image(Player_Json_Object.getString("character")));
+                                A_4.setText(util.get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                             case 4:
                                 System.out.println("case 4 active");
                                 P_5.setText(Player_Json_Object.getString("name").split("#")[0]);
-                                Photo_5.setImageResource(get_respective_image(Player_Json_Object.getString("character")));
-                                A_5.setText(get_respective_name(Player_Json_Object.getString("character")));
+                                Photo_5.setImageResource(util.get_respective_image(Player_Json_Object.getString("character")));
+                                A_5.setText(util.get_respective_name(Player_Json_Object.getString("character")));
                                 break;
                         }
                     }catch (Exception e){
@@ -174,11 +182,11 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
 
 
         try {
-            String map_now = pythonRestApi.get_map_name();
-            MapName.setText(get_respective_map_name(map_now));
-            server_name.setText(pythonRestApi.get_server());
-            game_mode.setText(pythonRestApi.get_gamemode());
-            Map.setImageResource(get_respective_map_image(map_now));
+            String map_now = LocalApiHandler.get_map_name();
+            MapName.setText(util.get_respective_map_name(map_now));
+            server_name.setText(LocalApiHandler.get_server());
+            game_mode.setText(LocalApiHandler.get_gamemode());
+            Map.setImageResource(util.get_respective_map_image(map_now));
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -222,178 +230,31 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         return v;
     }
 
-    // Gets image based on characters developer name
-    public int get_respective_image(String t){
-        switch (t){
-            case "Clay":
-                return R.drawable.raze_background;
-            case "Pandemic":
-                return R.drawable.viper_background;
-            case "Wraith":
-                return R.drawable.omen_background;
-            case "Hunter":
-                return R.drawable.sova_background;
-            case "Thorne":
-                return R.drawable.sage_background;
-            case "Phoenix":
-                return R.drawable.phx_background;
-            case "Wushu":
-                return R.drawable.jett_backgroun;
-            case "Gumshoe":
-                return R.drawable.cypher_background;
-            case "Sarge":
-                return R.drawable.brimstone_background;
-            case "Breach":
-                return R.drawable.breach_background;
-            case "Vampire":
-                return R.drawable.reyna_background;
-            case "Killjoy":
-                return R.drawable.killjoy_background;
-            case "Guide":
-                return R.drawable.skye_background;
-            case "Stealth":
-                return R.drawable.yoru_background;
-            case "Rift":
-                return R.drawable.astra_background;
-            case "Grenadier":
-                return R.drawable.kayo_background;
-            case "Deadeye":
-                return R.drawable.chamber_background;
-            case "Sprinter":
-                return R.drawable.neon_background;
-            case "BountyHunter":
-                return R.drawable.fade_background;
-        }
-        return R.drawable.valo_place_holder;
-    }
-
-    // Gets characters Name based on developers Name
-    public String get_respective_name(String char_name){
-        switch (char_name){
-            case "Clay":
-                return "Raze";
-            case "Pandemic":
-                return "Viper";
-            case "Wraith":
-                return "Omen";
-            case "Hunter":
-                return "Sova";
-            case "Thorne":
-                return "Sage";
-            case "Phoenix":
-                return "Phoenix";
-            case "Wushu":
-                return "Jett";
-            case "Gumshoe":
-                return "Cypher";
-            case "Sarge":
-                return "Brimstone";
-            case "Breach":
-                return "Breach";
-            case "Vampire":
-                return "Reyna";
-            case "Killjoy":
-                return "Kill Joy";
-            case "Guide":
-                return "Skye";
-            case "Stealth":
-                return "Yoru";
-            case "Rift":
-                return "Astra";
-            case "Grenadier":
-                return "Kayo";
-            case "Deadeye":
-                return "Chamber";
-            case "Sprinter":
-                return "Neon";
-            case "BountyHunter":
-                return "Fade";
-        }
-        return "Agent";
-    }
-    public String get_respective_map_name(String map){
-        switch (map){
-            case "/Game/Maps/Triad/Triad":
-                return "Haven";
-            case "/Game/Maps/Duality/Duality":
-                return ("Bind");
-            case "/Game/Maps/Bonsai/Bonsai":
-                return ("Split");
-            case "/Game/Maps/Ascent/Ascent":
-                return("Ascent");
-            case "/Game/Maps/Port/Port":
-                return("Icebox");
-            case "/Game/Maps/Foxtrot/Foxtrot":
-                return("Breeze");
-            case "/Game/Maps/Canyon/Canyon":
-                return("Fracture");
-            case "/Game/Maps/Pitt/Pitt":
-                return("Pearl");
-        }
-        return null;
-    }
-    public int get_respective_map_image(String map){
-        switch (map){
-            case "/Game/Maps/Triad/Triad":
-                return R.drawable.heaven;
-            case "/Game/Maps/Duality/Duality":
-                return R.drawable.bind;
-            case "/Game/Maps/Bonsai/Bonsai":
-                return R.drawable.split;
-            case "/Game/Maps/Ascent/Ascent":
-                return R.drawable.ascent;
-            case "/Game/Maps/Port/Port":
-                return R.drawable.icebox_1;
-            case "/Game/Maps/Foxtrot/Foxtrot":
-                return R.drawable.breeze;
-            case "/Game/Maps/Canyon/Canyon":
-                return R.drawable.fracture;
-            case "/Game/Maps/Pitt/Pitt":
-                return R.drawable.pearl;
-        }
-        return 0;
-    }
-    public void add_stroke(int ID){
+    private void add_stroke(int ID){
         ShapeableImageView Temp = (ShapeableImageView) getView().findViewById(ID);
         Temp.setStrokeColorResource(R.color.Agent_selected_color);
     }
-    public void remove_stroke_from_all(){
-        astra = (ShapeableImageView) getView().findViewById(R.id.Astra_button);
+    private void remove_stroke_from_all(){
         astra.setStrokeColorResource(android.R.color.transparent);
-        breach = (ShapeableImageView) getView().findViewById(R.id.Breach_button);
         breach.setStrokeColorResource(android.R.color.transparent);
-        brimstone = (ShapeableImageView) getView().findViewById(R.id.brimstone_button);
         brimstone.setStrokeColorResource(android.R.color.transparent);
-        chamber = (ShapeableImageView) getView().findViewById(R.id.chamber_button);
         chamber.setStrokeColorResource(android.R.color.transparent);
-        cypher = (ShapeableImageView) getView().findViewById(R.id.cypher_button);
         cypher.setStrokeColorResource(android.R.color.transparent);
-        sage = (ShapeableImageView) getView().findViewById(R.id.Sage_button);
         sage.setStrokeColorResource(android.R.color.transparent);
-        jett = (ShapeableImageView) getView().findViewById(R.id.jett_button);
         jett.setStrokeColorResource(android.R.color.transparent);
-        killjoy = (ShapeableImageView) getView().findViewById(R.id.Killjoy_button);
         killjoy.setStrokeColorResource(android.R.color.transparent);
-        kayo = (ShapeableImageView) getView().findViewById(R.id.kayo_button);
         kayo.setStrokeColorResource(android.R.color.transparent);
-        skye = (ShapeableImageView) getView().findViewById(R.id.Skye_button);
         skye.setStrokeColorResource(android.R.color.transparent);
-        neon = (ShapeableImageView) getView().findViewById(R.id.neon_button);
         neon.setStrokeColorResource(android.R.color.transparent);
-        omen = (ShapeableImageView) getView().findViewById(R.id.omen_button);
         omen.setStrokeColorResource(android.R.color.transparent);
-        phoniex = (ShapeableImageView) getView().findViewById(R.id.Phoenix_button);
         phoniex.setStrokeColorResource(android.R.color.transparent);
-        raze = (ShapeableImageView) getView().findViewById(R.id.Raze_button);
         raze.setStrokeColorResource(android.R.color.transparent);
-        sova = (ShapeableImageView) getView().findViewById(R.id.Sova_button);
         sova.setStrokeColorResource(android.R.color.transparent);
         reyna.setStrokeColorResource(android.R.color.transparent);
-        viper = (ShapeableImageView) getView().findViewById(R.id.Viper_button);
         viper.setStrokeColorResource(android.R.color.transparent);
-        fade = (ShapeableImageView) getView().findViewById(R.id.Fade_button);
         fade.setStrokeColorResource(android.R.color.transparent);
     }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
@@ -402,7 +263,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Astra_button:
                 agent = "41fb69c1-4189-7b37-f117-bcaf1e96f1bf";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -414,7 +275,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Breach_button:
                 agent = "5f8d3a7f-467b-97f3-062c-13acf203c006";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -427,7 +288,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.brimstone_button:
                 agent = "9f0d8ba9-4140-b941-57d3-a7ad57c6b417";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -441,7 +302,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.chamber_button:
                 agent = "22697a3d-45bf-8dd7-4fec-84a9e28c69d7";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -454,7 +315,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.cypher_button:
                 agent = "117ed9e3-49f3-6512-3ccf-0cada7e3823b";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -467,7 +328,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Fade_button:
                 agent = "dade69b4-4f5a-8528-247b-219e5a1facd6";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -480,7 +341,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Killjoy_button:
                 agent = "1e58de9c-4950-5125-93e9-a0aee9f98746";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -492,7 +353,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.neon_button:
                 agent = "bb2a4828-46eb-8cd1-e765-15848195d751";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -504,7 +365,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.jett_button:
                 agent = "add6443a-41bd-e414-f6ad-e58d267f4e95";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -516,7 +377,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Phoenix_button:
                 agent = "eb93336a-449b-9c1b-0a54-a891f7921d69";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -528,7 +389,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Raze_button:
                 agent = "f94c3b30-42be-e959-889c-5aa313dba261";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -540,7 +401,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.omen_button:
                 agent = "8e253930-4c05-31dd-1b6c-968525494517";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -552,7 +413,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Reyna_button:
                 agent = "a3bfb853-43b2-7238-a4f1-ad90e9e46bcc";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -564,7 +425,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Sage_button:
                 agent = "569fdd95-4d10-43ab-ca70-79becc718b46";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -576,7 +437,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.kayo_button:
                 agent = "601dbbe7-43ce-be57-2a40-4abd24953621";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -588,7 +449,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Skye_button:
                 agent = "6f2a04ca-43e0-be17-7f36-b3908627744d";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -600,7 +461,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Sova_button:
                 agent = "320b2a48-4d9b-a075-30f1-1f93a9b638fa";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -612,7 +473,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Viper_button:
                 agent = "707eab51-4836-f488-046a-cda6bf494859";
                 try {
-                    pythonRestApi.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -624,7 +485,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Lock_in_button:
                 System.out.println("Lock In button was clicked");
                 try {
-                    if (pythonRestApi.LockAgent(selected_agent).equals("409")){
+                    if (LocalApiHandler.LockAgent(selected_agent).equals("409")){
                         new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
                                 .setTitleText("AGENT")
                                 .setContentText("LOCKED AGENT")

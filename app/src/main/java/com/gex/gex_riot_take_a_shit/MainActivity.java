@@ -1,15 +1,13 @@
 package com.gex.gex_riot_take_a_shit;
 
-import static com.gex.gex_riot_take_a_shit.MainActivity.*;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
-
+import static com.gex.gex_riot_take_a_shit.MainActivity.Agent_Select_fragment;
+import static com.gex.gex_riot_take_a_shit.MainActivity.ContextMethod;
+import static com.gex.gex_riot_take_a_shit.MainActivity.Game_Fragment;
+import static com.gex.gex_riot_take_a_shit.MainActivity.Game_Status_Fragment;
+import static com.gex.gex_riot_take_a_shit.MainActivity.Qeue_Menu;
+import static com.gex.gex_riot_take_a_shit.MainActivity.UI_Handler;
+import static com.gex.gex_riot_take_a_shit.MainActivity.WIFI_SERVICE;
+import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
@@ -25,9 +23,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.gex.gex_riot_take_a_shit.Utils.util;
+import com.gex.gex_riot_take_a_shit.fragments.gameFragments.fragment_improved_ingame;
+import com.gex.gex_riot_take_a_shit.fragments.gameFragments.improved_Agent_sel_fragment;
+import com.gex.gex_riot_take_a_shit.fragments.gameFragments.menuSelection;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -36,17 +51,19 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.flutter.embedding.android.FlutterFragment;
 import io.github.muddz.styleabletoast.StyleableToast;
 
 
 public class MainActivity extends AppCompatActivity implements Observer {
 
-
+    public static FlutterFragment flutterFragment;
     // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
     static Handler UI_Handler = new Handler();
     // Might not need it in Main Activity, Need to go to Fragments
@@ -95,12 +112,39 @@ public class MainActivity extends AppCompatActivity implements Observer {
             // Works for other Mutalables expect for this, change it or fix it
         });
 
+        //Create instance of Api Handler
+        try {
+            LocalApiHandler apiHandler = new LocalApiHandler();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("CloudMessaging", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        Log.d("CloudMessaging", token);
+                        Toast.makeText(MainActivity.this, "Got the token", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         // Fragment container
         container = (ViewGroup) findViewById(R.id.fragmentContainerView);
 
 
-
+        flutterFragment = (FlutterFragment) fragmentManager
+                .findFragmentByTag("flutter_fragment");
         /*RemoteInput remoteInput = new RemoteInput.Builder("get_me")
                 .setLabel("ans")
                         .build();
@@ -115,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         bottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.valo,"GAME"))
                 .addItem(new BottomNavigationItem(R.drawable.riot, "STORE"))
-                .addItem(new BottomNavigationItem(R.drawable.controller,"Party"))
+                .addItem(new BottomNavigationItem(R.drawable.controller,"EXTRA"))
                 .setInActiveColor(R.color.Inactive_color_bottom_bar)
                 .setBarBackgroundColor(R.color.Bottom_bar_color)
                 .setActiveColor(R.color.Valo_Color)
@@ -127,15 +171,19 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void onTabSelected(int position) {
                 switch (position){
                     case 0:
-                        Game_Status_Fragment();
+                        //Game_Status_Fragment();
                         System.out.println("First_fragment");
                         break;
                     case 1:
-                        Store_Fragment();
-                        System.out.println("SECOND_fragment");
+                        //Store_Fragment();
+                        // Replace with Toasty if possible
+                        Toast.makeText(MainActivity.this,"Store is still under development",Toast.LENGTH_SHORT).show();
+                        Log.e("Bottom_Tab", "onTabSelected: Store Fragment is Under Development" );
+                        System.out.println("Second_fragment");
                         break;
                     case 2:
-                        party_fragment();
+                        //party_fragment();
+                        Toast.makeText(MainActivity.this,"Feature is still under development",Toast.LENGTH_SHORT).show();
                         System.out.println("Third_fragment");
                         break;
                 }
@@ -146,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void onTabReselected(int position) {}
         });
         // ENDS HERE * Bottom Navigation Bar
+
+
         // switch here man
         fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, Game_Status.class, null)
@@ -160,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
     public static void Qeue_Menu() throws JSONException, IOException {
 
-        Fragment fragment = new menuSelection();
+        Fragment fragment = new menuSelection(viewModel);
         new FragmentTransactionTask(fragmentManager, container, fragment).execute();
 
         /*UI_Handler.post(new Runnable() {
@@ -178,9 +228,14 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Fragment fragment = new Game_Status();
         new FragmentTransactionTask(fragmentManager, container, fragment).execute();
     }
-    public static void Store_Fragment(){
-        Fragment fragment = new Store_Fragment();
-        new FragmentTransactionTask(fragmentManager, container, fragment).execute();
+    public  static void Store_Fragment(){
+        //Fragment fragment = new Store_Fragment();
+        //new FragmentTransactionTask(fragmentManager, container, fragment).execute();
+        if(flutterFragment == null){
+            flutterFragment = FlutterFragment.createDefault();
+        }
+        new FragmentTransactionTask(fragmentManager, container, flutterFragment).execute();
+
     }
     public static void Game_Fragment(){
         Fragment fragment = new fragment_improved_ingame();
@@ -231,7 +286,7 @@ class WebsocketServer extends WebSocketClient {
             }
         });
         try {
-            switch (pythonRestApi.current_state()){
+            switch (LocalApiHandler.current_state()){
                 case "MainMenu":
                     System.out.println("ya main menu");
                     Qeue_Menu();
@@ -277,7 +332,7 @@ class WebsocketServer extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         System.out.println("Game Log: " + message);
-        viewModel.Selection(message.toString());
+        viewModel.Selection(message);
 
         // Notification Backup
         /*Intent intent = new Intent(MainActivity.ContextMethod(), MainActivity.class);
@@ -347,7 +402,7 @@ class WebsocketServer extends WebSocketClient {
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true)
                             .addAction(R.drawable.riot,"Dodge",actionIntent)
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(Agent_sel_frag.get_respective_map_name(pythonRestApi.get_map_name())))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(util.get_respective_map_name(LocalApiHandler.get_map_name())))
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 } catch (IOException | ExecutionException | InterruptedException e) {
                     e.printStackTrace();
