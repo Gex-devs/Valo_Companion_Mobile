@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
     public static void Qeue_Menu() throws JSONException, IOException {
 
-        Fragment fragment = new menuSelection();
+        Fragment fragment = new menuSelection(viewModel);
         new FragmentTransactionTask(fragmentManager, container, fragment).execute();
 
         /*UI_Handler.post(new Runnable() {
@@ -332,7 +332,7 @@ class WebsocketServer extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         System.out.println("Game Log: " + message);
-        viewModel.Selection(message.toString());
+        viewModel.Selection(message);
 
         // Notification Backup
         /*Intent intent = new Intent(MainActivity.ContextMethod(), MainActivity.class);
@@ -402,7 +402,7 @@ class WebsocketServer extends WebSocketClient {
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true)
                             .addAction(R.drawable.riot,"Dodge",actionIntent)
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(util.get_respective_map_name(RestApiCalls.get_map_name())))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(util.get_respective_map_name(LocalApiHandler.get_map_name())))
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 } catch (IOException | ExecutionException | InterruptedException e) {
                     e.printStackTrace();

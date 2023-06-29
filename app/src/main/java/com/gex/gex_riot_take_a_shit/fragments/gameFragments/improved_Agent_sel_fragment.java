@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.gex.gex_riot_take_a_shit.Current_status_Data;
 import com.gex.gex_riot_take_a_shit.R;
-import com.gex.gex_riot_take_a_shit.RestApiCalls;
+import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 import com.gex.gex_riot_take_a_shit.Utils.util;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
@@ -182,10 +182,10 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
 
 
         try {
-            String map_now = RestApiCalls.get_map_name();
+            String map_now = LocalApiHandler.get_map_name();
             MapName.setText(util.get_respective_map_name(map_now));
-            server_name.setText(RestApiCalls.get_server());
-            game_mode.setText(RestApiCalls.get_gamemode());
+            server_name.setText(LocalApiHandler.get_server());
+            game_mode.setText(LocalApiHandler.get_gamemode());
             Map.setImageResource(util.get_respective_map_image(map_now));
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -263,7 +263,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Astra_button:
                 agent = "41fb69c1-4189-7b37-f117-bcaf1e96f1bf";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -275,7 +275,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Breach_button:
                 agent = "5f8d3a7f-467b-97f3-062c-13acf203c006";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -288,7 +288,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.brimstone_button:
                 agent = "9f0d8ba9-4140-b941-57d3-a7ad57c6b417";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -302,7 +302,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.chamber_button:
                 agent = "22697a3d-45bf-8dd7-4fec-84a9e28c69d7";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -315,7 +315,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.cypher_button:
                 agent = "117ed9e3-49f3-6512-3ccf-0cada7e3823b";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -328,7 +328,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Fade_button:
                 agent = "dade69b4-4f5a-8528-247b-219e5a1facd6";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -341,7 +341,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Killjoy_button:
                 agent = "1e58de9c-4950-5125-93e9-a0aee9f98746";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -353,7 +353,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.neon_button:
                 agent = "bb2a4828-46eb-8cd1-e765-15848195d751";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -365,7 +365,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.jett_button:
                 agent = "add6443a-41bd-e414-f6ad-e58d267f4e95";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -377,7 +377,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Phoenix_button:
                 agent = "eb93336a-449b-9c1b-0a54-a891f7921d69";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -389,7 +389,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Raze_button:
                 agent = "f94c3b30-42be-e959-889c-5aa313dba261";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -401,7 +401,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.omen_button:
                 agent = "8e253930-4c05-31dd-1b6c-968525494517";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -413,7 +413,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Reyna_button:
                 agent = "a3bfb853-43b2-7238-a4f1-ad90e9e46bcc";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -425,7 +425,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Sage_button:
                 agent = "569fdd95-4d10-43ab-ca70-79becc718b46";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -437,7 +437,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.kayo_button:
                 agent = "601dbbe7-43ce-be57-2a40-4abd24953621";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -449,7 +449,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Skye_button:
                 agent = "6f2a04ca-43e0-be17-7f36-b3908627744d";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -461,7 +461,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Sova_button:
                 agent = "320b2a48-4d9b-a075-30f1-1f93a9b638fa";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -473,7 +473,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Viper_button:
                 agent = "707eab51-4836-f488-046a-cda6bf494859";
                 try {
-                    RestApiCalls.SelectAgent(agent);
+                    LocalApiHandler.SelectAgent(agent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -485,7 +485,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             case R.id.Lock_in_button:
                 System.out.println("Lock In button was clicked");
                 try {
-                    if (RestApiCalls.LockAgent(selected_agent).equals("409")){
+                    if (LocalApiHandler.LockAgent(selected_agent).equals("409")){
                         new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
                                 .setTitleText("AGENT")
                                 .setContentText("LOCKED AGENT")

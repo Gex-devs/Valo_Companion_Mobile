@@ -26,7 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.gex.gex_riot_take_a_shit.Current_status_Data;
 import com.gex.gex_riot_take_a_shit.MainActivity;
 import com.gex.gex_riot_take_a_shit.R;
-import com.gex.gex_riot_take_a_shit.RestApiCalls;
+import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 
@@ -147,7 +147,7 @@ public class fragment_improved_ingame extends Fragment {
 
         // Get the "Players" array from the JSON object
         try {
-            JSONObject jsonObject = new JSONObject(RestApiCalls.get_players_Current_game());
+            JSONObject jsonObject = new JSONObject(LocalApiHandler.get_players_Current_game());
             JSONArray players = jsonObject.getJSONArray("Players");
             for (int i = 0; i < players.length(); i++) {
                 // Get the player object as a JSONObject
@@ -177,7 +177,7 @@ public class fragment_improved_ingame extends Fragment {
                 charimage.setImageResource(get_respective_image_ID(characterID));
                 charimage.setLayoutParams(Imageparam);
 
-                player_name.setText(RestApiCalls.getUsername(subject));
+                player_name.setText(LocalApiHandler.getUsername(subject));
                 //player_name.setPadding(R.dimen.text_margin,R.dimen.inner_layout_text_view_width,0,0);
                 Typeface typeface = ResourcesCompat.getFont(MainActivity.ContextMethod(), R.font.poppins_bold);
                 player_name.setTypeface(typeface);

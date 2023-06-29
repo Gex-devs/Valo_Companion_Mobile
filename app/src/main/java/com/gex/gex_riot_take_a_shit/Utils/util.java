@@ -133,4 +133,40 @@ public class util {
         }
         return 0;
     }
+
+    public static int get_respective_map_imageBasedOnName(String map) {
+        int imageResource;
+        switch (map) {
+            case "Haven":
+                imageResource = R.drawable.heaven;
+                break;
+            case "Bind":
+                imageResource = R.drawable.bind;
+                break;
+            case "Split":
+                imageResource = R.drawable.split;
+                break;
+            case "Ascent":
+                imageResource = R.drawable.ascent;
+                break;
+            case "Icebox":
+                imageResource = R.drawable.heaven;
+                break;
+            case "Breeze":
+                imageResource = R.drawable.ascent;
+                break;
+            case "Fracture":
+                imageResource = R.drawable.fracture;
+                break;
+            case "Pearl":
+                imageResource = R.drawable.pearl;
+                break;
+            default:
+                // Set a default image resource or handle the case when the map is not recognized
+                imageResource = R.drawable.blue_button_background;
+                break;
+        }
+        return imageResource;
+    }
+
 }

@@ -99,4 +99,321 @@ public class LocalApiHandler {
             }
         }).start();
     }
+
+    public static String getUsername(String puuid) throws IOException, ExecutionException, InterruptedException {
+
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_name?PUID="+puuid)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
+    }
+
+    public static void StartQ() throws IOException {
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/startQ")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    System.out.println(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    public static void LeaveQ() throws IOException {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/stopQ")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    System.out.println(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    public static void LeaveParty() throws IOException {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/leave_party")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    System.out.println(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    public static void Dodge() throws IOException {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/Dodge")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    System.out.println(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public static void Change_Q(String Queue) throws IOException {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/changeQ?queue="+Queue)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    System.out.println(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    public static void set_party_status(String status) throws IOException {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/party_accessibility?state="+status)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    System.out.println(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    public static void SelectAgent(String agent) throws IOException {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/selectagent?agent="+agent)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    System.out.println(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public static String LockAgent(String agent) throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/lockagent?agent="+agent)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
+    }
+    public static String get_map_name() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_map")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
+    }
+    public static String get_server() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    
+
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_server/pre_game")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
+    }
+    public static String get_gamemode() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/gamemode")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+    }
+    public static String get_players_Current_game() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/coregame/players")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+    }
+    public static String get_party() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/getParty")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
+    }
 }

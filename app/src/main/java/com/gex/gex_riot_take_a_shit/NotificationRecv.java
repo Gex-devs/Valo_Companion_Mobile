@@ -25,7 +25,7 @@ public class NotificationRecv extends BroadcastReceiver  {
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         manager.cancel(1);
         try {
-            RestApiCalls.Dodge();
+            LocalApiHandler.Dodge();
         } catch (IOException e) {
             e.printStackTrace();
         }
