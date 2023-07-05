@@ -1,4 +1,4 @@
-# Gex_Riot_Take_A_Shit
+# Valo Companion
 
 You can Select Agent at the comfort of your toilet and many more.
 
