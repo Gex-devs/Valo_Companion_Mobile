@@ -4,49 +4,51 @@ import com.gex.gex_riot_take_a_shit.R;
 
 public class util {
 
-    public static int get_respective_image(String t){
-        switch (t){
-            case "Clay":
+    public static int get_respective_image(String Agent){
+
+        switch (Agent){
+            case "Raze":
                 return R.drawable.raze_background;
-            case "Pandemic":
+            case "Viper":
                 return R.drawable.viper_background;
-            case "Wraith":
+            case "Omen":
                 return R.drawable.omen_background;
-            case "Hunter":
+            case "Sova":
                 return R.drawable.sova_background;
-            case "Thorne":
+            case "Sage":
                 return R.drawable.sage_background;
             case "Phoenix":
                 return R.drawable.phx_background;
-            case "Wushu":
+            case "Jett":
                 return R.drawable.jett_backgroun;
-            case "Gumshoe":
+            case "Cypher":
                 return R.drawable.cypher_background;
-            case "Sarge":
+            case "Brimstone":
                 return R.drawable.brimstone_background;
             case "Breach":
                 return R.drawable.breach_background;
-            case "Vampire":
+            case "Reyna":
                 return R.drawable.reyna_background;
             case "Killjoy":
                 return R.drawable.killjoy_background;
-            case "Guide":
+            case "Skye":
                 return R.drawable.skye_background;
-            case "Stealth":
+            case "Yoru":
                 return R.drawable.yoru_background;
-            case "Rift":
+            case "Astra":
                 return R.drawable.astra_background;
-            case "Grenadier":
+            case "KAY/o":
                 return R.drawable.kayo_background;
-            case "Deadeye":
+            case "Chamber":
                 return R.drawable.chamber_background;
-            case "Sprinter":
+            case "Neon":
                 return R.drawable.neon_background;
-            case "BountyHunter":
+            case "Fade":
                 return R.drawable.fade_background;
         }
         return R.drawable.valo_place_holder;
     }
+
 
     public static String get_respective_name(String char_name){
         switch (char_name){

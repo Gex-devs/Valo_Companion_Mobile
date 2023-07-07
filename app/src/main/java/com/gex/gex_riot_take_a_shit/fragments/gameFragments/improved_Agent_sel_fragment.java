@@ -2,6 +2,7 @@ package com.gex.gex_riot_take_a_shit.fragments.gameFragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.gex.gex_riot_take_a_shit.Current_status_Data;
-import com.gex.gex_riot_take_a_shit.R;
 import com.gex.gex_riot_take_a_shit.LocalApiHandler;
+import com.gex.gex_riot_take_a_shit.R;
+import com.gex.gex_riot_take_a_shit.Utils.AgentSelViewOrganizer;
 import com.gex.gex_riot_take_a_shit.Utils.util;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -30,6 +33,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class improved_Agent_sel_fragment extends Fragment implements View.OnClickListener {
 
     private ImageView Photo_1,Photo_2,Photo_3,Photo_4,Photo_5;
+    private ImageView P_1_King,P_2_King,P_3_King,P_4_King,P_5_King;
     private TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5,MapName,server_name,game_mode;
     private Current_status_Data viewModel;
     private ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade,Map;
@@ -112,11 +116,18 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         A_3 = (TextView) v.findViewById(R.id.Player_3_Agent_Improved);
         A_4 = (TextView) v.findViewById(R.id.Player_4_Agent_Improved);
         A_5 = (TextView) v.findViewById(R.id.Player_5_Agent_Improved);
+
         Photo_1 = (ImageView) v.findViewById(R.id.Player_1_improved);
         Photo_2 = (ImageView) v.findViewById(R.id.player_2_improved);
         Photo_3 = (ImageView) v.findViewById(R.id.player_3_improved2);
         Photo_4 = (ImageView) v.findViewById(R.id.player_4_improved3);
         Photo_5 = (ImageView) v.findViewById(R.id.player_5_improved4);
+
+        P_1_King = (ImageView) v.findViewById(R.id.P_1_King);
+        P_2_King = (ImageView) v.findViewById(R.id.P_1_King);
+        P_3_King = (ImageView) v.findViewById(R.id.P_1_King);
+        P_4_King = (ImageView) v.findViewById(R.id.P_1_King);
+        P_5_King = (ImageView) v.findViewById(R.id.P_1_King);
 
         //Map
         Map = (ShapeableImageView) v.findViewById(R.id.imageView19);
@@ -126,9 +137,76 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         game_mode = (TextView) v.findViewById(R.id.textView5);
 
 
+
         // View model
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
 
+        AgentSelViewOrganizer PlayerOne = new AgentSelViewOrganizer(Photo_1,P_1,A_1);
+        AgentSelViewOrganizer PlayerTwo = new AgentSelViewOrganizer(Photo_2,P_2,A_2);
+        AgentSelViewOrganizer PlayerThree = new AgentSelViewOrganizer(Photo_3,P_3,A_3);
+        AgentSelViewOrganizer PlayerFour= new AgentSelViewOrganizer(Photo_4,P_4,A_4);
+        AgentSelViewOrganizer PlayerFive = new AgentSelViewOrganizer(Photo_5,P_5,A_5);
+
+        viewModel.getSelectedItem().observe(requireActivity(),item ->{
+            try {
+                JSONObject jsonObject = new JSONObject(item);
+                JSONObject allyTeam = jsonObject.getJSONObject("AllyTeam");
+
+                String teamId = allyTeam.getString("TeamID");
+                System.out.println("Team ID: " + teamId);
+
+                JSONArray players = allyTeam.getJSONArray("Players");
+                for (int i = 0; i < players.length(); i++) {
+                    JSONObject player = players.getJSONObject(i);
+                    String subject = player.getString("Subject");
+                    String characterId = player.getString("CharacterID");
+                    String characterSelectionState = player.getString("CharacterSelectionState");
+                    int competitiveTier = player.getInt("CompetitiveTier");
+                    boolean isCaptain = player.getBoolean("IsCaptain");
+
+                    JSONObject playerIdentity = player.getJSONObject("PlayerIdentity");
+                    String playerCardId = playerIdentity.getString("PlayerCardID");
+                    String playerTitleId = playerIdentity.getString("PlayerTitleID");
+
+                    System.out.println("Player " + (i + 1) + ":");
+                    System.out.println("  Subject: " + subject);
+                    System.out.println("  Character ID: " + characterId);
+                    System.out.println("  Character Selection State: " + characterSelectionState);
+                    System.out.println("  Competitive Tier: " + competitiveTier);
+                    System.out.println("  Is Captain: " + isCaptain);
+                    System.out.println("  Player Card ID: " + playerCardId);
+                    System.out.println("  Player Title ID: " + playerTitleId);
+
+                    AgentSelViewOrganizer playerViewOrganizer;
+                    switch (i) {
+                        case 0:
+                            playerViewOrganizer = PlayerOne;
+                            break;
+                        case 1:
+                            playerViewOrganizer = PlayerTwo;
+                            break;
+                        case 2:
+                            playerViewOrganizer = PlayerThree;
+                            break;
+                        case 3:
+                            playerViewOrganizer = PlayerFour;
+                            break;
+                        case 4:
+                            playerViewOrganizer = PlayerFive;
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    // Set the player name in the corresponding AgentSelViewOrganizer instance
+                    playerViewOrganizer.SetName(subject);
+                    playerViewOrganizer.SetAgent(characterId);
+                }
+            }catch (Exception ex){
+                Log.d("Agent Sel", "Agent Sel Json Parase: "+ex);
+
+            }
+        });
         // Agent select listener view model
         viewModel.getSelectedItem().observe(requireActivity(),item ->{
             try{
@@ -254,7 +332,52 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         viper.setStrokeColorResource(android.R.color.transparent);
         fade.setStrokeColorResource(android.R.color.transparent);
     }
+    private void SetViews(){
+        @SuppressLint("CutPasteId") ShapeableImageView[] agentButtons = new ShapeableImageView[] {
+                (ShapeableImageView) getView().findViewById(R.id.Astra_button),
+                (ShapeableImageView) getView().findViewById(R.id.Breach_button),
+                (ShapeableImageView) getView().findViewById(R.id.brimstone_button),
+                (ShapeableImageView) getView().findViewById(R.id.chamber_button),
+                (ShapeableImageView) getView().findViewById(R.id.cypher_button),
+                (ShapeableImageView) getView().findViewById(R.id.Sage_button),
+                (ShapeableImageView) getView().findViewById(R.id.jett_button),
+                (ShapeableImageView) getView().findViewById(R.id.Killjoy_button),
+                (ShapeableImageView) getView().findViewById(R.id.kayo_button),
+                (ShapeableImageView) getView().findViewById(R.id.Skye_button),
+                (ShapeableImageView) getView().findViewById(R.id.neon_button),
+                (ShapeableImageView) getView().findViewById(R.id.omen_button),
+                (ShapeableImageView) getView().findViewById(R.id.Phoenix_button),
+                (ShapeableImageView) getView().findViewById(R.id.Raze_button),
+                (ShapeableImageView) getView().findViewById(R.id.Sova_button),
+                (ShapeableImageView) getView().findViewById(R.id.Reyna_button),
+                (ShapeableImageView) getView().findViewById(R.id.Viper_button),
+                (ShapeableImageView) getView().findViewById(R.id.Fade_button)
+        };
 
+        for (ShapeableImageView button : agentButtons) {
+            button.setOnClickListener(this);
+        }
+
+        TextView[] playerNames = new TextView[] {
+                (TextView) getView().findViewById(R.id.Player_1_Name_Improved),
+                (TextView) getView().findViewById(R.id.Player_2_Name_improved),
+                (TextView) getView().findViewById(R.id.Player_3_Name_Improved),
+
+        };
+
+        TextView[] agentNames = new TextView[] {
+                (TextView) getView().findViewById(R.id.Player_1_Agent_Improved),
+                (TextView) getView().findViewById(R.id.Player_2_Agent_Improved),
+                (TextView) getView().findViewById(R.id.Player_3_Agent_Improved),
+
+        };
+
+        ImageView[] playerPhotos = new ImageView[] {
+                (ImageView) getView().findViewById(R.id.Player_1_improved),
+                (ImageView) getView().findViewById(R.id.player_2_improved),
+                (ImageView) getView().findViewById(R.id.player_3_improved2),
+        };
+    }
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
@@ -496,7 +619,9 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                     e.printStackTrace();
                 }
         }
+
     }
+
 
 }
 

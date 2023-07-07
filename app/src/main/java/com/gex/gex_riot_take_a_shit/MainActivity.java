@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Context context = App.getContext();
         return context;
     }
-    //static WebsocketServer Gex = new WebsocketServer();
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

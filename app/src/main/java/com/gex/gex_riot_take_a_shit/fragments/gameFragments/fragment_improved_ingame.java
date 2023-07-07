@@ -24,11 +24,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.gex.gex_riot_take_a_shit.Current_status_Data;
+import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 import com.gex.gex_riot_take_a_shit.MainActivity;
 import com.gex.gex_riot_take_a_shit.R;
-import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.nightonke.jellytogglebutton.JellyToggleButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,7 +46,6 @@ public class fragment_improved_ingame extends Fragment {
     LinearLayout killfeed;
     ShapeableImageView map;
     ScrollView killfeed_container;
-    JellyToggleButton switch_button;
     public fragment_improved_ingame() {
         // Required empty public constructor
     }
@@ -62,6 +60,7 @@ public class fragment_improved_ingame extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_improved_ingame, container, false);
 
         killfeed_container = (ScrollView) v.findViewById(R.id.kill_feed);
