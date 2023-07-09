@@ -222,8 +222,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingRight="40dp">
-        </LinearLayout>
+            android:paddingRight="40dp"></LinearLayout>
     </ScrollView>
 
     <TextView
@@ -436,6 +435,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/player_2"
         app:layout_constraintVertical_bias="0.979" />
+
+    <ImageView
+        android:id="@+id/P_3_leader"
+        android:layout_width="39dp"
+        android:layout_height="34dp"
+        android:src="@drawable/leader"
+        app:layout_constraintBottom_toTopOf="@+id/player_3_name"
+        app:layout_constraintEnd_toEndOf="@+id/player_3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/player_3"
+        app:layout_constraintTop_toTopOf="@+id/player_3"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/P_4_leader"
+        android:layout_width="42dp"
+        android:layout_height="31dp"
+        android:src="@drawable/leader"
+        app:layout_constraintBottom_toTopOf="@+id/player_4_name"
+        app:layout_constraintEnd_toEndOf="@+id/player_4"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/player_4"
+        app:layout_constraintTop_toTopOf="@+id/player_4"
+        app:layout_constraintVertical_bias="0.187" />
+
+    <ImageView
+        android:id="@+id/P_2_leader"
+        android:layout_width="37dp"
+        android:layout_height="31dp"
+        android:src="@drawable/leader"
+        app:layout_constraintBottom_toTopOf="@+id/player_2_name"
+        app:layout_constraintEnd_toEndOf="@+id/player_2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/player_2"
+        app:layout_constraintTop_toTopOf="@+id/player_2"
+        app:layout_constraintVertical_bias="0.058" />
+
+    <ImageView
+        android:id="@+id/P_5_leader"
+        android:layout_width="42dp"
+        android:layout_height="32dp"
+        android:src="@drawable/leader"
+        app:layout_constraintBottom_toTopOf="@+id/player_5_name"
+        app:layout_constraintEnd_toEndOf="@+id/player_5"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/player_5"
+        app:layout_constraintTop_toTopOf="@+id/player_5"
+        app:layout_constraintVertical_bias="0.062" />
+
+    <ImageView
+        android:id="@+id/P_1_leader"
+        android:layout_width="33dp"
+        android:layout_height="39dp"
+        android:src="@drawable/leader"
+        app:layout_constraintBottom_toTopOf="@+id/player_1_name"
+        app:layout_constraintEnd_toEndOf="@+id/player_1"
+        app:layout_constraintHorizontal_bias="0.003"
+        app:layout_constraintStart_toStartOf="@+id/player_1"
+        app:layout_constraintTop_toTopOf="@+id/player_1"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

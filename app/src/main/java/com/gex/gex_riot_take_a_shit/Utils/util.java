@@ -1,6 +1,7 @@
 package com.gex.gex_riot_take_a_shit.Utils;
 
 import com.gex.gex_riot_take_a_shit.R;
+import com.gex.gex_riot_take_a_shit.enums.GameModes;
 
 public class util {
 
@@ -170,5 +171,25 @@ public class util {
         }
         return imageResource;
     }
+    public static GameModes GetRespectiveGameMode(String codeName){
+        switch (codeName){
+            case "unrated":
+                return GameModes.UNRATED;
+            case "competitive":
+                return GameModes.COMPETITIVE;
+            case "swiftplay":
+                return GameModes.SWIFT_PLAY;
+            case "spikerush":
+                return GameModes.SPIKE_RUSH;
+            case "deathmatch":
+                return GameModes.DEATH_MATCH;
+            case "ggteam":
+                return GameModes.ESCALATION;
+            case "hurm":
+                return GameModes.TEAM_DEATHMATCH;
+            default:
+                return GameModes.DEATH_MATCH;
 
+        }
+    }
 }

@@ -451,4 +451,30 @@ public class LocalApiHandler {
         return executor.submit(callable).get();
 
     }
+    public static String GetQeueMode() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/QeueMode")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
+    }
 }

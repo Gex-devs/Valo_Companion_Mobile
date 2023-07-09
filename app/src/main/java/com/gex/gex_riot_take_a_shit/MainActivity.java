@@ -24,6 +24,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.gex.gex_riot_take_a_shit.ThirdParty.Firebase;
+import com.gex.gex_riot_take_a_shit.ThirdParty.ValorantApi;
 import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
 
 import org.java_websocket.client.WebSocketClient;
@@ -44,7 +46,6 @@ import io.github.muddz.styleabletoast.StyleableToast;
 
 
 public class MainActivity extends AppCompatActivity implements Observer {
-
     public static FlutterFragment flutterFragment;
     // Handler is Must to change UI_ElEMENTS outside of the  mainactivity class
     static Handler UI_Handler = new Handler();
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
     }
     @SuppressLint({"NewApi", "ResourceAsColor"})
     @Override
@@ -92,9 +92,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
             // Works for other Mutalables expect for this, change it or fix it
         });
 
+
+        Firebase firebase = new Firebase(this);
         //Create instance of Api Handler to use as a singleton
         try {
             LocalApiHandler apiHandler = new LocalApiHandler();
+            ValorantApi valorantApi = new ValorantApi();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (KeyManagementException e) {
@@ -210,7 +213,7 @@ class WebsocketServer extends WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         Log.d("Socket","Closed connection: "+reason+code    );
-        FragmentSwitcher.Game_Fragment();
+        FragmentSwitcher.Game_Status_Fragment();
         NotificationManagerCompat managerCompact = NotificationManagerCompat.from(MainActivity.ContextMethod());
         managerCompact.cancel(2);
         try{
