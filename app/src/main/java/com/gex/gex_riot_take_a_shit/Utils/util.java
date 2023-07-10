@@ -2,6 +2,10 @@ package com.gex.gex_riot_take_a_shit.Utils;
 
 import com.gex.gex_riot_take_a_shit.R;
 import com.gex.gex_riot_take_a_shit.enums.GameModes;
+import com.gex.gex_riot_take_a_shit.enums.InfoType;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class util {
 
@@ -190,6 +194,19 @@ public class util {
             default:
                 return GameModes.DEATH_MATCH;
 
+        }
+    }
+
+    public static InfoType IdentifyDataType(String jsonString) throws JSONException {
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        String type = jsonObject.getString("type");
+
+        if (type.equals(InfoType.Chat.getDisplayName())){
+            return InfoType.Chat;
+        }else {
+            return InfoType.Interface;
         }
     }
 }

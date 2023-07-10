@@ -27,6 +27,8 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.gex.gex_riot_take_a_shit.ThirdParty.Firebase;
 import com.gex.gex_riot_take_a_shit.ThirdParty.ValorantApi;
 import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
+import com.gex.gex_riot_take_a_shit.Utils.util;
+import com.gex.gex_riot_take_a_shit.enums.InfoType;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -233,9 +235,7 @@ class WebsocketServer extends WebSocketClient {
                 System.out.println("ya main menu");
                 try {
                     FragmentSwitcher.Qeue_Menu();
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
+                } catch (JSONException | IOException e) {
                     throw new RuntimeException(e);
                 }
                 break;
@@ -246,7 +246,14 @@ class WebsocketServer extends WebSocketClient {
                 FragmentSwitcher.Game_Fragment();
                 break;
             default:
-                viewModel.Selection(message);
+                try {
+                    if (util.IdentifyDataType(message) == InfoType.Chat){
+                        viewModel.SetPartyChat(message);
+                    }
+                    viewModel.Selection(message);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
         }
     }

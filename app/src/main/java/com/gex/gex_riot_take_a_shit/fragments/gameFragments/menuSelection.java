@@ -53,6 +53,8 @@ public class menuSelection extends Fragment implements View.OnClickListener {
     ShapeableImageView p1,p2,p3,p4,p5;
     ScrollView textchat;
     JellyToggleButton server_Switch;
+    JellyToggleButton.OnStateChangeListener onStateChangeListener;
+    AdapterView.OnItemSelectedListener GameModeSelectorListener;
     TextView p1_title,p2_title,p3_title,p4_title,p5_title;
     TextView p1_name,p2_name,p3_name,p4_name,p5_name;
     SweetAlertDialog pDialog;
@@ -63,6 +65,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
 
     public menuSelection(Current_status_Data viewModel){
         _viewModel = viewModel;
+
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,9 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         p4_title = (TextView) v.findViewById(R.id.player_4_title);
         p5_title = (TextView) v.findViewById(R.id.player_5_title);
 
+
+        ListnersIntiSetup();
+
          // layout params
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.inner_kill_feed);
 
@@ -132,63 +138,39 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         server_Switch = v.findViewById(R.id.party_Switch);
         server_Switch.setJelly(Jelly.LAZY_TREMBLE_TAIL_SLIM_JIM);
 
-        server_Switch.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
-            @Override
-            public void onStateChange(float process, State state, JellyToggleButton jtb) {
-                if (state.equals(State.LEFT)) {
-                    try {
-                        LocalApiHandler.set_party_status("closed");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(state.equals(State.RIGHT)){
-                    try {
-                        LocalApiHandler.set_party_status("open");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+        server_Switch.setOnStateChangeListener(onStateChangeListener);
 
-        //viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
         // Text chat
-        _viewModel.getSelectedItem().observe(requireActivity(), item ->{
+        _viewModel.getPartyChat().observe(requireActivity(),item->{
+            JSONObject jsonObject = null;
             try {
-                JSONObject jsob = new JSONObject(item);
-                String Match_info_object = String.valueOf(jsob.getJSONObject("messages"));
-                JSONObject ff = new JSONObject(Match_info_object);
-                //System.out.println(ff);
-                JSONArray gg = ff.getJSONArray("$insert");
-                System.out.println(gg);
-                //System.out.println(gg.getJSONArray(0).getJSONObject(1));
-                JSONObject uu = new JSONObject(String.valueOf(gg.getJSONArray(0).getJSONObject(1)));
-                System.out.println(uu.getString("body"));
+                jsonObject = new JSONObject(item);
+                String NewTextMessage = jsonObject.getString("message");
+                String name = jsonObject.getString("name");
 
                 LinearLayout InsiderLinearLayout = new LinearLayout(MainActivity.ContextMethod());
                 InsiderLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
                 InsiderLinearLayout.setLayoutParams(Text_Container);
                 TextView Name = new TextView(MainActivity.ContextMethod());
                 Name.setLayoutParams(Name_Text);
-                Name.setText(uu.getString("game_name")+":");
+                Name.setText(name);
                 Name.setTextColor(Color.WHITE);
 
                 TextView Body = new TextView(MainActivity.ContextMethod());
                 Body.setLayoutParams(Text_Value);
-                Body.setText(" "+uu.getString("body"));
+                Body.setText(": "+NewTextMessage);
                 Body.setTextColor(Color.WHITE);
 
                 InsiderLinearLayout.addView(Name);
                 InsiderLinearLayout.addView(Body);
 
-
                 linearLayout.addView(InsiderLinearLayout);
                 textchat.scrollTo(0, textchat.getBottom());
+
             } catch (JSONException e) {
-                e.printStackTrace();
-                System.out.println(e);
+                throw new RuntimeException(e);
             }
+
         });
 
         // Update on render
@@ -213,21 +195,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
 
         // this how u select item spProvince.setSelection(0);
 
-        spProvince.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                //Toasty.info(MainActivity.ContextMethod(), provinceList.get(position), Toast.LENGTH_SHORT, true).show();
-                try {
-                    LocalApiHandler.Change_Q(GameModes.values()[position].getCodeName());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                Toast.makeText(getContext(),"No Item",Toast.LENGTH_SHORT);
-            }
-        });
+        spProvince.setOnItemSelectedListener(GameModeSelectorListener);
 
         return v;
     }
@@ -307,7 +275,6 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                     break;
             }
 
-
             for(int i = 0;i < 5;i++){
                 try {
                     String player_puid;
@@ -359,245 +326,46 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                     throw new RuntimeException(e);
                 }
             }
-
-//            StringRequest request = null;
-//            RequestQueue rQueue = Volley.newRequestQueue(MainActivity.ContextMethod());
-//            for(int i = 0;i < 5;i++){
-//                try {
-//                    switch (i){
-//                        case 0:
-//                            System.out.println("player 1");
-//                            System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
-//                            System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
-//                            System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-//                            p1_name.setText(LocalApiHandler.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
-//                            request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("wideArt")).into(p1);
-//                                        // Downgraded to 2.0.0 to make cardlist work
-//                                        //Picasso.get().load(json.getJSONObject("data").getString("wideArt")).into(p1);
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            request = new StringRequest("https://valorant-api.com/v1/playertitles/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        JSONObject ff = json.getJSONObject("data");
-//                                        p1_title.setText(ff.getString("titleText"));
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            break;
-//                        case 1:
-//                            System.out.println("player 2");
-//                            System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
-//                            System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
-//                            System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-//                            p2_name.setText(LocalApiHandler.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
-//                            request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("smallArt")).into(p2);
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            request = new StringRequest("https://valorant-api.com/v1/playertitles/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        JSONObject ff = json.getJSONObject("data");
-//                                        p2_title.setText(ff.getString("titleText"));
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            break;
-//                        case 2:
-//                            System.out.println("player 3");
-//                            System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
-//                            System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
-//                            System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-//                            p3_name.setText(LocalApiHandler.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
-//                            request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("smallArt")).into(p3);
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            request = new StringRequest("https://valorant-api.com/v1/playertitles/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        JSONObject ff = json.getJSONObject("data");
-//                                        p3_title.setText(ff.getString("titleText"));
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            break;
-//                        case 3:
-//                            System.out.println("player 4");
-//                            System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
-//                            System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
-//                            System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-//                            p4_name.setText(LocalApiHandler.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
-//                            request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("smallArt")).into(p4);
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            request = new StringRequest("https://valorant-api.com/v1/playertitles/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        JSONObject ff = json.getJSONObject("data");
-//                                        p4_title.setText(ff.getString("titleText"));
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            break;
-//                        case 4:
-//                            System.out.println("player 5");
-//                            System.out.println("player_puid: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject"));
-//                            System.out.println("player_card: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"));
-//                            System.out.println("player_title: "+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"));
-//                            p5_name.setText(LocalApiHandler.getUsername(party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject")));
-//                            request = new StringRequest("https://valorant-api.com/v1/playercards/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        Picasso.with(MainActivity.ContextMethod()).load(json.getJSONObject("data").getString("smallArt")).into(p5);
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            request = new StringRequest("https://valorant-api.com/v1/playertitles/"+party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID"), new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String string) {
-//                                    System.out.println(string);
-//                                    try {
-//                                        JSONObject json = new JSONObject(string);
-//                                        JSONObject ff = json.getJSONObject("data");
-//                                        p5_title.setText(ff.getString("titleText"));
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError volleyError) {
-//                                    System.out.println("error");
-//                                }
-//                            });
-//                            rQueue.add(request);
-//                            break;
-//                    }
-//
-//                }catch (JSONException | IOException | ExecutionException | InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
-
         }catch (JSONException e) {
             e.printStackTrace();
             System.out.println(e);
         }
+    }
+    private void ListnersIntiSetup(){
+        onStateChangeListener = new JellyToggleButton.OnStateChangeListener() {
+            @Override
+            public void onStateChange(float process, State state, JellyToggleButton jtb) {
+                if (state.equals(State.LEFT)) {
+                    try {
+                        LocalApiHandler.set_party_status("closed");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(state.equals(State.RIGHT)){
+                    try {
+                        LocalApiHandler.set_party_status("open");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        GameModeSelectorListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                //Toasty.info(MainActivity.ContextMethod(), provinceList.get(position), Toast.LENGTH_SHORT, true).show();
+                try {
+                    LocalApiHandler.Change_Q(GameModes.values()[position].getCodeName());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Toast.makeText(getContext(),"No Item",Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 }
