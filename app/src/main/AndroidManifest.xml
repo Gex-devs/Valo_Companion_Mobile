@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.gex.gex_riot_take_a_shit">
 
-    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
+    <uses-permission
+        android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,7 +12,6 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -25,15 +25,26 @@
         android:theme="@style/Theme.Gex_Riot_Take_A_Shit"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
+        <service
+            android:name=".Background.ConnectionService"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".NotificationRecv" />
+
+        <receiver
+            android:name=".NotificationRecv"
+            android:exported="false"
+            android:enabled="true"/>
+
         <service
             android:name="com.gex.gex_riot_take_a_shit.MyFirebaseMessagingService"
             android:exported="false">
@@ -41,12 +52,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name="io.flutter.embedding.android.FlutterActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-            android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -57,8 +59,12 @@ public class menuSelection extends Fragment implements View.OnClickListener {
     AdapterView.OnItemSelectedListener GameModeSelectorListener;
     TextView p1_title,p2_title,p3_title,p4_title,p5_title;
     TextView p1_name,p2_name,p3_name,p4_name,p5_name;
+    ImageView p1_leader,p2_leader,p3_leader,p4_leader,p5_leader;
+
     SweetAlertDialog pDialog;
     private SmartMaterialSpinner<String> spProvince;
+    private boolean AllowNotification = true;
+    private long lastActionTime = 0;
     private List<String> provinceList;
 
     private Current_status_Data _viewModel;
@@ -119,8 +125,15 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         p4_title = (TextView) v.findViewById(R.id.player_4_title);
         p5_title = (TextView) v.findViewById(R.id.player_5_title);
 
+        // Party Leader images
+        p1_leader = (ImageView) v.findViewById(R.id.P_1_leader);
+        p2_leader = (ImageView) v.findViewById(R.id.P_2_leader);
+        p3_leader = (ImageView) v.findViewById(R.id.P_3_leader);
+        p4_leader = (ImageView) v.findViewById(R.id.P_4_leader);
+        p5_leader = (ImageView) v.findViewById(R.id.P_5_leader);
 
-        ListnersIntiSetup();
+
+        ListenersIntiSetup();
 
          // layout params
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.inner_kill_feed);
@@ -185,7 +198,9 @@ public class menuSelection extends Fragment implements View.OnClickListener {
             provinceList.add(gameModes.getDisplayName());
         }
         spProvince.setItem(provinceList);
-        spProvince.setItemListBackground(R.color.Valo_Color);
+        spProvince.setOnItemSelectedListener(GameModeSelectorListener);
+
+
         try {
             UiUpdate(LocalApiHandler.get_party());
             spProvince.setSelection(GameModes.getByCodeName(LocalApiHandler.GetQeueMode()).ordinal());
@@ -193,9 +208,6 @@ public class menuSelection extends Fragment implements View.OnClickListener {
             throw new RuntimeException(e);
         }
 
-        // this how u select item spProvince.setSelection(0);
-
-        spProvince.setOnItemSelectedListener(GameModeSelectorListener);
 
         return v;
     }
@@ -236,12 +248,14 @@ public class menuSelection extends Fragment implements View.OnClickListener {
     }
     public void UiUpdate(String item){
         try {
-            JSONObject jsob = new JSONObject(item);
-            String QueueID = jsob.getJSONObject("MatchmakingData").getString("QueueID");
+            JSONObject json = new JSONObject(item);
+            String QueueID = json.getJSONObject("MatchmakingData").getString("QueueID");
+            Log.d("UiUpdate", "UiUpdate: "+QueueID);
+            Log.d("UiUpdate", "UiUpdate: "+GameModes.getByCodeName(QueueID).ordinal());
             spProvince.setSelection(GameModes.getByCodeName(QueueID).ordinal());
 
-            JSONArray party_members = jsob.getJSONArray("Members");
-            switch (jsob.getString("Accessibility")){
+            JSONArray party_members = json.getJSONArray("Members");
+            switch (json.getString("Accessibility")){
                 case "CLOSED":
                     if(!server_Switch.isChecked()){
                         Log.d("Toggle Button", "JellyToggle is already False");
@@ -257,7 +271,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                     }
                     break;
             }
-            switch (jsob.getString("State")){
+            switch (json.getString("State")){
                 case "DEFAULT":
                     Log.d("Start_Button", "Set the button to Start");
                     Start.setText("START");
@@ -269,9 +283,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                     Start.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Button_Color)));
                     break;
                 case "MATCHMADE_GAME_STARTING":
-                    new SweetAlertDialog(getContext())
-                            .setTitleText("MATCH FOUND")
-                            .show();
+                    MatchFoundNotification();
                     break;
             }
 
@@ -285,6 +297,11 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                             player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
                             player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
                             player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
+                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
+                                p1_leader.setVisibility(View.VISIBLE);
+                            }else{
+                                p1_leader.setVisibility(View.INVISIBLE);
+                            }
                             p1_name.setText(LocalApiHandler.getUsername(player_puid));
                             Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,true)).into(p1);
                             p1_title.setText(ValorantApi.GetPlayerTitle(player_title));
@@ -293,6 +310,11 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                             player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
                             player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
                             player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
+                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
+                                p2_leader.setVisibility(View.VISIBLE);
+                            }else{
+                                p2_leader.setVisibility(View.INVISIBLE);
+                            }
                             p2_name.setText(LocalApiHandler.getUsername(player_puid));
                             Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,false)).into(p2);
                             p2_title.setText(ValorantApi.GetPlayerTitle(player_title));
@@ -301,6 +323,11 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                             player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
                             player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
                             player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
+                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
+                                p3_leader.setVisibility(View.VISIBLE);
+                            }else{
+                                p3_leader.setVisibility(View.INVISIBLE);
+                            }
                             p3_name.setText(LocalApiHandler.getUsername(player_puid));
                             Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,false)).into(p3);
                             p3_title.setText(ValorantApi.GetPlayerTitle(player_title));
@@ -309,6 +336,11 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                             player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
                             player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
                             player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
+                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
+                                p4_leader.setVisibility(View.VISIBLE);
+                            }else{
+                                p4_leader.setVisibility(View.INVISIBLE);
+                            }
                             p4_name.setText(LocalApiHandler.getUsername(player_puid));
                             Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,false)).into(p4);
                             p4_title.setText(ValorantApi.GetPlayerTitle(player_title));
@@ -317,6 +349,11 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                             player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
                             player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
                             player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
+                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
+                                p5_leader.setVisibility(View.VISIBLE);
+                            }else{
+                                p5_leader.setVisibility(View.INVISIBLE);
+                            }
                             p5_name.setText(LocalApiHandler.getUsername(player_puid));
                             Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,false)).into(p5);
                             p5_title.setText(ValorantApi.GetPlayerTitle(player_title));
@@ -331,7 +368,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
             System.out.println(e);
         }
     }
-    private void ListnersIntiSetup(){
+    private void ListenersIntiSetup(){
         onStateChangeListener = new JellyToggleButton.OnStateChangeListener() {
             @Override
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
@@ -367,5 +404,32 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                 Toast.makeText(getContext(),"No Item",Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    private void MatchFoundNotification(){
+        if (AllowNotification) {
+            // Perform the action here
+            new SweetAlertDialog(getContext())
+                    .setTitleText("MATCH FOUND")
+                    .show();
+
+            Log.d("ActionHandler", "Action performed");
+
+            // Update the flag and record the last action time
+            AllowNotification = false;
+            lastActionTime = System.currentTimeMillis();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    AllowNotification = true;
+                    Log.d("ActionHandler", "Action allowed again");
+                }
+            }, 5000);
+        } else {
+            // Action not allowed yet
+            Log.d("ActionHandler", "Action not allowed yet");
+        }
     }
 }

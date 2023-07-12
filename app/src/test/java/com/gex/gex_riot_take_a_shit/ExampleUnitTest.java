@@ -1,5 +1,6 @@
 package com.gex.gex_riot_take_a_shit;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -21,6 +22,14 @@ import okhttp3.Response;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+
+    @Before
+    public void setup() {
+
+    }
+
+
     @Test
     public void adition_isCorrect() {
         System.out.println("test?");
@@ -116,4 +125,17 @@ public class ExampleUnitTest {
         // Implement the extraction logic based on the actual response format
         return "entitlements_token";
     }
+
+//    @Test
+//    public void WebsocketTest() throws URISyntaxException {
+//        try{
+//            WebsocketServer client = new WebsocketServer(new URI("ws://192.168.1.19:8765"));
+//            client.connect();
+//            System.out.println("hello "+client.isOpen());
+//            Assert.assertTrue(client.isOpen());
+//        }catch (Exception e){
+//            System.out.println(e);
+//        }
+//
+//    }
 }

@@ -20,7 +20,3 @@ rootProject.name = "Gex_Riot_Take_A_Shit"
 include ':app'
 include ':fancydialoglib'
 setBinding(new Binding([gradle: this]))
-evaluate(new File(                                                     // new
-        settingsDir.absoluteFile,                                              // new
-        'my_flutter/.android/include_flutter.groovy'                         // new
-))

@@ -1,8 +1,5 @@
 package com.gex.gex_riot_take_a_shit;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdManager;
@@ -14,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.TableLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,14 +23,11 @@ import com.dexafree.materialList.card.CardProvider;
 import com.dexafree.materialList.card.OnActionClickListener;
 import com.dexafree.materialList.card.action.TextViewAction;
 import com.dexafree.materialList.view.MaterialListView;
-import com.journeyapps.barcodescanner.CaptureActivity;
+import com.gex.gex_riot_take_a_shit.Background.ConnectionService;
+import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 import com.squareup.picasso.RequestCreator;
 
-import org.java_websocket.drafts.Draft_6455;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,11 +36,8 @@ public class Game_Status extends Fragment implements View.OnClickListener{
     Current_status_Data viewModel;
     String myString;
     public String ip_addrs;
-    TableLayout disco;
     MaterialListView mListView;
-    Button cam;
     public static WebsocketServer client;
-    NsdManager nsdManager = (NsdManager) MainActivity.ContextMethod().getApplicationContext().getSystemService(Context.NSD_SERVICE);
 
 
     private List<NsdServiceInfo> mDiscoveredServices = new ArrayList<>();
@@ -86,7 +75,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_game__status, container, false);
-        cam = (Button) v.findViewById(R.id.button);
+
         if (savedInstanceState != null) {
             myString = savedInstanceState.getString("myString","default");
         }
@@ -113,48 +102,11 @@ public class Game_Status extends Fragment implements View.OnClickListener{
         });
 
 
-        cam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), CaptureActivity.class);
-                intent.setAction("com.google.zxing.client.android.SCAN");
-                intent.putExtra("SAVE_HISTORY", false);
-                startActivityForResult(intent, 0);
-
-            }
-        });
 
         return v;
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                String qrCode = data.getStringExtra("SCAN_RESULT");
-                System.out.println(qrCode);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            client = new WebsocketServer(new URI("ws://"+qrCode.split(":")[0]+ ":"+qrCode.split(":")[1]), new Draft_6455());
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                        if (client != null) {
-                            client.connect();
-                        }
-                    }
-                });
-
-                // Use the QR code here
-            } else if (resultCode == RESULT_CANCELED) {
-                // Handle cancelled scan
-            }
-        }
-    }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -273,15 +225,22 @@ public class Game_Status extends Fragment implements View.OnClickListener{
                                     public void onActionClicked(View view, Card card) {
                                         //Toasty.info(MainActivity.ContextMethod(), card.getProvider().getDescription().split(":")[0]+card.getProvider().getDescription().split(":")[1], Toast.LENGTH_SHORT, true).show();
 
-                                        try {
-                                            client = new WebsocketServer(new URI("ws://"+card.getProvider().getDescription().split(":")[0]+ ":"+card.getProvider().getDescription().split(":")[1]), new Draft_6455());
-                                        } catch (URISyntaxException e) {
-                                            e.printStackTrace();
-                                        }
-                                        if (client != null) {
-                                            client.connect();
-                                            System.out.printf("I am not null "+ client);
-                                        }
+//                                        try {
+//                                            //client = new WebsocketServer(new URI("ws://"+card.getProvider().getDescription().split(":")[0]+ ":"+card.getProvider().getDescription().split(":")[1]));
+//                                            client = new WebsocketServer(new URI("ws://192.168.1.19:8765"));
+//                                            System.out.println(client.isOpen());
+//                                        } catch (URISyntaxException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                        if (client != null) {
+//                                            client.connect();
+//                                            System.out.printf("I am not null "+ client);
+//                                        }
+
+                                        Intent serviceIntent = new Intent(MainActivity.ContextMethod(), ConnectionService.class);
+                                        serviceIntent.putExtra("addr","ws://"+card.getProvider().getDescription().split(":")[0]+ ":"+card.getProvider().getDescription().split(":")[1]);
+                                        MainActivity.ContextMethod().startService(serviceIntent);
+
                                     }
                                 }))
                         .endConfig()
@@ -292,6 +251,5 @@ public class Game_Status extends Fragment implements View.OnClickListener{
         });
 
     }
-
 
 }

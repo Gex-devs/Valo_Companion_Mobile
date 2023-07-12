@@ -2,6 +2,8 @@ package com.gex.gex_riot_take_a_shit;
 
 import android.util.Log;
 
+import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,7 +72,7 @@ public class LocalApiHandler {
                     System.out.println("called from python Rest Api");
 
                     Request request = new Request.Builder()
-                            .url("http:/" + String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0] + ":7979/api/current_state")
+                            .url("http:/" + String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0] + ":7979/api/current_state")
                             .build();
                     Response response = client.newCall(request).execute();
                     return response.body().string();
@@ -91,7 +93,7 @@ public class LocalApiHandler {
             public void run() {
                 try {
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/sendChat?text="+text)
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/sendChat?text="+text)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -111,7 +113,7 @@ public class LocalApiHandler {
                     System.out.println("called from python Rest Api");
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_name?PUID="+puuid)
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/get_name?PUID="+puuid)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -171,7 +173,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/startQ")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/startQ")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -189,7 +191,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/stopQ")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/stopQ")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -207,7 +209,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/leave_party")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/leave_party")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -225,7 +227,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/Dodge")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/Dodge")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -244,7 +246,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/changeQ?queue="+Queue)
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/changeQ?queue="+Queue)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -262,7 +264,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/party_accessibility?state="+status)
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/party_accessibility?state="+status)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -280,7 +282,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/selectagent?agent="+agent)
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/selectagent?agent="+agent)
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -300,7 +302,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/lockagent?agent="+agent)
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/lockagent?agent="+agent)
                             .build();
                     Response response = client.newCall(request).execute();
                     Log.d("Api Call Response", "call: "+response);
@@ -326,7 +328,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_map")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/get_map")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -354,7 +356,7 @@ public class LocalApiHandler {
 
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/get_server/pre_game")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/get_server/pre_game")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -381,7 +383,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/gamemode")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/gamemode")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -407,7 +409,7 @@ public class LocalApiHandler {
                     
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/coregame/players")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/coregame/players")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -432,7 +434,7 @@ public class LocalApiHandler {
                     System.out.println("called from python Rest Api");
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/getParty")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/getParty")
                             .build();
 
                     Response response = client.newCall(request).execute();
@@ -458,7 +460,7 @@ public class LocalApiHandler {
                     System.out.println("called from python Rest Api");
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("http:/"+String.valueOf(Game_Status.client.getRemoteSocketAddress()).split(":")[0]+":7979/api/QeueMode")
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/QeueMode")
                             .build();
 
                     Response response = client.newCall(request).execute();

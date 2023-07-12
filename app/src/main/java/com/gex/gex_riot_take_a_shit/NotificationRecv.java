@@ -3,8 +3,9 @@ package com.gex.gex_riot_take_a_shit;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
-import androidx.core.app.NotificationManagerCompat;
+import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
 
 import java.io.IOException;
 
@@ -18,21 +19,19 @@ public class NotificationRecv extends BroadcastReceiver  {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        String m = intent.getStringExtra("test_1");
-        System.out.println("Pls call me son of bitch");
-        ObservableObject.getInstance().updateValue(intent);
-        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
-        manager.cancel(1);
-        try {
-            LocalApiHandler.Dodge();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(intent.getAction().equals("DODGE_ACTION")){
+            Log.d("Notification Event", "onReceive: Dodged");
+            try {
+                LocalApiHandler.Dodge();
+            } catch (IOException e) {
+                Log.d("Notification Event","onReceive: Failed To Dodge");
+            }
         }
-        intent = new Intent(context, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        MainActivity.ContextMethod().startActivity(intent);
-        //context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+        if (intent.getAction().equals("GONE_ACTION")){
+            assert WebsocketServer.getInstance() != null;
+            WebsocketServer.getInstance().setAllowNotification(true);
+        }
 
     }
 

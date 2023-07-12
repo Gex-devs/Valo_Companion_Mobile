@@ -1,6 +1,5 @@
 package com.gex.gex_riot_take_a_shit.Utils;
 
-import static com.gex.gex_riot_take_a_shit.MainActivity.flutterFragment;
 import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
 
 import android.view.ViewGroup;
@@ -14,11 +13,6 @@ import com.gex.gex_riot_take_a_shit.fragments.gameFragments.improved_Agent_sel_f
 import com.gex.gex_riot_take_a_shit.fragments.gameFragments.menuSelection;
 import com.gex.gex_riot_take_a_shit.party;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-
-import io.flutter.embedding.android.FlutterFragment;
 
 public class FragmentSwitcher {
     
@@ -34,7 +28,7 @@ public class FragmentSwitcher {
         Fragment fragment = new improved_Agent_sel_fragment();
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
     }
-    public static void Qeue_Menu() throws JSONException, IOException {
+    public static void Qeue_Menu() {
         Fragment fragment = new menuSelection(viewModel);
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
     }
@@ -43,10 +37,8 @@ public class FragmentSwitcher {
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
     }
     public  static void Store_Fragment(){
-        if(flutterFragment == null){
-            flutterFragment = FlutterFragment.createDefault();
-        }
-        new FragmentTransactionTask(_fragmentManager, _container, flutterFragment).execute();
+
+        //new FragmentTransactionTask(_fragmentManager, _container, flutterFragment).execute();
 
     }
     public static void Game_Fragment(){

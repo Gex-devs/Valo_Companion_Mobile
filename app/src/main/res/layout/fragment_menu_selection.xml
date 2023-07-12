@@ -197,7 +197,7 @@
         app:smsp_hintColor="#FFFFFF"
         app:smsp_isOutlined="true"
         app:smsp_itemColor="#FFFFFF"
-        app:smsp_itemListBackgroundColor="#7C4DFF"
+        app:smsp_itemListBackgroundColor="@color/Valo_Color"
         app:smsp_itemListColor="@color/soft_black"
         app:smsp_itemListHintBackgroundColor="#FF5252"
         app:smsp_itemListHintColor="#1976D2"
@@ -208,7 +208,7 @@
 
     <ScrollView
         android:id="@+id/kill_feed"
-        android:layout_width="361dp"
+        android:layout_width="0dp"
         android:layout_height="63dp"
         android:background="#52000000"
         android:paddingTop="10dp"
@@ -441,60 +441,70 @@
         android:layout_width="39dp"
         android:layout_height="34dp"
         android:src="@drawable/leader"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/player_3_name"
         app:layout_constraintEnd_toEndOf="@+id/player_3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/player_3"
         app:layout_constraintTop_toTopOf="@+id/player_3"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/P_4_leader"
         android:layout_width="42dp"
         android:layout_height="31dp"
         android:src="@drawable/leader"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/player_4_name"
         app:layout_constraintEnd_toEndOf="@+id/player_4"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/player_4"
         app:layout_constraintTop_toTopOf="@+id/player_4"
-        app:layout_constraintVertical_bias="0.187" />
+        app:layout_constraintVertical_bias="0.187"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/P_2_leader"
         android:layout_width="37dp"
         android:layout_height="31dp"
         android:src="@drawable/leader"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/player_2_name"
         app:layout_constraintEnd_toEndOf="@+id/player_2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/player_2"
         app:layout_constraintTop_toTopOf="@+id/player_2"
-        app:layout_constraintVertical_bias="0.058" />
+        app:layout_constraintVertical_bias="0.058"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/P_5_leader"
         android:layout_width="42dp"
         android:layout_height="32dp"
         android:src="@drawable/leader"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/player_5_name"
         app:layout_constraintEnd_toEndOf="@+id/player_5"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/player_5"
         app:layout_constraintTop_toTopOf="@+id/player_5"
-        app:layout_constraintVertical_bias="0.062" />
+        app:layout_constraintVertical_bias="0.062"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/P_1_leader"
         android:layout_width="33dp"
         android:layout_height="39dp"
         android:src="@drawable/leader"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/player_1_name"
         app:layout_constraintEnd_toEndOf="@+id/player_1"
         app:layout_constraintHorizontal_bias="0.003"
         app:layout_constraintStart_toStartOf="@+id/player_1"
         app:layout_constraintTop_toTopOf="@+id/player_1"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

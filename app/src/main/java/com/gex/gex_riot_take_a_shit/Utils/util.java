@@ -101,7 +101,7 @@ public class util {
     public static String get_respective_map_name(String map){
         switch (map){
             case "/Game/Maps/Triad/Triad":
-                return "Haven";
+                return ("Haven");
             case "/Game/Maps/Duality/Duality":
                 return ("Bind");
             case "/Game/Maps/Bonsai/Bonsai":
@@ -116,6 +116,9 @@ public class util {
                 return("Fracture");
             case "/Game/Maps/Pitt/Pitt":
                 return("Pearl");
+            case "/Game/Maps/Jam/Jam":
+                return ("Lotus");
+
         }
         return null;
     }
@@ -197,16 +200,21 @@ public class util {
         }
     }
 
-    public static InfoType IdentifyDataType(String jsonString) throws JSONException {
+    public static InfoType IdentifyDataType(String jsonString) {
 
-        JSONObject jsonObject = new JSONObject(jsonString);
+        try{
+            JSONObject jsonObject = new JSONObject(jsonString);
 
-        String type = jsonObject.getString("type");
+            String type = jsonObject.getString("type");
 
-        if (type.equals(InfoType.Chat.getDisplayName())){
-            return InfoType.Chat;
-        }else {
-            return InfoType.Interface;
+            if (type.equals(InfoType.Chat.getDisplayName())){
+                return InfoType.Chat;
+            }else {
+                return InfoType.Unkown;
+            }
+        }catch (JSONException e){
+            return InfoType.Unkown;
         }
     }
+
 }

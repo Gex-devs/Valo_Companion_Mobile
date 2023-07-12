@@ -8,24 +8,24 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:layout_width="362dp"
-        android:layout_height="833dp"
+        android:name="com.gex.gex_riot_take_a_shit.Game_Status"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_gravity="center"
-        android:paddingTop="213sp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout="@layout/fragment_game__status" />
 
     <com.ashokvarma.bottomnavigation.BottomNavigationBar
         android:id="@+id/bottom_navigation_bar"
-        android:layout_width="425dp"
-        android:layout_height="58dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:outlineSpotShadowColor="@color/white"
-        android:paddingRight="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
