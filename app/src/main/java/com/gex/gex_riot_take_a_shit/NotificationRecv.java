@@ -23,6 +23,8 @@ public class NotificationRecv extends BroadcastReceiver  {
             Log.d("Notification Event", "onReceive: Dodged");
             try {
                 LocalApiHandler.Dodge();
+                assert WebsocketServer.getInstance() != null;
+                WebsocketServer.getInstance().setAllowNotification(true);
             } catch (IOException e) {
                 Log.d("Notification Event","onReceive: Failed To Dodge");
             }

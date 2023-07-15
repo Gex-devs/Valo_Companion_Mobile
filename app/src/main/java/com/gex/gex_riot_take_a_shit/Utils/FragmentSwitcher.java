@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.gex.gex_riot_take_a_shit.Game_Status;
+import com.gex.gex_riot_take_a_shit.fragments.Riot_login_frag;
+import com.gex.gex_riot_take_a_shit.fragments.Store_Fragment;
 import com.gex.gex_riot_take_a_shit.fragments.gameFragments.fragment_improved_ingame;
 import com.gex.gex_riot_take_a_shit.fragments.gameFragments.improved_Agent_sel_fragment;
 import com.gex.gex_riot_take_a_shit.fragments.gameFragments.menuSelection;
@@ -37,8 +39,13 @@ public class FragmentSwitcher {
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
     }
     public  static void Store_Fragment(){
-
-        //new FragmentTransactionTask(_fragmentManager, _container, flutterFragment).execute();
+        Fragment fragment;
+        if (signInChecker.isCookieAlive()){
+            fragment = new Store_Fragment();
+        }else {
+            fragment = new Riot_login_frag();
+        }
+        new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
 
     }
     public static void Game_Fragment(){

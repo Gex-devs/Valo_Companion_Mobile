@@ -1,5 +1,8 @@
 package com.gex.gex_riot_take_a_shit;
 
+import static com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher.Game_Status_Fragment;
+import static com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher.Store_Fragment;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -17,9 +20,13 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
 import com.gex.gex_riot_take_a_shit.ThirdParty.Firebase;
+import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.ThirdParty.ValorantApi;
 import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Observable;
@@ -99,6 +106,19 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 .addToBackStack(null)       // name can be null
                 .commit();
 
+        Thread testThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                   OfficalValorantApi officalValorantApi = OfficalValorantApi.getInstance(MainActivity.ContextMethod().getApplicationContext());
+                } catch (IOException | JSONException | NoSuchAlgorithmException | KeyManagementException e) {
+                    Log.d("ApiThread", "run: "+e);
+                     throw new RuntimeException(e);
+                }
+            }
+        });
+
+        testThread.start();
 
 
     }
@@ -125,11 +145,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void onTabSelected(int position) {
                 switch (position){
                     case 0:
-                        //Game_Status_Fragment();
+                        Game_Status_Fragment();
                         System.out.println("First_fragment");
                         break;
                     case 1:
-                        //Store_Fragment();
+                        Store_Fragment();
                         // Replace with Toasty if possible
                         Toast.makeText(MainActivity.this,"Store is still under development",Toast.LENGTH_SHORT).show();
                         Log.e("Bottom_Tab", "onTabSelected: Store Fragment is Under Development" );

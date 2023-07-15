@@ -126,4 +126,65 @@ public class ValorantApi {
         // Submit the Callable object to the ExecutorService to run in a separate thread
         return executor.submit(callable).get();
     }
+
+    public static String[] GetSkinByLevel(String WeaponID) throws ExecutionException, InterruptedException {
+        Callable<String[]> callable = new Callable<String[]>() {
+            public String[] call() {
+                try {
+                    String[] TheData = new String[4];
+
+                    Request request = new Request.Builder()
+                            .url("https://valorant-api.com/v1/weapons/skinlevels/"+WeaponID)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    String responseString = response.body().string();
+                    JSONObject json = new JSONObject(responseString).getJSONObject("data");
+                    String name = json.getString("displayName");
+                    String icon = json.getString("displayIcon");
+                    String streamedVid = json.getString("streamedVideo");
+
+                    TheData[0] = name;
+                    TheData[1] = icon;
+                    TheData [2] = streamedVid;
+
+                    return TheData;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("Api_Call", "Call failed: " + e);
+                    return null;
+                }
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+    }
+
+
+    public static String  GetBundle(String bundleID) throws ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+
+                    Request request = new Request.Builder()
+                            .url("https://valorant-api.com/v1/bundles/"+bundleID)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    String responseString = response.body().string();
+                    JSONObject json = new JSONObject(responseString);
+                    String ImageLink = json.getJSONObject("data").getString("displayIcon2");
+                    Log.d("GetBundleApi", "Get Bundle Api: "+ImageLink);
+                    return ImageLink;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("Api_Call", "Call failed: " + e);
+                    return "null";
+                }
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+    }
 }

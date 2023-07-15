@@ -310,6 +310,8 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                             player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
                             player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
                             player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
+
+                            // Check if party leader
                             if (party_members.getJSONObject(i).getBoolean("IsOwner")){
                                 p2_leader.setVisibility(View.VISIBLE);
                             }else{

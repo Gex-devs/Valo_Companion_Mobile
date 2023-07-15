@@ -8,9 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class util {
-
     public static int get_respective_image(String Agent){
-
         switch (Agent){
             case "Raze":
                 return R.drawable.raze_background;

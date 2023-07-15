@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.gex.gex_riot_take_a_shit"
@@ -33,12 +33,13 @@ android {
         resources.excludes.add("META-INF/DEPENDENCIES")
     }
 
+
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'org.java-websocket:Java-WebSocket:1.5.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.2.0'
@@ -61,21 +62,26 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
-    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.10'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'org.jmdns:jmdns:3.5.8'
     implementation 'org.slf4j:slf4j-nop:2.0.5'
-    implementation 'com.github.skydoves:powermenu:2.2.1'
     implementation 'com.github.dexafree:materiallist:3.2.1'
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
-    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging:23.1.2'
     implementation 'com.google.firebase:firebase-firestore:24.6.1'
-    testImplementation 'junit:junit:4.+'
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'androidx.annotation:annotation:1.6.0'
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }

@@ -1,7 +1,6 @@
 package com.gex.gex_riot_take_a_shit.Background;
 
 import static com.gex.gex_riot_take_a_shit.MainActivity.viewModel;
-import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
@@ -26,8 +25,6 @@ import com.gex.gex_riot_take_a_shit.enums.InfoType;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -104,6 +101,12 @@ public class WebsocketServer extends WebSocketClient{
                 FragmentSwitcher.Qeue_Menu();
                 break;
             case "Agent_sel":
+                try {
+                    CheckForGameStartEvent();
+                } catch (IOException | ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
                 FragmentSwitcher.Agent_Select_fragment();
                 break;
             case "In_Game":
@@ -111,12 +114,6 @@ public class WebsocketServer extends WebSocketClient{
                 FragmentSwitcher.Game_Fragment();
                 break;
             default:
-                try {
-                    CheckForGameStartEvent(message);
-                } catch (JSONException | IOException | ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
                 if (util.IdentifyDataType(message) == InfoType.Chat) {
                     viewModel.SetPartyChat(message);
                 } else {
@@ -151,20 +148,18 @@ public class WebsocketServer extends WebSocketClient{
         }
     }
 
-    private void CheckForGameStartEvent(String jsonString) throws JSONException, IOException, ExecutionException, InterruptedException {
-        JSONObject json = new JSONObject(jsonString);
-        String state = json.getString("State");
-        if (state.equals("MATCHMADE_GAME_STARTING") && allowNotification){
+    private void CheckForGameStartEvent() throws IOException, ExecutionException, InterruptedException {
+        if (allowNotification){
             Intent intent = new Intent(Thecontext, NotificationRecv.class);
             intent.setAction("DODGE_ACTION");
             Intent dismissIntent = new Intent(Thecontext, NotificationRecv.class);
             dismissIntent.setAction("GONE_ACTION");
             PendingIntent dismissPendingIntent = PendingIntent.getBroadcast(
-                    Thecontext, REQUEST_CODE, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    Thecontext, 1, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(
                     Thecontext,
-                    REQUEST_CODE,
+                    1,
                     intent,
                     PendingIntent.FLAG_UPDATE_CURRENT
             );

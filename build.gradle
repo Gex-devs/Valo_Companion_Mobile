@@ -5,6 +5,8 @@ buildscript {
 
         mavenCentral()  // Maven Central repository
 
+        maven { url "https://jitpack.io" }
+
     }
     dependencies {
         // Add the dependency for the Google services Gradle plugin
@@ -24,6 +26,7 @@ allprojects { repositories {
     mavenCentral()
     google()
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 }
 
