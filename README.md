@@ -1,11 +1,12 @@
 # Valo Companion
 
 You can check the store
-
-<img src="store screenshot.jpg" alt="Image Here" width="200" height="400"/> 
-
 > Using Cookies for Re Authentication 
-<img src="sign in.jpg" alt="Image Here" width="200" height="400"/>
+<p>
+  <img src="sign in.jpg" alt="Image Here" width="200" height="400"/>
+  <img src="store screenshot.jpg" alt="Image Here" width="200" height="400"/> 
+</p>
+
 
 You can Select Agent at the comfort of your toilet and many more.
 
