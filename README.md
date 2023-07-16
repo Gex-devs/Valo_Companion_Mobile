@@ -2,8 +2,8 @@
 
 You can check the store
 
-![](store%20screenshot.jpg)
-![](sign%20in.jpg) 
+<img src="store screenshot.jpg" alt="Image Here" width="200" height="400"/>
+<img src="sign in.jpg" alt="Image Here" width="200" height="400"/>
 
 You can Select Agent at the comfort of your toilet and many more.
 
