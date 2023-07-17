@@ -45,7 +45,7 @@ public class OfficalValorantApi {
     private SharedPreferences.Editor editor;
     private CookieJar cookieJar;
     private String TokenJson = "";
-    private Map<String ,Integer> StorebundleHash = new HashMap<>(); //got lazy
+    private final Map<String ,Integer> StorebundleHash = new HashMap<>(); //got lazy
     private static OfficalValorantApi instance;
 
 

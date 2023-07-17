@@ -44,7 +44,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.2.0'
     implementation 'com.labo.kaji:fragmentanimations:0.1.1'
-    implementation 'io.github.muddz:styleabletoast:2.4.0'
     implementation 'com.nightonke:jellytogglebutton:1.0.2'
     implementation 'am.gaut.android.toolbarbutton:toolbarbutton:0.1.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
@@ -73,6 +72,7 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'io.github.muddz:styleabletoast:2.4.0'
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
             because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="invalidErrorToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#CC0B0B</item>
+        <item name="stFont">@font/gsm</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#FFFFFF</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#CC0B0B</item>
+        <item name="stIconStart">@drawable/valo</item>
+        <item name="stIconEnd">@drawable/valo</item>
+        <item name="stLength">LONG</item>
+        <item name="stGravity">center</item> top or center
+        <item name="stRadius">5dp</item>
+    </style>
+</resources>

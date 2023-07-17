@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+import io.github.muddz.styleabletoast.StyleableToast;
+
 
 public class Riot_login_frag extends Fragment {
 
@@ -25,11 +28,7 @@ public class Riot_login_frag extends Fragment {
     private EditText _username;
     private EditText _password;
     private Button _loginButton;
-    public Riot_login_frag() {
-        // Required empty public constructor
-    }
-
-
+    private ProgressBar _progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,13 +43,14 @@ public class Riot_login_frag extends Fragment {
         View v = inflater.inflate(R.layout.fragment_riot_login, container, false);
         _username = v.findViewById(R.id.username);
         _password = v.findViewById(R.id.password);
-
+        _progressBar = v.findViewById(R.id.loading);
         _loginButton = v.findViewById(R.id.login);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("I have been clicked");
+                _progressBar.setVisibility(View.VISIBLE);
                 if (!_username.getText().toString().equals("") && !_password.getText().toString().equals("")){
                     Login();
                 }else {
@@ -58,7 +58,6 @@ public class Riot_login_frag extends Fragment {
                 }
             }
         });
-
 
         return v;
     }
@@ -72,7 +71,6 @@ public class Riot_login_frag extends Fragment {
             @Override
             public void run() {
                 boolean status = false;
-
                 try {
                     status = OfficalValorantApi.getInstance().AuthToken(_username.getText().toString(),_password.getText().toString());
                 } catch (IOException | JSONException e) {
@@ -82,7 +80,15 @@ public class Riot_login_frag extends Fragment {
                 if (status){
                     OpenUpTheStore();
                 }else{
-//                    Toast.makeText(getContext(),"Invalid Username or password",Toast.LENGTH_SHORT).show();
+                    OfficalValorantApi.getInstance().clearCookies();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            _progressBar.setVisibility(View.GONE);
+//                            Toast.makeText(getContext(),"Invalid Username or password",Toast.LENGTH_SHORT).show();
+                            StyleableToast.makeText(getContext(), "Invalid Username or password", Toast.LENGTH_SHORT, R.style.invalidErrorToast).show();
+                        }
+                    });
                     System.out.println("Invalid Username or password");
                 }
             }
