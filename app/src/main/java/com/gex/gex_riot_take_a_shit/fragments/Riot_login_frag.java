@@ -24,7 +24,6 @@ import io.github.muddz.styleabletoast.StyleableToast;
 
 public class Riot_login_frag extends Fragment {
 
-
     private EditText _username;
     private EditText _password;
     private Button _loginButton;

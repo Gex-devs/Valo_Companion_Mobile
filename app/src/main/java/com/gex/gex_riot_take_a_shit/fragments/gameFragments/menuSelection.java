@@ -3,6 +3,7 @@ package com.gex.gex_riot_take_a_shit.fragments.gameFragments;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -187,9 +188,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         });
 
         // Update on render
-        _viewModel.getSelectedItem().observe(requireActivity(), item ->{
-            UiUpdate(item);
-        });
+
 
         // drop down menu https://github.com/Chivorns/SmartMaterialSpinner
         spProvince = v.findViewById(R.id.spinner1);
@@ -200,9 +199,14 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         spProvince.setItem(provinceList);
         spProvince.setOnItemSelectedListener(GameModeSelectorListener);
 
+        _viewModel.getSelectedItem().observe(requireActivity(), item ->{
+//            UiUpdate(item);
+            new JsonParseTask().execute(item);
+        });
 
         try {
-            UiUpdate(LocalApiHandler.get_party());
+            new JsonParseTask().execute(LocalApiHandler.get_party());
+//            UiUpdate(LocalApiHandler.get_party());
             spProvince.setSelection(GameModes.getByCodeName(LocalApiHandler.GetQeueMode()).ordinal());
         } catch (IOException | ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -246,130 +250,169 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                 break;
         }
     }
-    public void UiUpdate(String item){
-        try {
-            JSONObject json = new JSONObject(item);
-            String QueueID = json.getJSONObject("MatchmakingData").getString("QueueID");
-            Log.d("UiUpdate", "UiUpdate: "+QueueID);
-            Log.d("UiUpdate", "UiUpdate: "+GameModes.getByCodeName(QueueID).ordinal());
-            spProvince.setSelection(GameModes.getByCodeName(QueueID).ordinal());
+    private class JsonParseTask extends AsyncTask<String, Void, Void> {
+        String QueueID;
+        String accessibility;
+        String state;
+        JSONArray players;
+        @Override
+        protected Void doInBackground(String... strings) {
+            String item = strings[0];
+            try {
+                JSONObject json = new JSONObject(item);
+                QueueID = json.getJSONObject("MatchmakingData").getString("QueueID");
+                Log.d("UiUpdate", "UiUpdate: " + QueueID);
+                Log.d("UiUpdate", "UiUpdate: " + GameModes.getByCodeName(QueueID).ordinal());
+//                spProvince.setSelection(GameModes.getByCodeName(QueueID).ordinal());
+                players = json.getJSONArray("Members");
+                accessibility = json.getString("Accessibility");
+                state = json.getString("State");
 
-            JSONArray party_members = json.getJSONArray("Members");
-            switch (json.getString("Accessibility")){
-                case "CLOSED":
-                    if(!server_Switch.isChecked()){
-                        Log.d("Toggle Button", "JellyToggle is already False");
-                    }else if(server_Switch.isChecked()){
-                        server_Switch.setChecked(false);
-                    }
-                    break;
-                case "OPEN":
-                    if(server_Switch.isChecked()){
-                        Log.d("Toggle Button", "JellyToggle is already True");
-                    }else if(!server_Switch.isChecked()){
-                        server_Switch.setChecked(true);
-                    }
-                    break;
-            }
-            switch (json.getString("State")){
-                case "DEFAULT":
-                    Log.d("Start_Button", "Set the button to Start");
-                    Start.setText("START");
-                    Start.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.teal_700)));
-                    break;
-                case "MATCHMAKING":
-                    Log.d("Start_Button", "Set the button to In Queue");
-                    Start.setText("In Queue");
-                    Start.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Button_Color)));
-                    break;
-                case "MATCHMADE_GAME_STARTING":
-                    MatchFoundNotification();
-                    break;
-            }
 
-            for(int i = 0;i < 5;i++){
+            } catch (JSONException e) {
+                e.printStackTrace();
+                System.out.println(e);
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            // This method runs on the main thread after doInBackground completes
+            // Perform UI updates here
+            if (accessibility != null)
+                updateAccessibility(accessibility);
+            if (state != null)
+                updateState(state);
+            if(players != null){
                 try {
-                    String player_puid;
-                    String player_card;
-                    String player_title;
-                    switch (i){
-                        case 0:
-                            player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
-                            player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
-                            player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
-                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
-                                p1_leader.setVisibility(View.VISIBLE);
-                            }else{
-                                p1_leader.setVisibility(View.INVISIBLE);
-                            }
-                            p1_name.setText(LocalApiHandler.getUsername(player_puid));
-                            Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,true)).into(p1);
-                            p1_title.setText(ValorantApi.GetPlayerTitle(player_title));
-                            break;
-                        case 1:
-                            player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
-                            player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
-                            player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
-
-                            // Check if party leader
-                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
-                                p2_leader.setVisibility(View.VISIBLE);
-                            }else{
-                                p2_leader.setVisibility(View.INVISIBLE);
-                            }
-                            p2_name.setText(LocalApiHandler.getUsername(player_puid));
-                            Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,false)).into(p2);
-                            p2_title.setText(ValorantApi.GetPlayerTitle(player_title));
-                            break;
-                        case 2:
-                            player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
-                            player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
-                            player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
-                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
-                                p3_leader.setVisibility(View.VISIBLE);
-                            }else{
-                                p3_leader.setVisibility(View.INVISIBLE);
-                            }
-                            p3_name.setText(LocalApiHandler.getUsername(player_puid));
-                            Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,false)).into(p3);
-                            p3_title.setText(ValorantApi.GetPlayerTitle(player_title));
-                            break;
-                        case 3:
-                            player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
-                            player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
-                            player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
-                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
-                                p4_leader.setVisibility(View.VISIBLE);
-                            }else{
-                                p4_leader.setVisibility(View.INVISIBLE);
-                            }
-                            p4_name.setText(LocalApiHandler.getUsername(player_puid));
-                            Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,false)).into(p4);
-                            p4_title.setText(ValorantApi.GetPlayerTitle(player_title));
-                            break;
-                        case 4:
-                            player_puid = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("Subject");
-                            player_card =  party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerCardID");
-                            player_title = party_members.getJSONObject(i).getJSONObject("PlayerIdentity").getString("PlayerTitleID");
-                            if (party_members.getJSONObject(i).getBoolean("IsOwner")){
-                                p5_leader.setVisibility(View.VISIBLE);
-                            }else{
-                                p5_leader.setVisibility(View.INVISIBLE);
-                            }
-                            p5_name.setText(LocalApiHandler.getUsername(player_puid));
-                            Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card,false)).into(p5);
-                            p5_title.setText(ValorantApi.GetPlayerTitle(player_title));
-                            break;
-                    }
+                    updatePlayerUI(players);
                 } catch (IOException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
+                }catch (JSONException e){
+                    Log.d("MenuSelection", e.toString());
                 }
             }
-        }catch (JSONException e) {
-            e.printStackTrace();
-            System.out.println(e);
+            // Update the game mode UI
+            if (QueueID != null)
+                UpdateGameModeUi(QueueID);
         }
     }
+
+    private void updateAccessibility(String accessibility) {
+        switch (accessibility) {
+            case "CLOSED":
+                if (!server_Switch.isChecked()) {
+                    Log.d("Toggle Button", "JellyToggle is already False");
+                } else if (server_Switch.isChecked()) {
+                    server_Switch.setChecked(false);
+                }
+                break;
+            case "OPEN":
+                if (server_Switch.isChecked()) {
+                    Log.d("Toggle Button", "JellyToggle is already True");
+                } else if (!server_Switch.isChecked()) {
+                    server_Switch.setChecked(true);
+                }
+                break;
+        }
+    }
+
+    private void updateState(String state) {
+        switch (state) {
+            case "DEFAULT":
+                Log.d("Start_Button", "Set the button to Start");
+                Start.setText("START");
+                Start.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.teal_700)));
+                break;
+            case "MATCHMAKING":
+                Log.d("Start_Button", "Set the button to In Queue");
+                Start.setText("In Queue");
+                Start.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Button_Color)));
+                break;
+            case "MATCHMADE_GAME_STARTING":
+                MatchFoundNotification();
+                break;
+        }
+    }
+
+    private void updatePlayerUI(JSONArray players) throws IOException, ExecutionException, InterruptedException, JSONException {
+        // Update player UI
+        for (int i = 0; i < players.length(); i++) {
+            try {
+                JSONObject player = players.getJSONObject(i);
+                String player_puid = player.getJSONObject("PlayerIdentity").getString("Subject");
+                String player_card = player.getJSONObject("PlayerIdentity").getString("PlayerCardID");
+                String  player_title = player.getJSONObject("PlayerIdentity").getString("PlayerTitleID");
+                boolean isOwner = player.getBoolean("IsOwner");
+
+                switch (i) {
+                    case 0:
+                        if (isOwner) {
+                            p1_leader.setVisibility(View.VISIBLE);
+                        } else {
+                            p1_leader.setVisibility(View.INVISIBLE);
+                        }
+                        p1_name.setText(LocalApiHandler.getUsername(player_puid));
+                        Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, true)).into(p1);
+                        p1_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        break;
+                    case 1:
+                        if (isOwner) {
+                            p2_leader.setVisibility(View.VISIBLE);
+                        } else {
+                            p2_leader.setVisibility(View.INVISIBLE);
+                        }
+                        p2_name.setText(LocalApiHandler.getUsername(player_puid));
+                        Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p2);
+                        p2_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        break;
+                    case 2:
+                        if (isOwner) {
+                            p3_leader.setVisibility(View.VISIBLE);
+                        } else {
+                            p3_leader.setVisibility(View.INVISIBLE);
+                        }
+                        p3_name.setText(LocalApiHandler.getUsername(player_puid));
+                        Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p3);
+                        p3_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        break;
+                    case 3:
+                        if (isOwner) {
+                            p4_leader.setVisibility(View.VISIBLE);
+                        } else {
+                            p4_leader.setVisibility(View.INVISIBLE);
+                        }
+                        p4_name.setText(LocalApiHandler.getUsername(player_puid));
+                        Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p4);
+                        p4_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        break;
+                    case 4:
+                        if (isOwner) {
+                            p5_leader.setVisibility(View.VISIBLE);
+                        } else {
+                            p5_leader.setVisibility(View.INVISIBLE);
+                        }
+                        p5_name.setText(LocalApiHandler.getUsername(player_puid));
+                        Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p5);
+                        p5_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        break;
+                    default:
+                        Log.d("AgentSelect", "Unknown Amount of agents");
+                        break;
+                }
+            }catch (JSONException e){
+                Log.d("MenuSelection", "JsonException: "+e.toString());
+            }
+
+        }
+
+    }
+    private void UpdateGameModeUi(String QueueID){
+        spProvince.setSelection(GameModes.getByCodeName(QueueID).ordinal());
+    }
+
+
+
     private void ListenersIntiSetup(){
         onStateChangeListener = new JellyToggleButton.OnStateChangeListener() {
             @Override

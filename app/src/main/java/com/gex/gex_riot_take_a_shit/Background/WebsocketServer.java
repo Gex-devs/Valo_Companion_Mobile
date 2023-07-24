@@ -19,6 +19,7 @@ import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 import com.gex.gex_riot_take_a_shit.NotificationRecv;
 import com.gex.gex_riot_take_a_shit.R;
 import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
+import com.gex.gex_riot_take_a_shit.Utils.PlayerStaticInfos;
 import com.gex.gex_riot_take_a_shit.Utils.util;
 import com.gex.gex_riot_take_a_shit.enums.InfoType;
 
@@ -76,6 +77,12 @@ public class WebsocketServer extends WebSocketClient{
         Log.d("Websocket", "Connection Opened");
         System.out.println("Connection Opened");
         send("Phone Connected");
+        try {
+            SetBaseInfo();
+        } catch (IOException | ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         SetFirstFragment();
 
     }
@@ -88,7 +95,6 @@ public class WebsocketServer extends WebSocketClient{
         FragmentSwitcher.Game_Status_Fragment();
         stopAndDestroy();
 
-
     }
 
     @SuppressLint({"SetTextI18n", "NotificationTrampoline"})
@@ -98,6 +104,7 @@ public class WebsocketServer extends WebSocketClient{
         switch (message) {
             case "MainMenu":
                 notificationManager.cancel(2);
+                setAllowNotification(true);
                 FragmentSwitcher.Qeue_Menu();
                 break;
             case "Agent_sel":
@@ -110,7 +117,9 @@ public class WebsocketServer extends WebSocketClient{
                 FragmentSwitcher.Agent_Select_fragment();
                 break;
             case "In_Game":
+                Log.d("WebSocket", "onMessage: InGame called");
                 notificationManager.cancel(2);
+                setAllowNotification(true);
                 FragmentSwitcher.Game_Fragment();
                 break;
             default:
@@ -128,8 +137,12 @@ public class WebsocketServer extends WebSocketClient{
         Log.d("WebSocket", "onError: "+ex);
     }
 
+    public static void SetBaseInfo() throws IOException, ExecutionException, InterruptedException {
+        PlayerStaticInfos.setMyID(LocalApiHandler.getMyID());
+    }
     public static void SetFirstFragment() {
-        Log.d("FirstFragment", "SetFirstFragment: Called Function");
+        Log.d("FirstFragment", "SetFirstFragment Called Function");
+
         try {
             switch (LocalApiHandler.current_state()) {
                 case "MainMenu":
@@ -141,11 +154,16 @@ public class WebsocketServer extends WebSocketClient{
                 case "In_Game":
                     FragmentSwitcher.Game_Fragment();
                     break;
+                default:
+                    FragmentSwitcher.Game_Status_Fragment();
+                    break;
             }
 
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+
+
     }
 
     private void CheckForGameStartEvent() throws IOException, ExecutionException, InterruptedException {

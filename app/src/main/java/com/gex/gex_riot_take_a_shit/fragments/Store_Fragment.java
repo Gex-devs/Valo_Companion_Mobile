@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class Store_Fragment extends Fragment {
 
@@ -39,6 +41,8 @@ public class Store_Fragment extends Fragment {
     ShapeableImageView bundle;
     Button _logoutButton;
     TextView[] currencies;
+
+    private SweetAlertDialog loadingDialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +81,7 @@ public class Store_Fragment extends Fragment {
 
         _logoutButton = v.findViewById(R.id.logout_button);
 
-
+        showLoadingDialog();
 
 
         try {
@@ -98,11 +102,25 @@ public class Store_Fragment extends Fragment {
         return v;
     }
 
+    private void showLoadingDialog() {
+        // Create the loading dialog using Sweet Alert
+        loadingDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        loadingDialog.setTitleText("Loading...");
+        loadingDialog.setCancelable(false);
+        loadingDialog.show();
+    }
+    private void dismissLoadingDialog() {
+        // Dismiss the loading dialog
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismissWithAnimation();
+        }
+    }
     private void LoadOffers() {
         AsyncTask<Void, Void, Void> loadOffersTask = new AsyncTask<Void, Void, Void>() {
             @SuppressLint("StaticFieldLeak")
             @Override
             protected Void doInBackground(Void... params) {
+
                 try {
                     String[] skins = new String[4];
                     Map<String, Integer> load = OfficalValorantApi.getInstance().GetStore();
@@ -151,10 +169,13 @@ public class Store_Fragment extends Fragment {
                 } catch (JSONException | IOException | ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
+                // Dismiss the loading dialog when the task is completed
+                dismissLoadingDialog();
 
                 return null;
             }
         };
+
 
         loadOffersTask.execute();
     }
@@ -189,11 +210,12 @@ public class Store_Fragment extends Fragment {
                         }
                     }
                 }
+                // Dismiss the loading dialog when the task is completed
+                dismissLoadingDialog();
             }
         };
 
         loadWalletTask.execute();
     }
-
 
 }

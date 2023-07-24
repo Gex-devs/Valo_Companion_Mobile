@@ -4,6 +4,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gex.gex_riot_take_a_shit.LocalApiHandler;
+import com.gex.gex_riot_take_a_shit.ThirdParty.ValorantApi;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +25,7 @@ public class AgentSelViewOrganizer {
     }
 
     public void SetAgent(String characterID) throws IOException, ExecutionException, InterruptedException {
-        String Name = LocalApiHandler.getCharacterNameByID(characterID);
+        String Name = ValorantApi.getCharacterNameByID(characterID);
         if (Name.equals("null")){
             _AgentName.setText("Selecting....");
         }else {

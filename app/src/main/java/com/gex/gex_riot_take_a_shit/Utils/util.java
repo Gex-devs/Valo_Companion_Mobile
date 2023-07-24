@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class util {
+
     public static int get_respective_image(String Agent){
         switch (Agent){
             case "Raze":
@@ -214,5 +215,6 @@ public class util {
             return InfoType.Unkown;
         }
     }
+
 
 }

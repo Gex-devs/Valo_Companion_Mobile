@@ -4,9 +4,6 @@ import android.util.Log;
 
 import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -69,13 +66,13 @@ public class LocalApiHandler {
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
-                    System.out.println("called from python Rest Api");
-
                     Request request = new Request.Builder()
                             .url("http:/" + String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0] + ":7979/api/current_state")
                             .build();
                     Response response = client.newCall(request).execute();
-                    return response.body().string();
+                    String reponsebody = response.body().string();
+                    Log.d("Local Api, current_state", "call: "+reponsebody);
+                    return reponsebody;
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.d("Api_Call", "Call failed: " + e);
@@ -132,28 +129,22 @@ public class LocalApiHandler {
         return executor.submit(callable).get();
 
     }
-    public static String getCharacterNameByID(String puuid) throws IOException, ExecutionException, InterruptedException {
+    public static String getMyID() throws IOException, ExecutionException, InterruptedException {
 
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
-                    System.out.println("called from python Rest Api");
                     // code request code here
                     Request request = new Request.Builder()
-                            .url("https://valorant-api.com/v1/agents/"+puuid)
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/GetMyID")
                             .build();
 
                     Response response = client.newCall(request).execute();
                     Log.d("Api Call Response", "call: "+response);
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-                    String displayName = jsonObject.getJSONObject("data").getString("displayName");
-                    Log.d("displayName", "call: Agent Display Name " + displayName);
-                    return displayName;
+                    return response.body().string();
                 } catch (IOException e) {
                     e.printStackTrace();
                     return "null";
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
                 }
 
             }
@@ -164,7 +155,6 @@ public class LocalApiHandler {
         return executor.submit(callable).get();
 
     }
-
     public static void StartQ() throws IOException {
 
         new Thread(new Runnable() {
@@ -275,23 +265,28 @@ public class LocalApiHandler {
             }
         }).start();
     }
-    public static void SelectAgent(String agent) throws IOException {
-        new Thread(new Runnable() {
-            public void run() {
+    public static boolean SelectAgent(String agent) throws IOException, ExecutionException, InterruptedException {
+        Callable<Boolean> callable = new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
                 try {
-                    
                     // code request code here
                     Request request = new Request.Builder()
                             .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/selectagent?agent="+agent)
                             .build();
 
                     Response response = client.newCall(request).execute();
-                    System.out.println(response);
+                    return response.isSuccessful();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                return false;
             }
-        }).start();
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
     }
 
     public static String LockAgent(String agent) throws IOException, ExecutionException, InterruptedException {
@@ -384,6 +379,32 @@ public class LocalApiHandler {
                     // code request code here
                     Request request = new Request.Builder()
                             .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame/gamemode")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+    }
+    public static String getPreGame() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/pregame")
                             .build();
 
                     Response response = client.newCall(request).execute();

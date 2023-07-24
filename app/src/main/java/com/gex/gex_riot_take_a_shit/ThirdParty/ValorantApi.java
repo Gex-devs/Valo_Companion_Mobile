@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -186,5 +187,37 @@ public class ValorantApi {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         // Submit the Callable object to the ExecutorService to run in a separate thread
         return executor.submit(callable).get();
+    }
+    public static String getCharacterNameByID(String puuid) throws IOException, ExecutionException, InterruptedException {
+
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+                    // code request code here
+                    Request request = new Request.Builder()
+                            .url("https://valorant-api.com/v1/agents/"+puuid)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    Log.d("Api Call Response", "call: "+response);
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    String displayName = jsonObject.getJSONObject("data").getString("displayName");
+                    Log.d("displayName", "call: Agent Display Name " + displayName);
+                    return displayName;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "null";
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
     }
 }

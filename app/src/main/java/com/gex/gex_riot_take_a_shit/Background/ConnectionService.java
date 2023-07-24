@@ -3,6 +3,7 @@ package com.gex.gex_riot_take_a_shit.Background;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +11,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 import androidx.core.app.NotificationCompat;
+
+import com.gex.gex_riot_take_a_shit.NotificationRecv;
 import com.gex.gex_riot_take_a_shit.R;
 import java.net.URI;
 
@@ -48,7 +51,14 @@ public class ConnectionService extends Service {
         WebsocketServer client;
         String status;
         Log.d("onStartCommand", "onStartCommand: "+addr);
-
+        Intent dissmisintent = new Intent(this, NotificationRecv.class);
+        dissmisintent.setAction("DODGE_ACTION");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                1,
+                dissmisintent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
         try {
             client = WebsocketServer.getInstance(new URI(addr),this,this);
             if (!client.isOpen()){
@@ -58,6 +68,7 @@ public class ConnectionService extends Service {
                         .setOngoing(true)
                         .setContentTitle("Valo Companion")
                         .setContentText("Your Device is "+status)
+                        .addAction(R.drawable.valo,"Disconnect",pendingIntent)
                         .setSmallIcon(R.drawable.valo)
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 

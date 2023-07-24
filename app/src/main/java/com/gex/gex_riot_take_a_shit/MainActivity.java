@@ -1,6 +1,5 @@
 package com.gex.gex_riot_take_a_shit;
 
-import static com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher.Game_Status_Fragment;
 import static com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher.Store_Fragment;
 
 import android.annotation.SuppressLint;
@@ -96,29 +95,24 @@ public class MainActivity extends AppCompatActivity implements Observer {
         fragmentSwitcher = new FragmentSwitcher(fragmentManager,container);
 
 
-        if (WebsocketServer.getInstance() != null){
-            WebsocketServer.SetFirstFragment();
-        }
-        // Start Fragment
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, Game_Status.class, null)
-                .setReorderingAllowed(true)
-                .addToBackStack(null)       // name can be null
-                .commit();
-
         Thread testThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                   OfficalValorantApi officalValorantApi = OfficalValorantApi.getInstance(MainActivity.ContextMethod().getApplicationContext());
+                    OfficalValorantApi officalValorantApi = OfficalValorantApi.getInstance(MainActivity.ContextMethod().getApplicationContext());
                 } catch (IOException | JSONException | NoSuchAlgorithmException | KeyManagementException e) {
                     Log.d("ApiThread", "run: "+e);
-                     throw new RuntimeException(e);
+                    throw new RuntimeException(e);
                 }
             }
         });
-
         testThread.start();
+
+        if (WebsocketServer.getInstance() != null){
+            WebsocketServer.SetFirstFragment();
+        }else{
+            FragmentSwitcher.Game_Status_Fragment();
+        }
 
 
     }
@@ -145,7 +139,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void onTabSelected(int position) {
                 switch (position){
                     case 0:
-                        Game_Status_Fragment();
+                        if (WebsocketServer.getInstance() != null)
+                            WebsocketServer.SetFirstFragment();
+                        else
+                            FragmentSwitcher.Game_Status_Fragment();
                         System.out.println("First_fragment");
                         break;
                     case 1:

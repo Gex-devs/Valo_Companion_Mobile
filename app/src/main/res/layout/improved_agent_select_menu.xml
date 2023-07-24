@@ -533,7 +533,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/gamemode"
         android:layout_width="49dp"
         android:layout_height="31dp"
         android:background="#000000"
@@ -563,66 +563,6 @@
         app:layout_constraintStart_toStartOf="@+id/imageView19"
         app:layout_constraintTop_toTopOf="@+id/imageView19"
         app:layout_constraintVertical_bias="0.74" />
-
-    <ImageView
-        android:id="@+id/P_1_King"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/crown"
-        app:layout_constraintBottom_toTopOf="@+id/Player_1_Name_Improved"
-        app:layout_constraintEnd_toEndOf="@+id/Player_1_improved"
-        app:layout_constraintHorizontal_bias="0.024"
-        app:layout_constraintStart_toStartOf="@+id/Player_1_improved"
-        app:layout_constraintTop_toTopOf="@+id/Player_1_improved"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/P_2_King"
-        android:layout_width="32dp"
-        android:layout_height="31dp"
-        android:src="@drawable/crown"
-        app:layout_constraintBottom_toTopOf="@+id/Player_2_Name_improved"
-        app:layout_constraintEnd_toEndOf="@+id/player_2_improved"
-        app:layout_constraintHorizontal_bias="0.064"
-        app:layout_constraintStart_toStartOf="@+id/player_2_improved"
-        app:layout_constraintTop_toTopOf="@+id/player_2_improved"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/P_3_King"
-        android:layout_width="32dp"
-        android:layout_height="31dp"
-        android:src="@drawable/crown"
-        app:layout_constraintBottom_toTopOf="@+id/Player_3_Name_Improved"
-        app:layout_constraintEnd_toEndOf="@+id/player_3_improved2"
-        app:layout_constraintHorizontal_bias="0.074"
-        app:layout_constraintStart_toStartOf="@+id/player_3_improved2"
-        app:layout_constraintTop_toTopOf="@+id/player_3_improved2"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/P_4_King"
-        android:layout_width="32dp"
-        android:layout_height="31dp"
-        android:src="@drawable/crown"
-        app:layout_constraintBottom_toTopOf="@+id/Player_4_Name_Improved"
-        app:layout_constraintEnd_toEndOf="@+id/player_4_improved3"
-        app:layout_constraintHorizontal_bias="0.074"
-        app:layout_constraintStart_toStartOf="@+id/player_4_improved3"
-        app:layout_constraintTop_toTopOf="@+id/player_4_improved3"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/P_5_King"
-        android:layout_width="32dp"
-        android:layout_height="31dp"
-        android:src="@drawable/crown"
-        app:layout_constraintBottom_toTopOf="@+id/Player_5_Name_Improved"
-        app:layout_constraintEnd_toEndOf="@+id/player_5_improved4"
-        app:layout_constraintHorizontal_bias="0.074"
-        app:layout_constraintStart_toStartOf="@+id/player_5_improved4"
-        app:layout_constraintTop_toTopOf="@+id/player_5_improved4"
-        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

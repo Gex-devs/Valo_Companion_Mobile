@@ -1,6 +1,7 @@
 package com.gex.gex_riot_take_a_shit.Utils;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
@@ -36,5 +37,6 @@ public class FragmentTransactionTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void result) {
         // Update the user interface to reflect the changes
+        Log.d("FragmentSwitcher", "BackGround "+result);
     }
 }

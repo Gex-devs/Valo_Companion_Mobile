@@ -35,6 +35,11 @@ public class NotificationRecv extends BroadcastReceiver  {
             WebsocketServer.getInstance().setAllowNotification(true);
         }
 
+        if (intent.getAction().equals("DISCONNECT")){
+            assert WebsocketServer.getInstance() != null;
+            WebsocketServer.getInstance().stopAndDestroy();
+        }
+
     }
 
 }
