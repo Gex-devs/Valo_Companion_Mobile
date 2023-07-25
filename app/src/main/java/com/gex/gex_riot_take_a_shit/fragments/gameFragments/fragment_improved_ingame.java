@@ -63,10 +63,10 @@ public class fragment_improved_ingame extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_improved_ingame, container, false);
 
-        killfeed_container = (ScrollView) v.findViewById(R.id.kill_feed);
+        killfeed_container = (ScrollView) v.findViewById(R.id.chat_body);
         killfeed = (LinearLayout) v.findViewById(R.id.inner_kill_feed);
 
-        map = (ShapeableImageView) v.findViewById(R.id.imageView19) ;
+        map = (ShapeableImageView) v.findViewById(R.id.map) ;
 
         YourTeam = v.findViewById(R.id.teammates);
         Enemy = v.findViewById(R.id.enemy);

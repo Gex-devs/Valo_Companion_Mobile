@@ -1,7 +1,5 @@
 package com.gex.gex_riot_take_a_shit;
 
-import static com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher.Store_Fragment;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -92,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
         container = findViewById(R.id.fragmentContainerView);
 
 
-        fragmentSwitcher = new FragmentSwitcher(fragmentManager,container);
+
+        FragmentSwitcher.getInstance(fragmentManager,container);
 
 
         Thread testThread = new Thread(new Runnable() {
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         if (WebsocketServer.getInstance() != null){
             WebsocketServer.SetFirstFragment();
         }else{
-            FragmentSwitcher.Game_Status_Fragment();
+            FragmentSwitcher.getInstance().Game_Status_Fragment();
         }
 
 
@@ -142,11 +141,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
                         if (WebsocketServer.getInstance() != null)
                             WebsocketServer.SetFirstFragment();
                         else
-                            FragmentSwitcher.Game_Status_Fragment();
+                            FragmentSwitcher.getInstance().Game_Status_Fragment();
                         System.out.println("First_fragment");
                         break;
                     case 1:
-                        Store_Fragment();
+                        FragmentSwitcher.getInstance().Store_Fragment();
                         // Replace with Toasty if possible
                         Toast.makeText(MainActivity.this,"Store is still under development",Toast.LENGTH_SHORT).show();
                         Log.e("Bottom_Tab", "onTabSelected: Store Fragment is Under Development" );

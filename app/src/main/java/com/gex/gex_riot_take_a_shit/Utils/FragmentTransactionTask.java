@@ -1,14 +1,12 @@
 package com.gex.gex_riot_take_a_shit.Utils;
 
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class FragmentTransactionTask extends AsyncTask<Void, Void, Void> {
+public class FragmentTransactionTask {
 
     private FragmentManager fragmentManager;
     private ViewGroup container;
@@ -20,8 +18,7 @@ public class FragmentTransactionTask extends AsyncTask<Void, Void, Void> {
         this.fragment = fragment;
     }
 
-    @Override
-    protected Void doInBackground(Void... params) {
+    public void execute() {
         // Start the fragment transaction
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
@@ -31,12 +28,7 @@ public class FragmentTransactionTask extends AsyncTask<Void, Void, Void> {
         // Commit the transaction
         transaction.commitAllowingStateLoss();
 
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void result) {
-        // Update the user interface to reflect the changes
-        Log.d("FragmentSwitcher", "BackGround "+result);
+        fragmentManager.executePendingTransactions();
     }
 }
+

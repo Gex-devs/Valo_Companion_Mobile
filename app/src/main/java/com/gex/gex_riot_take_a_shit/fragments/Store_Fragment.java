@@ -96,7 +96,7 @@ public class Store_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 OfficalValorantApi.getInstance().clearCookies();
-                FragmentSwitcher.Store_Fragment();
+                FragmentSwitcher.getInstance().Store_Fragment();
             }
         });
         return v;

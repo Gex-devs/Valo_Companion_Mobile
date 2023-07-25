@@ -155,24 +155,28 @@ public class LocalApiHandler {
         return executor.submit(callable).get();
 
     }
-    public static void StartQ() throws IOException {
-
-        new Thread(new Runnable() {
-            public void run() {
+    public static boolean StartQ() throws IOException, ExecutionException, InterruptedException {
+        Callable<Boolean> callable = new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
                 try {
-                    
                     // code request code here
                     Request request = new Request.Builder()
                             .url("http:/"+String.valueOf(WebsocketServer.getInstance().getRemoteSocketAddress()).split(":")[0]+":7979/api/startQ")
                             .build();
 
                     Response response = client.newCall(request).execute();
-                    System.out.println(response);
+                    return response.isSuccessful();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                return false;
             }
-        }).start();
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
     }
     public static void LeaveQ() throws IOException {
         new Thread(new Runnable() {

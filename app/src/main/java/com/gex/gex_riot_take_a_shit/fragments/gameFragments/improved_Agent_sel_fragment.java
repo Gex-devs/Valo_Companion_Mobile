@@ -39,11 +39,12 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
     private ImageView P_1_King,P_2_King,P_3_King,P_4_King,P_5_King;
     private TextView P_1,P_2,P_3,P_4,P_5,A_1,A_2,A_3,A_4,A_5,MapName,server_name,game_mode;
     private Current_status_Data viewModel;
-    private ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade,Map;
+    private ShapeableImageView astra,breach,brimstone,chamber,cypher,jett,kayo,killjoy,neon,omen,phoniex,raze,reyna,sage,skye,sova,viper,fade;
+    private ShapeableImageView Map;
     private String selected_agent;
 
     private String gameMode,gameMap,gameServer;
-
+    private JsonParseTask jsonParseTask;
     private AgentSelViewOrganizer PlayerOne,PlayerTwo,PlayerThree,PlayerFour,PlayerFive;
     private AgentSelViewOrganizer[] otherPlayers;
     @Override
@@ -127,7 +128,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
 
 
         //Map
-        Map = (ShapeableImageView) v.findViewById(R.id.imageView19);
+        Map = (ShapeableImageView) v.findViewById(R.id.map);
         MapName = (TextView) v.findViewById(R.id.textView7);
         // Server,game mode and
         server_name = (TextView) v.findViewById(R.id.server_name);
@@ -148,7 +149,11 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
 
         viewModel.getSelectedItem().observe(requireActivity(),item ->{
 //            UpdateUi(item);
-            new JsonParseTask().execute(item);
+            if (jsonParseTask != null && jsonParseTask.getStatus() == AsyncTask.Status.RUNNING) {
+                jsonParseTask.cancel(true);
+            }
+            jsonParseTask = new JsonParseTask();
+            jsonParseTask.execute(item);
         });
 
         try {
@@ -156,7 +161,7 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
             MapName.setText(util.get_respective_map_name(map_now));
             server_name.setText(LocalApiHandler.get_server());
             game_mode.setText(LocalApiHandler.get_gamemode());
-            Map.setImageResource(util.get_respective_map_image(map_now));
+            Map.setBackgroundResource(util.get_respective_map_image(map_now));
 //            new JsonParseTask().execute(LocalApiHandler.getPreGame());
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -164,12 +169,19 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
         return v;
     }
     @SuppressLint("StaticFieldLeak")
-    private class JsonParseTask extends AsyncTask<String, Void, Void> {
+    private class JsonParseTask extends AsyncTask<String, Void, AgentSelViewOrganizer> {
+        String subject;
+        String characterId;
         @Override
-        protected Void doInBackground(String... strings) {
+        protected AgentSelViewOrganizer doInBackground(String... strings) {
             String item = strings[0];
+            AgentSelViewOrganizer playerViewOrganizer = null;
+            if (isCancelled()) {
+                return null; // Exit the task if it's canceled
+            }
+
             try {
-                Log.d("AgentSelect", "Json: "+item);
+                Log.d("AgentSelect", "Json: " + item);
                 JSONObject jsonObject = new JSONObject(item);
                 JSONObject allyTeam = jsonObject.getJSONObject("AllyTeam");
 
@@ -177,14 +189,14 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                 Log.d("AgentSelect", "Team ID: " + teamId);
 
                 JSONArray players = allyTeam.getJSONArray("Players");
-                Log.d("ddme", "Value of array: "+String.valueOf(players.length()));
+                Log.d("ddme", "Value of array: " + String.valueOf(players.length()));
                 int foragentSel = 0;
                 for (int i = 0; i < players.length(); i++) {
                     Log.d("ddme", String.valueOf(i));
                     try {
                         JSONObject player = players.getJSONObject(i);
-                        String subject = player.getString("Subject");
-                        String characterId = player.getString("CharacterID");
+                        subject = player.getString("Subject");
+                        characterId = player.getString("CharacterID");
                         String characterSelectionState = player.getString("CharacterSelectionState");
                         int competitiveTier = player.getInt("CompetitiveTier");
                         boolean isCaptain = player.getBoolean("IsCaptain");
@@ -202,13 +214,13 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                         Log.d("AgentSelect", "Player Card ID: " + playerCardId);
                         Log.d("AgentSelect", "Player Title ID: " + playerTitleId);
 
-                        AgentSelViewOrganizer playerViewOrganizer = null;
+                        playerViewOrganizer = null;
 
-                        if (subject.equals(PlayerStaticInfos.getMyID())){
+                        if (subject.equals(PlayerStaticInfos.getMyID())) {
                             // Apply PlayerOne to the owner only
                             playerViewOrganizer = PlayerOne;
                             Log.d("AgentSelect", "isOwner: true");
-                        }else if (foragentSel >= 0 && foragentSel < otherPlayers.length) {
+                        } else if (foragentSel >= 0 && foragentSel < otherPlayers.length) {
                             // Apply the other players to PlayerTwo, PlayerThree, PlayerFour, or PlayerFive
                             playerViewOrganizer = otherPlayers[foragentSel];
                             foragentSel++; // Increment the index for the next iteration
@@ -217,19 +229,20 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                         }
 
 
-
-                        if(playerViewOrganizer != null)
-                            updateUiOnUiThread(playerViewOrganizer,subject,characterId);
-                    }catch (Exception ex){
+                        if (playerViewOrganizer != null)
+                                updateUiOnUiThread(playerViewOrganizer, subject, characterId);
+                    } catch (Exception ex) {
                         Log.e("AgentSel", ex.toString());
                     }
 
                 }
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 Log.d("ShowMeTheWay", ex.toString());
             }
-            return null;
+            return playerViewOrganizer;
         }
+
+
     }
 
     private void updateUiOnUiThread(AgentSelViewOrganizer agentSelViewOrganizer,String... item) throws IOException, ExecutionException, InterruptedException {

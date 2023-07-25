@@ -62,7 +62,7 @@ public class Riot_login_frag extends Fragment {
     }
 
     private void OpenUpTheStore(){
-        FragmentSwitcher.Store_Fragment();
+        FragmentSwitcher.getInstance().Store_Fragment();
     }
 
     private void Login(){

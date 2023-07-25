@@ -92,7 +92,7 @@ public class WebsocketServer extends WebSocketClient{
         Log.d("Websocket", "Closed connection: " + reason + code);
         Theservice.stopForeground(true);
         notificationManager.cancel(1);
-        FragmentSwitcher.Game_Status_Fragment();
+        FragmentSwitcher.getInstance().Game_Status_Fragment();
         stopAndDestroy();
 
     }
@@ -105,7 +105,7 @@ public class WebsocketServer extends WebSocketClient{
             case "MainMenu":
                 notificationManager.cancel(2);
                 setAllowNotification(true);
-                FragmentSwitcher.Qeue_Menu();
+                FragmentSwitcher.getInstance().Qeue_Menu();
                 break;
             case "Agent_sel":
                 try {
@@ -114,13 +114,13 @@ public class WebsocketServer extends WebSocketClient{
                     throw new RuntimeException(e);
                 }
 
-                FragmentSwitcher.Agent_Select_fragment();
+                FragmentSwitcher.getInstance().Agent_Select_fragment();
                 break;
             case "In_Game":
                 Log.d("WebSocket", "onMessage: InGame called");
                 notificationManager.cancel(2);
                 setAllowNotification(true);
-                FragmentSwitcher.Game_Fragment();
+                FragmentSwitcher.getInstance().Game_Fragment();
                 break;
             default:
                 if (util.IdentifyDataType(message) == InfoType.Chat) {
@@ -146,16 +146,16 @@ public class WebsocketServer extends WebSocketClient{
         try {
             switch (LocalApiHandler.current_state()) {
                 case "MainMenu":
-                    FragmentSwitcher.Qeue_Menu();
+                    FragmentSwitcher.getInstance().Qeue_Menu();
                     break;
                 case "Agent_sel":
-                    FragmentSwitcher.Agent_Select_fragment();
+                    FragmentSwitcher.getInstance().Agent_Select_fragment();
                     break;
                 case "In_Game":
-                    FragmentSwitcher.Game_Fragment();
+                    FragmentSwitcher.getInstance().Game_Fragment();
                     break;
                 default:
-                    FragmentSwitcher.Game_Status_Fragment();
+                    FragmentSwitcher.getInstance().Game_Status_Fragment();
                     break;
             }
 

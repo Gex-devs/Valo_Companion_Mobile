@@ -99,7 +99,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
          Send.setOnClickListener(this);
 
          //scroll view
-        textchat = (ScrollView)v.findViewById(R.id.kill_feed);
+        textchat = (ScrollView)v.findViewById(R.id.chat_body);
 
          // Player image view
          p1 = (ShapeableImageView) v.findViewById(R.id.player_1);
@@ -239,9 +239,13 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                    }
                }else {
                    try {
-                       LocalApiHandler.StartQ();
+                       boolean status = LocalApiHandler.StartQ();
+                        if (!status)
+                            Toast.makeText(getContext(),"Unable to start Match",Toast.LENGTH_LONG).show();
                    } catch (IOException e) {
                        e.printStackTrace();
+                   } catch (ExecutionException | InterruptedException e) {
+                       throw new RuntimeException(e);
                    }
                }
                 break;
@@ -267,8 +271,6 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                 players = json.getJSONArray("Members");
                 accessibility = json.getString("Accessibility");
                 state = json.getString("State");
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
                 System.out.println(e);
@@ -337,73 +339,108 @@ public class menuSelection extends Fragment implements View.OnClickListener {
 
     private void updatePlayerUI(JSONArray players) throws IOException, ExecutionException, InterruptedException, JSONException {
         // Update player UI
+        Log.d("MenuSelection", "Players size: "+players.length());
+        boolean p1Called = false;
+        boolean p2Called = false;
+        boolean p3Called = false;
+        boolean p4Called = false;
+        boolean p5Called = false;
+
         for (int i = 0; i < players.length(); i++) {
             try {
                 JSONObject player = players.getJSONObject(i);
                 String player_puid = player.getJSONObject("PlayerIdentity").getString("Subject");
                 String player_card = player.getJSONObject("PlayerIdentity").getString("PlayerCardID");
-                String  player_title = player.getJSONObject("PlayerIdentity").getString("PlayerTitleID");
-                boolean isOwner = player.getBoolean("IsOwner");
+                String player_title = player.getJSONObject("PlayerIdentity").getString("PlayerTitleID");
+                boolean isOwner = player.has("IsOwner") && player.getBoolean("IsOwner");
 
                 switch (i) {
                     case 0:
+                        Log.d("MenuSelection", "updatePlayerUI: first Player");
                         if (isOwner) {
                             p1_leader.setVisibility(View.VISIBLE);
-                        } else {
-                            p1_leader.setVisibility(View.INVISIBLE);
                         }
                         p1_name.setText(LocalApiHandler.getUsername(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, true)).into(p1);
                         p1_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        p1Called = true;
                         break;
                     case 1:
+                        Log.d("MenuSelection", "updatePlayerUI: Second Player");
                         if (isOwner) {
                             p2_leader.setVisibility(View.VISIBLE);
-                        } else {
-                            p2_leader.setVisibility(View.INVISIBLE);
                         }
                         p2_name.setText(LocalApiHandler.getUsername(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p2);
                         p2_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        p2Called = true;
                         break;
                     case 2:
                         if (isOwner) {
                             p3_leader.setVisibility(View.VISIBLE);
-                        } else {
-                            p3_leader.setVisibility(View.INVISIBLE);
                         }
                         p3_name.setText(LocalApiHandler.getUsername(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p3);
                         p3_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        p3Called = true;
                         break;
                     case 3:
                         if (isOwner) {
                             p4_leader.setVisibility(View.VISIBLE);
-                        } else {
-                            p4_leader.setVisibility(View.INVISIBLE);
                         }
                         p4_name.setText(LocalApiHandler.getUsername(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p4);
                         p4_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        p4Called = true;
                         break;
                     case 4:
                         if (isOwner) {
                             p5_leader.setVisibility(View.VISIBLE);
-                        } else {
-                            p5_leader.setVisibility(View.INVISIBLE);
                         }
                         p5_name.setText(LocalApiHandler.getUsername(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p5);
                         p5_title.setText(ValorantApi.GetPlayerTitle(player_title));
+                        p5Called = true;
                         break;
                     default:
                         Log.d("AgentSelect", "Unknown Amount of agents");
                         break;
                 }
-            }catch (JSONException e){
-                Log.d("MenuSelection", "JsonException: "+e.toString());
+            } catch (JSONException e) {
+                Log.d("MenuSelection", "JsonException: " + e.toString());
             }
+        }
 
+        // Check if a case wasn't called and handle default behavior
+        if (!p1Called) {
+            // Handle default behavior for player 1
+            p1_name.setText("");
+            p1.setImageResource(R.color.scoreboard);
+            p1_title.setText("");
+        }
+        if (!p2Called) {
+            // Handle default behavior for player 2
+            p2_name.setText("");
+            p2.setImageResource(R.color.scoreboard);
+            p2_title.setText("");
+        }
+        if (!p3Called) {
+            // Handle default behavior for player 3
+            p3_name.setText("");
+            p3.setImageResource(R.color.scoreboard);
+            p3_title.setText("");
+        }
+        if (!p4Called) {
+            // Handle default behavior for player 4
+            p4_name.setText("");
+            p4.setImageResource(R.color.scoreboard);
+            p4_title.setText("");
+        }
+        if (!p5Called) {
+            // Handle default behavior for player 5
+            p5_name.setText("");
+            p5.setImageResource(R.color.scoreboard);
+            p5_title.setText("");
         }
 
     }

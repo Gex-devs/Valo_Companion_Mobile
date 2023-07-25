@@ -20,10 +20,30 @@ public class FragmentSwitcher {
     
     private static FragmentManager _fragmentManager;
     private static ViewGroup _container;
-    
+
+    private static FragmentSwitcher Instance;
+
+
+
     public FragmentSwitcher(FragmentManager fragmentManager,ViewGroup container){
         _fragmentManager = fragmentManager;
         _container = container;
+    }
+
+
+    public static FragmentSwitcher getInstance(){
+        if (Instance != null)
+            return Instance;
+        return null;
+    }
+
+
+    public static FragmentSwitcher getInstance(FragmentManager fragmentSwitcher,ViewGroup _container){
+        if (Instance == null){
+            Instance = new FragmentSwitcher(fragmentSwitcher,_container);
+            return Instance;
+        }
+        return Instance;
     }
 
     public static void Agent_Select_fragment(){
