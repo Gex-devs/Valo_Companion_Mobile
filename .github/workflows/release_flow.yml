@@ -32,7 +32,7 @@ jobs:
             exit 1
           fi
 
-      - name: Use Java8
+      - name: Use Java 8
         uses: actions/setup-java@v1
         with:
           java-version: 11
@@ -43,16 +43,16 @@ jobs:
           ./gradlew clean assembleRelease
 
       - name: Create Release
-          id: create_release
-          uses: actions/create-release@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ github.ref }}  # Use the tag name from the event
-            release_name: Release ${{ github.ref }}  # Use the tag name for the release name
-            draft: false
-            prerelease: false
-            body: ${{ steps.read_changelog.outputs.CHANGELOG }}
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}  # Use the tag name from the event
+          release_name: Release ${{ github.ref }}  # Use the tag name for the release name
+          draft: false
+          prerelease: false
+          body: ${{ steps.read_changelog.outputs.CHANGELOG }}
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
