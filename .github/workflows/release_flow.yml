@@ -39,6 +39,7 @@ jobs:
 
       - name: Build debug apk
         run: |
+          chmod +x gradlew
           ./gradlew clean assembleRelease
 
       - name: Create Release
