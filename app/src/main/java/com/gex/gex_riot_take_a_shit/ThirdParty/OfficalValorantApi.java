@@ -24,6 +24,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
@@ -45,6 +49,7 @@ public class OfficalValorantApi {
     private SharedPreferences.Editor editor;
     private CookieJar cookieJar;
     private String TokenJson = "";
+    private ExecutorService executor;
     private final Map<String ,Integer> StorebundleHash = new HashMap<>(); //got lazy
     private static OfficalValorantApi instance;
 
@@ -62,6 +67,9 @@ public class OfficalValorantApi {
 
 //        clearCookies();
         ReAuth();
+
+        executor = Executors.newFixedThreadPool(6);
+
 //        GetEntitlementToken();
     }
 
@@ -78,12 +86,9 @@ public class OfficalValorantApi {
     public static OfficalValorantApi getInstance(Context context) throws NoSuchAlgorithmException, KeyManagementException, JSONException, IOException {
 
         if (instance == null) {
-            synchronized (LocalApiHandler.class) {
-                if (instance == null) {
-                    instance = new OfficalValorantApi(context);
-                }
-            }
+            instance = new OfficalValorantApi(context);
         }
+
         return instance;
     }
 
@@ -105,6 +110,7 @@ public class OfficalValorantApi {
         AuthCookiesBody authCookiesBody = new AuthCookiesBody();
 
         String postJsonBody = gson.toJson(authCookiesBody);
+
         Request postRequest = new Request.Builder()
                 .url(AuthCookiesUrl)
                 .headers(headers)
@@ -260,62 +266,77 @@ public class OfficalValorantApi {
         return accessToken;
     }
 
-    private String GetEntitlementToken() throws IOException, JSONException {
+    private String GetEntitlementToken() throws IOException, JSONException, ExecutionException, InterruptedException {
 
-        OkHttpClient client = new OkHttpClient();
+        Callable<String> callable = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Content-Type", "application/json")
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .build();
 
-        Headers headers = new Headers.Builder()
-                .add("Content-Type", "application/json")
-                .add("Authorization","Bearer "+ GetAccessToken())
-                .build();
+                //Empty Body
+                RequestBody requestBody = RequestBody.create(null, new byte[0]);
+                Request postRequest = new Request.Builder()
+                        .url("https://entitlements.auth.riotgames.com/api/token/v1")
+                        .headers(headers)
+                        .post(requestBody)
+                        .build();
 
-        //Empty Body
-        RequestBody requestBody = RequestBody.create(null, new byte[0]);
-        Request postRequest = new Request.Builder()
-                .url("https://entitlements.auth.riotgames.com/api/token/v1")
-                .headers(headers)
-                .post(requestBody)
-                .build();
+                // Send the POST request
+                Response response = miscClient.newCall(postRequest).execute();
+                if (!response.isSuccessful()){
+                    ReAuth();
+                    GetEntitlementToken();
+                }
 
-        // Send the POST request
-        Response response = client.newCall(postRequest).execute();
-        if (!response.isSuccessful()){
-            ReAuth();
-            GetEntitlementToken();
-        }
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                String entitlement = jsonObject.getString("entitlements_token");
+                // Handle the response
+                Log.d("GetEntitlementToken", "GetEntitlementToken: "+entitlement);
+                return entitlement;
+            }
+        };
 
-        JSONObject jsonObject = new JSONObject(response.body().string());
-        String entitlement = jsonObject.getString("entitlements_token");
-        // Handle the response
-        Log.d("GetEntitlementToken", "GetEntitlementToken: "+entitlement);
-        return entitlement;
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+
     }
 
-    private String GetPuuid() throws JSONException, IOException {
-        OkHttpClient client = new OkHttpClient();
+    private String GetPuuid() throws JSONException, IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .build();
 
-        Headers headers = new Headers.Builder()
-                .add("Authorization","Bearer "+ GetAccessToken())
-                .build();
+                //Empty Body
+                RequestBody requestBody = RequestBody.create(null, new byte[0]);
+                Request Request = new Request.Builder()
+                        .url("https://auth.riotgames.com/userinfo")
+                        .headers(headers)
+                        .build();
 
-        //Empty Body
-        RequestBody requestBody = RequestBody.create(null, new byte[0]);
-        Request Request = new Request.Builder()
-                .url("https://auth.riotgames.com/userinfo")
-                .headers(headers)
-                .build();
+                // Send the POST request
+                Response response = miscClient.newCall(Request).execute();
 
-        // Send the POST request
-        Response response = client.newCall(Request).execute();
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                String Puuid = jsonObject.getString("sub");
+                // Handle the response
+                Log.d("Official Api", "GetPuuid: "+Puuid);
+                return Puuid;
 
-        JSONObject jsonObject = new JSONObject(response.body().string());
-        String Puuid = jsonObject.getString("sub");
-        // Handle the response
-        Log.d("Official Api", "GetPuuid: "+Puuid);
-        return Puuid;
+            }
+        };
+
+        return executor.submit(callable).get();
+
+
     }
 
-    public Map<String, Integer> GetStore() throws JSONException, IOException {
+    public Map<String, Integer> GetStore() throws JSONException, IOException, ExecutionException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
         Headers headers = new Headers.Builder()
                 .add("Authorization","Bearer "+ GetAccessToken())
                 .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
@@ -357,6 +378,25 @@ public class OfficalValorantApi {
 
         StorebundleHash.put(ID,fakeprice);
 
+        ///// DEBUG
+
+        headers = new Headers.Builder()
+                .add("X-Riot-ClientVersion",ValorantApi.getInstance().GetClientVersion())
+                .add("Authorization","Bearer "+ GetAccessToken())
+                .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                .build();
+
+        request = new Request.Builder()
+                .url("https://glz-eu-1.eu.a.pvp.net/parties/v1/players/6daff3be-92d8-58cb-986c-e4ab72b96a5a")
+                .headers(headers)
+                .build();
+
+        response = miscClient.newCall(request).execute();
+
+        ResponseString = response.body().string();
+
+        Log.d("Party Debug", "Is Player Online: "+ ResponseString);
+
         return StoreList;
     }
 
@@ -369,7 +409,7 @@ public class OfficalValorantApi {
     }
 
 
-    public Map<String, Integer> GetWallet() throws JSONException, IOException {
+    public Map<String, Integer> GetWallet() throws JSONException, IOException, ExecutionException, InterruptedException {
         Headers headers = new Headers.Builder()
                 .add("Authorization","Bearer "+ GetAccessToken())
                 .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
@@ -397,6 +437,99 @@ public class OfficalValorantApi {
 
 
         return Wallet;
+    }
+
+    public String GetPartyID() throws IOException, JSONException, NoSuchAlgorithmException, KeyManagementException, ExecutionException, InterruptedException {
+
+        Callable<String> callable = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("X-Riot-ClientVersion",ValorantApi.getInstance().GetClientVersion())
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url("https://glz-eu-1.eu.a.pvp.net/parties/v1/players/"+GetPuuid())
+                        .headers(headers)
+                        .build();
+
+                Response response = miscClient.newCall(request).execute();
+
+                String ResponseString = response.body().string();
+                String PartyID = new JSONObject(ResponseString).getString("CurrentPartyID");
+                return  PartyID;
+            }
+        };
+
+        return executor.submit(callable).get();
+
+    }
+
+    public String GetParty() throws IOException, JSONException, NoSuchAlgorithmException, KeyManagementException, ExecutionException, InterruptedException {
+
+        Callable<String> callable = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url("https://glz-eu-1.eu.a.pvp.net/parties/v1/parties/"+GetPartyID())
+                        .headers(headers)
+                        .build();
+
+                Response response = miscClient.newCall(request).execute();
+
+                String ResponseString = response.body().string();
+
+                return  ResponseString;
+            }
+        };
+
+        return executor.submit(callable).get();
+
+    }
+
+    public String GetQeueMode() throws JSONException, IOException, NoSuchAlgorithmException, ExecutionException, InterruptedException, KeyManagementException {
+
+        String QeueMode = new JSONObject(GetParty()).getJSONObject("MatchmakingData").getString("QueueID");
+
+        return QeueMode;
+    }
+
+    public String GetNameByPuuid(String puuid) throws IOException, JSONException, NoSuchAlgorithmException, KeyManagementException, ExecutionException, InterruptedException{
+
+        Callable<String> callable = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                        .build();
+
+                JSONObject requestBody = new JSONObject();
+
+                String[] payload = new String[]{puuid};
+                Request request = new Request.Builder()
+                        .url("https://pd.eu.a.pvp.net/name-service/v2/players")
+                        .headers(headers)
+                        .post(RequestBody.create(MediaType.parse("application/json"), gson.toJson(requestBody)))
+                        .build();
+
+                Response response = miscClient.newCall(request).execute();
+
+                String ResponseString = response.body().string();
+
+                return  new JSONArray(ResponseString).getJSONObject(0).getString("GameName");
+            }
+        };
+
+        return executor.submit(callable).get();
+
     }
 
 

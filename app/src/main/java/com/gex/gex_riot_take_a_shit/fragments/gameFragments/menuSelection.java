@@ -27,6 +27,7 @@ import com.gex.gex_riot_take_a_shit.Current_status_Data;
 import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 import com.gex.gex_riot_take_a_shit.MainActivity;
 import com.gex.gex_riot_take_a_shit.R;
+import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.ThirdParty.ValorantApi;
 import com.gex.gex_riot_take_a_shit.enums.GameModes;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -41,6 +42,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -72,8 +75,8 @@ public class menuSelection extends Fragment implements View.OnClickListener {
 
     public menuSelection(Current_status_Data viewModel){
         _viewModel = viewModel;
-
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,11 +208,14 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         });
 
         try {
-            new JsonParseTask().execute(LocalApiHandler.get_party());
+            new JsonParseTask().execute(OfficalValorantApi.getInstance().GetParty());
 //            UiUpdate(LocalApiHandler.get_party());
-            spProvince.setSelection(GameModes.getByCodeName(LocalApiHandler.GetQeueMode()).ordinal());
-        } catch (IOException | ExecutionException | InterruptedException e) {
+            spProvince.setSelection(GameModes.getByCodeName(OfficalValorantApi.getInstance().GetQeueMode()).ordinal());
+        } catch (IOException | ExecutionException | InterruptedException |
+                 NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
+        }catch (JSONException e){
+            Log.d("Api Json Parse", "JsonParse: "+ e);
         }
 
 
@@ -288,9 +294,9 @@ public class menuSelection extends Fragment implements View.OnClickListener {
             if(players != null){
                 try {
                     updatePlayerUI(players);
-                } catch (IOException | ExecutionException | InterruptedException e) {
+                } catch (IOException  | InterruptedException e) {
                     throw new RuntimeException(e);
-                }catch (JSONException e){
+                }catch (ExecutionException | JSONException e){
                     Log.d("MenuSelection", e.toString());
                 }
             }
@@ -360,7 +366,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         if (isOwner) {
                             p1_leader.setVisibility(View.VISIBLE);
                         }
-                        p1_name.setText(LocalApiHandler.getUsername(player_puid));
+                        p1_name.setText(OfficalValorantApi.getInstance().GetNameByPuuid(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, true)).into(p1);
                         p1_title.setText(ValorantApi.GetPlayerTitle(player_title));
                         p1Called = true;
@@ -370,7 +376,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         if (isOwner) {
                             p2_leader.setVisibility(View.VISIBLE);
                         }
-                        p2_name.setText(LocalApiHandler.getUsername(player_puid));
+                        p2_name.setText(OfficalValorantApi.getInstance().GetNameByPuuid(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p2);
                         p2_title.setText(ValorantApi.GetPlayerTitle(player_title));
                         p2Called = true;
@@ -379,7 +385,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         if (isOwner) {
                             p3_leader.setVisibility(View.VISIBLE);
                         }
-                        p3_name.setText(LocalApiHandler.getUsername(player_puid));
+                        p3_name.setText(OfficalValorantApi.getInstance().GetNameByPuuid(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p3);
                         p3_title.setText(ValorantApi.GetPlayerTitle(player_title));
                         p3Called = true;
@@ -388,7 +394,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         if (isOwner) {
                             p4_leader.setVisibility(View.VISIBLE);
                         }
-                        p4_name.setText(LocalApiHandler.getUsername(player_puid));
+                        p4_name.setText(OfficalValorantApi.getInstance().GetNameByPuuid(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p4);
                         p4_title.setText(ValorantApi.GetPlayerTitle(player_title));
                         p4Called = true;
@@ -397,7 +403,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         if (isOwner) {
                             p5_leader.setVisibility(View.VISIBLE);
                         }
-                        p5_name.setText(LocalApiHandler.getUsername(player_puid));
+                        p5_name.setText(OfficalValorantApi.getInstance().GetNameByPuuid(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, false)).into(p5);
                         p5_title.setText(ValorantApi.GetPlayerTitle(player_title));
                         p5Called = true;
@@ -408,6 +414,8 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                 }
             } catch (JSONException e) {
                 Log.d("MenuSelection", "JsonException: " + e.toString());
+            } catch (NoSuchAlgorithmException | KeyManagementException e) {
+                throw new RuntimeException(e);
             }
         }
 
@@ -454,20 +462,20 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         onStateChangeListener = new JellyToggleButton.OnStateChangeListener() {
             @Override
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
-                if (state.equals(State.LEFT)) {
-                    try {
-                        LocalApiHandler.set_party_status("closed");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(state.equals(State.RIGHT)){
-                    try {
-                        LocalApiHandler.set_party_status("open");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+//                if (state.equals(State.LEFT)) {
+//                    try {
+//                        LocalApiHandler.set_party_status("closed");
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                if(state.equals(State.RIGHT)){
+//                    try {
+//                        LocalApiHandler.set_party_status("open");
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
             }
         };
 
@@ -475,11 +483,11 @@ public class menuSelection extends Fragment implements View.OnClickListener {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 //Toasty.info(MainActivity.ContextMethod(), provinceList.get(position), Toast.LENGTH_SHORT, true).show();
-                try {
-                    LocalApiHandler.Change_Q(GameModes.values()[position].getCodeName());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+//                try {
+//                    LocalApiHandler.Change_Q(GameModes.values()[position].getCodeName());
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {

@@ -55,16 +55,20 @@ public class FragmentSwitcher {
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
     }
     public static void Game_Status_Fragment(){
-        Fragment fragment = new Game_Status();
+        Fragment fragment;
+        if (signInChecker.isCookieAlive())
+            fragment = new Game_Status();
+        else
+            fragment = new Riot_login_frag();
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
     }
     public  static void Store_Fragment(){
         Fragment fragment;
-        if (signInChecker.isCookieAlive()){
+        if (signInChecker.isCookieAlive())
             fragment = new Store_Fragment();
-        }else {
+        else
             fragment = new Riot_login_frag();
-        }
+
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
 
     }

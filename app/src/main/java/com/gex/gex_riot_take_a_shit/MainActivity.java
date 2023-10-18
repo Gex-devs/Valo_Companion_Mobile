@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.gex.gex_riot_take_a_shit.Background.BackgroundWatchers;
 import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
 import com.gex.gex_riot_take_a_shit.ThirdParty.Firebase;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
@@ -28,6 +29,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity implements Observer {
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
 
         Firebase firebase = new Firebase(this);
+
         //Create instance of Api Handler to use as a singleton
         try {
             LocalApiHandler apiHandler = new LocalApiHandler();
@@ -98,13 +101,18 @@ public class MainActivity extends AppCompatActivity implements Observer {
             @Override
             public void run() {
                 try {
+                    // Move the instantiation of OfficalValorantApi here
                     OfficalValorantApi officalValorantApi = OfficalValorantApi.getInstance(MainActivity.ContextMethod().getApplicationContext());
-                } catch (IOException | JSONException | NoSuchAlgorithmException | KeyManagementException e) {
-                    Log.d("ApiThread", "run: "+e);
+                    BackgroundWatchers backgroundWatchers = new BackgroundWatchers(viewModel);
+                    backgroundWatchers.StartWatch();
+                } catch (IOException | JSONException | NoSuchAlgorithmException |
+                         KeyManagementException | ExecutionException | InterruptedException e) {
+                    Log.d("ApiThread", "run: " + e);
                     throw new RuntimeException(e);
                 }
             }
         });
+
         testThread.start();
 
         if (WebsocketServer.getInstance() != null){
@@ -113,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             FragmentSwitcher.getInstance().Game_Status_Fragment();
         }
 
-
+        // Test
     }
     @Override
     public void update(Observable observable, Object o) {
@@ -138,10 +146,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void onTabSelected(int position) {
                 switch (position){
                     case 0:
-                        if (WebsocketServer.getInstance() != null)
-                            WebsocketServer.SetFirstFragment();
-                        else
-                            FragmentSwitcher.getInstance().Game_Status_Fragment();
+                        FragmentSwitcher.getInstance().Qeue_Menu();
                         System.out.println("First_fragment");
                         break;
                     case 1:

@@ -27,11 +27,16 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import okhttp3.Headers;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class Store_Fragment extends Fragment {
@@ -168,6 +173,10 @@ public class Store_Fragment extends Fragment {
 
                 } catch (JSONException | IOException | ExecutionException | InterruptedException e) {
                     e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (KeyManagementException e) {
+                    throw new RuntimeException(e);
                 }
                 // Dismiss the loading dialog when the task is completed
                 dismissLoadingDialog();
@@ -188,6 +197,10 @@ public class Store_Fragment extends Fragment {
                     return OfficalValorantApi.getInstance().GetWallet();
                 } catch (JSONException | IOException e) {
                     e.printStackTrace();
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 return null;
             }

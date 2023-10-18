@@ -8,7 +8,6 @@ public class Current_status_Data extends ViewModel {
     private final MutableLiveData<String> Selection_Menu_json = new MutableLiveData<>();
     private final MutableLiveData<String> ChatData = new MutableLiveData<>();
     private final MutableLiveData<String> char_select_item = new MutableLiveData<>();
-    private final MutableLiveData<String> Map_addr = new MutableLiveData<>();
 
 
     public void Selection(String item) {
@@ -26,9 +25,7 @@ public class Current_status_Data extends ViewModel {
     public LiveData<String> getPartyChat(){
         return ChatData;
     }
-    public LiveData<String> get_map(){
-        return  Map_addr;
-    }
+
 
 
     public LiveData<String> getSelectedItem() {

@@ -25,22 +25,25 @@ import com.dexafree.materialList.card.action.TextViewAction;
 import com.dexafree.materialList.view.MaterialListView;
 import com.gex.gex_riot_take_a_shit.Background.ConnectionService;
 import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
+import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
+import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 import com.squareup.picasso.RequestCreator;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class Game_Status extends Fragment implements View.OnClickListener{
     Current_status_Data viewModel;
     String myString;
-    public String ip_addrs;
-    MaterialListView mListView;
-    public static WebsocketServer client;
 
-
-    private List<NsdServiceInfo> mDiscoveredServices = new ArrayList<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,18 +83,6 @@ public class Game_Status extends Fragment implements View.OnClickListener{
             myString = savedInstanceState.getString("myString","default");
         }
 
-        SwipeRefreshLayout swiper = (SwipeRefreshLayout) v.findViewById(R.id.swiper);
-        swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                discoverServices();
-                swiper.setRefreshing(false);
-            }
-        });
-        //https://github.com/dexafree/MaterialList
-        mListView = (MaterialListView) v.findViewById(R.id.material_listview);
-
-
         viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
         viewModel.getFor_char().observe(requireActivity(),item->{
             //WebServer.broadcast(item, WebServer.getConnections());
@@ -117,139 +108,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         viewModel.for_char("Say something i am giving up on u");
     }
-    public void resolveService(NsdServiceInfo serviceInfo) {
-        // Create a NsdManager instance
-        NsdManager nsdManager = (NsdManager) MainActivity.ContextMethod().getApplicationContext().getSystemService(Context.NSD_SERVICE);
-
-        // Create a NsdManager.ResolveListener instance
-        NsdManager.ResolveListener resolveListener = new NsdManager.ResolveListener() {
-            @Override
-            public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-                // Resolution failed
-            }
-
-            @Override
-            public void onServiceResolved(NsdServiceInfo serviceInfo) {
-                // The service was resolved
-                System.out.println(serviceInfo.getHost());
-                System.out.println(serviceInfo.getServiceName());
-                System.out.println(serviceInfo.getPort());
-                System.out.println(serviceInfo.getServiceType());
-                ip_addrs = serviceInfo.getHost().toString().substring(1);
-                Log.d("WifiSet", "onServiceResolved: Assigned value Ip");
-                mDiscoveredServices.add(serviceInfo); // do i really need this? Good Question Past me! fking retard talking to himself
-                add_discov_device_improved(serviceInfo.getServiceName(),serviceInfo.getHost().toString().substring(1) +":"+ serviceInfo.getPort());
 
 
-
-            }
-        };
-
-        // Start resolving the service
-        nsdManager.resolveService(serviceInfo, resolveListener);
-    }
-
-    public void discoverServices() {
-        // Create a NsdManager instance
-        NsdManager nsdManager = (NsdManager) MainActivity.ContextMethod().getApplicationContext().getSystemService(Context.NSD_SERVICE);
-
-        // Create a NsdManager.DiscoveryListener instance
-        NsdManager.DiscoveryListener discoveryListener = new NsdManager.DiscoveryListener() {
-            @Override
-            public void onStartDiscoveryFailed(String serviceType, int errorCode) {
-                // Discovery failed
-            }
-
-            @Override
-            public void onStopDiscoveryFailed(String serviceType, int errorCode) {
-                // Discovery failed
-            }
-
-            @Override
-            public void onDiscoveryStarted(String serviceType) {
-                // Discovery started
-                System.out.println("Discovery Started");
-                mDiscoveredServices.clear();
-            }
-
-            @Override
-            public void onDiscoveryStopped(String serviceType) {
-                // Discovery stopped
-                System.out.println("discovery stopped");
-                for (NsdServiceInfo serviceInfo : mDiscoveredServices) {
-                    System.out.println(serviceInfo.getServiceName());
-                }
-            }
-
-            @Override
-            public void onServiceFound(NsdServiceInfo serviceInfo) {
-                // A service was found
-                resolveService(serviceInfo);
-
-            }
-
-            @Override
-            public void onServiceLost(NsdServiceInfo serviceInfo) {
-                // A service was lost
-                System.out.println("Service lost");
-            }
-        };
-
-        // Start discovery
-        nsdManager.discoverServices("_http._tcp.", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
-    }
-    public void add_discov_device_improved(String DeviceName,String IP_PORT){
-        requireActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Card card = new Card.Builder(MainActivity.ContextMethod())
-                        .withProvider(new CardProvider())
-                        .setLayout(R.layout.material_basic_image_buttons_card_layout)
-                        .setTitle(DeviceName)
-                        .setTitleGravity(Gravity.LEFT)
-                        .setDescription(IP_PORT)
-                        .setDescriptionGravity(Gravity.LEFT)
-                        .setDrawable(R.drawable.computer_ico)
-                        .setDrawableConfiguration(new CardProvider.OnImageConfigListener() {
-                            @Override
-                            public void onImageConfigure(@NonNull RequestCreator requestCreator) {
-                                requestCreator.resize(200,200);
-                            }
-                        })
-                        .addAction(R.id.left_text_button, new TextViewAction(MainActivity.ContextMethod())
-                                .setText("Connect")
-                                .setTextResourceColor(R.color.Button_Color)
-                                .setTextResourceColor(R.color.black_button)
-                                .setListener(new OnActionClickListener() {
-                                    @Override
-                                    public void onActionClicked(View view, Card card) {
-                                        //Toasty.info(MainActivity.ContextMethod(), card.getProvider().getDescription().split(":")[0]+card.getProvider().getDescription().split(":")[1], Toast.LENGTH_SHORT, true).show();
-
-//                                        try {
-//                                            //client = new WebsocketServer(new URI("ws://"+card.getProvider().getDescription().split(":")[0]+ ":"+card.getProvider().getDescription().split(":")[1]));
-//                                            client = new WebsocketServer(new URI("ws://192.168.1.19:8765"));
-//                                            System.out.println(client.isOpen());
-//                                        } catch (URISyntaxException e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                        if (client != null) {
-//                                            client.connect();
-//                                            System.out.printf("I am not null "+ client);
-//                                        }
-
-                                        Intent serviceIntent = new Intent(MainActivity.ContextMethod(), ConnectionService.class);
-                                        serviceIntent.putExtra("addr","ws://"+card.getProvider().getDescription().split(":")[0]+ ":"+card.getProvider().getDescription().split(":")[1]);
-                                        MainActivity.ContextMethod().startService(serviceIntent);
-
-                                    }
-                                }))
-                        .endConfig()
-                        .build();
-                
-                mListView.getAdapter().add(card);
-            }
-        });
-
-    }
 
 }

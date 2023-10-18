@@ -220,4 +220,29 @@ public class ValorantApi {
         return executor.submit(callable).get();
 
     }
+    public static String GetClientVersion() throws IOException, ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            public String call() {
+                try {
+                    System.out.println("called from python Rest Api");
+
+                    Request request = new Request.Builder()
+                            .url("https://valorant-api.com/v1/version/")
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    String responseString = response.body().string();
+                    JSONObject json = new JSONObject(responseString);
+                    String riotClientVersion = json.getJSONObject("data").getString("riotClientVersion");
+                    return riotClientVersion;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("Api_Call", "Call failed: " + e);
+                    return "null";
+                }
+            }
+        };
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        // Submit the Callable object to the ExecutorService to run in a separate thread
+        return executor.submit(callable).get();
+    }
 }
