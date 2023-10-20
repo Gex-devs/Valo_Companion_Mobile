@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.gex.gex_riot_take_a_shit.Game_Status;
+import com.gex.gex_riot_take_a_shit.fragments.Game_Status;
 import com.gex.gex_riot_take_a_shit.fragments.Riot_login_frag;
 import com.gex.gex_riot_take_a_shit.fragments.Store_Fragment;
 import com.gex.gex_riot_take_a_shit.fragments.gameFragments.fragment_improved_ingame;

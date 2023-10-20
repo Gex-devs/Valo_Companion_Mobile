@@ -20,6 +20,7 @@ public class FragmentTransactionTask {
 
     public void execute() {
         // Start the fragment transaction
+
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         // Add, remove, or replace the fragment

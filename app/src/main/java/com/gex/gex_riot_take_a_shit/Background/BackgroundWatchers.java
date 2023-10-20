@@ -2,6 +2,7 @@ package com.gex.gex_riot_take_a_shit.Background;
 
 import com.gex.gex_riot_take_a_shit.Current_status_Data;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
+import com.gex.gex_riot_take_a_shit.Utils.signInChecker;
 
 import org.json.JSONException;
 
@@ -26,6 +27,12 @@ public class BackgroundWatchers {
     public void StartWatch() throws JSONException, IOException, NoSuchAlgorithmException, ExecutionException, InterruptedException, KeyManagementException {
 
         while (true){
+
+            if (!signInChecker.isCookieAlive() || !OfficalValorantApi.getInstance().isGameRunning()){
+                Thread.sleep(5000);
+                return;
+            }
+
 
             String partyData = OfficalValorantApi.getInstance().GetParty();
 

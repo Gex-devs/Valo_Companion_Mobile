@@ -15,6 +15,7 @@
         android:background="@color/scoreboard"
         android:contentDescription="TODO"
         android:scaleType="fitXY"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/chat_body"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.433"
@@ -222,7 +223,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingRight="40dp"></LinearLayout>
+            android:paddingRight="40dp">
+
+        </LinearLayout>
     </ScrollView>
 
     <TextView
@@ -248,34 +251,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-
-        <EditText
-            android:id="@+id/edit_gchat_message"
-            android:layout_width="321dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:layout_toStartOf="@+id/button_gchat_send"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@color/white"
-            android:hint="Enter Message"
-            android:inputType="text"
-            android:maxLines="6"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFEFE"
-            tools:ignore="Autofill" />
-
-        <Button
-            android:id="@+id/button_gchat_send"
-            android:layout_width="75dp"
-            android:layout_height="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="0dp"
-            android:background="?attr/selectableItemBackground"
-            android:text="Send"
-            android:textColor="@color/white" />
 
     </RelativeLayout>
 

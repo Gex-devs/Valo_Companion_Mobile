@@ -30,6 +30,8 @@ import com.gex.gex_riot_take_a_shit.R;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.ThirdParty.ValorantApi;
 import com.gex.gex_riot_take_a_shit.enums.GameModes;
+import com.gex.gex_riot_take_a_shit.enums.PartyStatus;
+import com.gex.gex_riot_take_a_shit.enums.QeueType;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 import com.nightonke.jellytogglebutton.JellyToggleButton;
@@ -98,9 +100,6 @@ public class menuSelection extends Fragment implements View.OnClickListener {
          Start = (Button) v.findViewById(R.id.start_btn);
          Start.setOnClickListener(this);
 
-         Send = (Button) v.findViewById(R.id.button_gchat_send);
-         Send.setOnClickListener(this);
-
          //scroll view
         textchat = (ScrollView)v.findViewById(R.id.chat_body);
 
@@ -119,8 +118,6 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         p4_name = (TextView) v.findViewById(R.id.player_4_name);
         p5_name = (TextView) v.findViewById(R.id.player_5_name);
 
-         // Text chat value
-         body_value = (EditText) v.findViewById(R.id.edit_gchat_message);
 
          //player titles
         p1_title = (TextView) v.findViewById(R.id.player_1_title);
@@ -210,7 +207,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         try {
             new JsonParseTask().execute(OfficalValorantApi.getInstance().GetParty());
 //            UiUpdate(LocalApiHandler.get_party());
-            spProvince.setSelection(GameModes.getByCodeName(OfficalValorantApi.getInstance().GetQeueMode()).ordinal());
+            //spProvince.setSelection(GameModes.getByCodeName(OfficalValorantApi.getInstance().GetQeueMode()).ordinal());
         } catch (IOException | ExecutionException | InterruptedException |
                  NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
@@ -227,36 +224,25 @@ public class menuSelection extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         System.out.println("Clicked");
         switch (view.getId()){
-            case R.id.button_gchat_send:
-                try {
-                    LocalApiHandler.send_text(String.valueOf(body_value.getText()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //Toasty.info(MainActivity.ContextMethod(), "Gex:Text Sent", Toast.LENGTH_SHORT, true).show();
-                body_value.setText("");
-                break;
            case R.id.start_btn:
                if(Start.getText().equals("In Queue")){
                    try {
-                       LocalApiHandler.LeaveQ();
-                   } catch (IOException e) {
-                       e.printStackTrace();
+                       OfficalValorantApi.getInstance().StartStopQ(QeueType.STOPQ);
+                   } catch (ExecutionException | InterruptedException e) {
+                       throw new RuntimeException(e);
                    }
                }else {
                    try {
-                       boolean status = LocalApiHandler.StartQ();
+                       boolean status = OfficalValorantApi.getInstance().StartStopQ(QeueType.STARTQ);
                         if (!status)
                             Toast.makeText(getContext(),"Unable to start Match",Toast.LENGTH_LONG).show();
-                   } catch (IOException e) {
-                       e.printStackTrace();
                    } catch (ExecutionException | InterruptedException e) {
                        throw new RuntimeException(e);
                    }
                }
                 break;
-            case R.id.exit_party:
-                _viewModel.for_char("LeaveParty");
+               case R.id.exit_party:
+                //_viewModel.for_char("LeaveParty");
                 break;
         }
     }
@@ -366,6 +352,7 @@ public class menuSelection extends Fragment implements View.OnClickListener {
                         if (isOwner) {
                             p1_leader.setVisibility(View.VISIBLE);
                         }
+
                         p1_name.setText(OfficalValorantApi.getInstance().GetNameByPuuid(player_puid));
                         Picasso.with(MainActivity.ContextMethod()).load(ValorantApi.GetPlayerCard(player_card, true)).into(p1);
                         p1_title.setText(ValorantApi.GetPlayerTitle(player_title));
@@ -462,32 +449,31 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         onStateChangeListener = new JellyToggleButton.OnStateChangeListener() {
             @Override
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
-//                if (state.equals(State.LEFT)) {
-//                    try {
-//                        LocalApiHandler.set_party_status("closed");
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                if(state.equals(State.RIGHT)){
-//                    try {
-//                        LocalApiHandler.set_party_status("open");
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+                if (state.equals(State.LEFT)) {
+                    try {
+                        OfficalValorantApi.getInstance().SetPartyAcc(PartyStatus.CLOSE);
+                    } catch (ExecutionException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if(state.equals(State.RIGHT)){
+                    try {
+                        OfficalValorantApi.getInstance().SetPartyAcc(PartyStatus.OPEN);
+                    } catch (ExecutionException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         };
 
         GameModeSelectorListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                //Toasty.info(MainActivity.ContextMethod(), provinceList.get(position), Toast.LENGTH_SHORT, true).show();
-//                try {
-//                    LocalApiHandler.Change_Q(GameModes.values()[position].getCodeName());
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
+                try {
+                    OfficalValorantApi.getInstance().ChangeQueue(GameModes.values()[position]);
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {

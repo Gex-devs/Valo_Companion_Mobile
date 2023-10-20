@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.gex.gex_riot_take_a_shit.MainActivity;
 import com.gex.gex_riot_take_a_shit.R;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
@@ -18,6 +19,7 @@ import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import io.github.muddz.styleabletoast.StyleableToast;
 
@@ -62,17 +64,24 @@ public class Riot_login_frag extends Fragment {
     }
 
     private void OpenUpTheStore(){
-        FragmentSwitcher.getInstance().Store_Fragment();
+        switch (MainActivity.BottomNavIndex){
+            case 0:
+                FragmentSwitcher.Game_Status_Fragment();
+                break;
+            case 1:
+                FragmentSwitcher.Store_Fragment();
+                break;
+            case 2:
+                Toast.makeText(getActivity(),"Feature is still under development",Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private void Login(){
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
                 boolean status = false;
                 try {
                     status = OfficalValorantApi.getInstance().AuthToken(_username.getText().toString(),_password.getText().toString());
-                } catch (IOException | JSONException e) {
+                } catch (IOException | JSONException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
 
@@ -80,19 +89,9 @@ public class Riot_login_frag extends Fragment {
                     OpenUpTheStore();
                 }else{
                     OfficalValorantApi.getInstance().clearCookies();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            _progressBar.setVisibility(View.GONE);
-//                            Toast.makeText(getContext(),"Invalid Username or password",Toast.LENGTH_SHORT).show();
-                            StyleableToast.makeText(getContext(), "Invalid Username or password", Toast.LENGTH_SHORT, R.style.invalidErrorToast).show();
-                        }
-                    });
-                    System.out.println("Invalid Username or password");
+                    _progressBar.setVisibility(View.GONE);
+                    StyleableToast.makeText(getContext(), "Invalid Username or password", Toast.LENGTH_SHORT, R.style.invalidErrorToast).show();
                 }
-            }
-        });
 
-        thread.start();
+                }
     }
-}

@@ -7,11 +7,13 @@ import android.util.Log;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
-import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 import com.gex.gex_riot_take_a_shit.Utils.requestBodies.AuthCookiesBody;
 import com.gex.gex_riot_take_a_shit.Utils.requestBodies.AuthRequestBody;
 import com.gex.gex_riot_take_a_shit.Utils.signInChecker;
 import com.gex.gex_riot_take_a_shit.enums.CurrencieIds;
+import com.gex.gex_riot_take_a_shit.enums.GameModes;
+import com.gex.gex_riot_take_a_shit.enums.PartyStatus;
+import com.gex.gex_riot_take_a_shit.enums.QeueType;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -21,6 +23,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +57,7 @@ public class OfficalValorantApi {
     private static OfficalValorantApi instance;
 
 
-    private OfficalValorantApi(Context context) throws IOException, JSONException {
+    private OfficalValorantApi(Context context) throws IOException {
         // What happened here
         this.TheContext = context;
 
@@ -64,11 +67,10 @@ public class OfficalValorantApi {
         editor = sharedPreferences.edit();
 
         gson = new Gson();
-
 //        clearCookies();
         ReAuth();
 
-        executor = Executors.newFixedThreadPool(6);
+        executor = Executors.newFixedThreadPool(15);
 
 //        GetEntitlementToken();
     }
@@ -94,115 +96,124 @@ public class OfficalValorantApi {
 
 
     // Will clean up one day
-    public boolean AuthToken(String username, String password) throws IOException, JSONException {
-        clearCookies();
+    public boolean AuthToken(String username, String password) throws IOException, JSONException, ExecutionException, InterruptedException {
 
-        cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(sharedPreferences));
+        Callable<Boolean> callable = new Callable<Boolean>(){
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .cookieJar(cookieJar)
-                .build();
 
-        Headers headers = new Headers.Builder()
-                .add("Content-Type", "application/json")
-                .build();
+            @Override
+            public Boolean call() throws Exception {
+                clearCookies();
 
-        AuthCookiesBody authCookiesBody = new AuthCookiesBody();
+                cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(sharedPreferences));
 
-        String postJsonBody = gson.toJson(authCookiesBody);
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .cookieJar(cookieJar)
+                        .build();
 
-        Request postRequest = new Request.Builder()
-                .url(AuthCookiesUrl)
-                .headers(headers)
-                .post(RequestBody.create(MediaType.parse("application/json"), postJsonBody))
-                .build();
+                Headers headers = new Headers.Builder()
+                        .add("Content-Type", "application/json")
+                        .build();
 
-        // Send the POST request
-        Response postResponse = client.newCall(postRequest).execute();
+                AuthCookiesBody authCookiesBody = new AuthCookiesBody();
 
-        String jsonPostResponse = postResponse.body().string();
+                String postJsonBody = gson.toJson(authCookiesBody);
 
-        // Use the POST response as needed
-        Log.d("AuthToken", "Official Api: from first request " + jsonPostResponse);
+                Request postRequest = new Request.Builder()
+                        .url(AuthCookiesUrl)
+                        .headers(headers)
+                        .post(RequestBody.create(MediaType.parse("application/json"), postJsonBody))
+                        .build();
 
-        // Save cookies from the POST response
-        List<Cookie> cookies = cookieJar.loadForRequest(HttpUrl.parse("https://auth.riotgames.com/api/v1/authorization"));
-        cookieJar.saveFromResponse(HttpUrl.parse("https://auth.riotgames.com/api/v1/authorization"), cookies);
+                // Send the POST request
+                Response postResponse = client.newCall(postRequest).execute();
 
-        AuthRequestBody putRequestBody = new AuthRequestBody(username, password, true);
+                String jsonPostResponse = postResponse.body().string();
 
-        // Convert the AuthRequestBody to JSON
-        String putJsonBody = gson.toJson(putRequestBody);
-        // PUT request
-        Request putRequest = new Request.Builder()
-                .url(AuthCookiesUrl)
-                .headers(headers)
-                .put(RequestBody.create(MediaType.parse("application/json"), putJsonBody))
-                .build();
 
-        // Send the PUT request
-        Response putResponse = client.newCall(putRequest).execute();
 
-        cookies = cookieJar.loadForRequest(HttpUrl.parse("https://auth.riotgames.com/api/v1/authorization"));
-        cookieJar.saveFromResponse(HttpUrl.parse("https://auth.riotgames.com/api/v1/authorization"), cookies);
+                // Save cookies from the POST response
+                List<Cookie> cookies = cookieJar.loadForRequest(HttpUrl.parse("https://auth.riotgames.com/api/v1/authorization"));
+                cookieJar.saveFromResponse(HttpUrl.parse("https://auth.riotgames.com/api/v1/authorization"), cookies);
 
-        String responseBody = putResponse.body().string();
-        System.out.println(putResponse.isSuccessful());
-        Log.d("AuthToken", "AuthToken: putResponse: " + responseBody);
+                AuthRequestBody putRequestBody = new AuthRequestBody(username, password, true);
 
-        client = new OkHttpClient.Builder()
-                .cookieJar(cookieJar)
-                .build();
+                // Convert the AuthRequestBody to JSON
+                String putJsonBody = gson.toJson(putRequestBody);
+                // PUT request
+                Request putRequest = new Request.Builder()
+                        .url(AuthCookiesUrl)
+                        .headers(headers)
+                        .put(RequestBody.create(MediaType.parse("application/json"), putJsonBody))
+                        .build();
 
-        headers = new Headers.Builder()
-                .add("Content-Type", "application/json")
-                .build();
+                // Send the PUT request
+                Response putResponse = client.newCall(putRequest).execute();
 
-        authCookiesBody = new AuthCookiesBody();
+                cookies = cookieJar.loadForRequest(HttpUrl.parse("https://auth.riotgames.com/api/v1/authorization"));
+                cookieJar.saveFromResponse(HttpUrl.parse("https://auth.riotgames.com/api/v1/authorization"), cookies);
 
-        postJsonBody = gson.toJson(authCookiesBody);
-        postRequest = new Request.Builder()
-                .url(AuthCookiesUrl)
-                .headers(headers)
-                .post(RequestBody.create(MediaType.parse("application/json"), postJsonBody))
-                .build();
+                String responseBody = putResponse.body().string();
+                System.out.println(putResponse.isSuccessful());
 
-        // Send the POST request
-        postResponse = client.newCall(postRequest).execute();
 
-       jsonPostResponse = postResponse.body().string();
+                client = new OkHttpClient.Builder()
+                        .cookieJar(cookieJar)
+                        .build();
 
-        Log.d("AuthToken", "AuthToken: secondAuth: "+jsonPostResponse);
+                headers = new Headers.Builder()
+                        .add("Content-Type", "application/json")
+                        .build();
 
-        putRequestBody = new AuthRequestBody(username, password, true);
+                authCookiesBody = new AuthCookiesBody();
 
-        // Convert the AuthRequestBody to JSON
-        putJsonBody = gson.toJson(putRequestBody);
-        // PUT request
-        putRequest = new Request.Builder()
-                .url(AuthCookiesUrl)
-                .headers(headers)
-                .put(RequestBody.create(MediaType.parse("application/json"), putJsonBody))
-                .build();
+                postJsonBody = gson.toJson(authCookiesBody);
+                postRequest = new Request.Builder()
+                        .url(AuthCookiesUrl)
+                        .headers(headers)
+                        .post(RequestBody.create(MediaType.parse("application/json"), postJsonBody))
+                        .build();
 
-        // Send the PUT request
-        putResponse = client.newCall(putRequest).execute();
+                // Send the POST request
+                postResponse = client.newCall(postRequest).execute();
 
-        String putResponseBody = putResponse.body().string();
-        Log.d("AuthToken", "AuthToken: Second Put Response: "+putResponseBody);
-        JSONObject jsonObject = new JSONObject(putResponseBody);
-        try{
-            String j = jsonObject.getString("error");
-            if (j.equals("auth_failure")){
-                Log.d("AuthToken", "AuthToken: Invalid Username or password");
-                return false;
+                jsonPostResponse = postResponse.body().string();
+
+
+
+                putRequestBody = new AuthRequestBody(username, password, true);
+
+                // Convert the AuthRequestBody to JSON
+                putJsonBody = gson.toJson(putRequestBody);
+                // PUT request
+                putRequest = new Request.Builder()
+                        .url(AuthCookiesUrl)
+                        .headers(headers)
+                        .put(RequestBody.create(MediaType.parse("application/json"), putJsonBody))
+                        .build();
+
+                // Send the PUT request
+                putResponse = client.newCall(putRequest).execute();
+
+                String putResponseBody = putResponse.body().string();
+
+                JSONObject jsonObject = new JSONObject(putResponseBody);
+                try{
+                    String j = jsonObject.getString("error");
+                    if (j.equals("auth_failure")){
+                        Log.d("AuthToken", "AuthToken: Invalid Username or password");
+                        return false;
+                    }
+                }catch (JSONException e){
+                    Log.d("AuthToken", "AuthToken: No error");
+                }
+
+                TokenJson = putResponseBody;
+                return true;
             }
-        }catch (JSONException e){
-            Log.d("AuthToken", "AuthToken: No error");
-        }
+        };
 
-        TokenJson = putResponseBody;
-        return true;
+        return executor.submit(callable).get();
     }
 
     public void clearCookies() {
@@ -227,7 +238,6 @@ public class OfficalValorantApi {
         // Send the PUT request
         Response putResponse = client.newCall(putRequest).execute();
 
-        Log.d("ReAuth", "ReAuth: "+putResponse.body().string());
 
 
         Headers headers = new Headers.Builder()
@@ -252,21 +262,23 @@ public class OfficalValorantApi {
 
     }
 
-    private String GetAccessToken() throws JSONException {
-        Log.d("GetAccessToken", "GetAccessToken: "+TokenJson);
-        JSONObject jsonObject = new JSONObject(TokenJson);
-        JSONObject j = jsonObject.getJSONObject("response");
-        JSONObject jj = j.getJSONObject("parameters");
-        String jjj = jj.getString("uri");
-        // Extract the access token from the URI
-        String accessToken = jjj.split("access_token=")[1].split("&")[0];
+    private String GetAccessToken() {
+        String accessToken = null;
+        try{
+            JSONObject jsonObject = new JSONObject(TokenJson);
+            JSONObject j = jsonObject.getJSONObject("response");
+            JSONObject jj = j.getJSONObject("parameters");
+            String jjj = jj.getString("uri");
+            // Extract the access token from the URI
+            accessToken = jjj.split("access_token=")[1].split("&")[0];
+        }catch (JSONException e){
+            Log.d("OfficialApi", "GetAccessToken: "+e);
+        }
 
-        // Print the access token
-        System.out.println("Access Token: " + accessToken);
         return accessToken;
     }
 
-    private String GetEntitlementToken() throws IOException, JSONException, ExecutionException, InterruptedException {
+    private String GetEntitlementToken() throws ExecutionException, InterruptedException {
 
         Callable<String> callable = new Callable<String>() {
             @Override
@@ -294,7 +306,6 @@ public class OfficalValorantApi {
                 JSONObject jsonObject = new JSONObject(response.body().string());
                 String entitlement = jsonObject.getString("entitlements_token");
                 // Handle the response
-                Log.d("GetEntitlementToken", "GetEntitlementToken: "+entitlement);
                 return entitlement;
             }
         };
@@ -304,7 +315,7 @@ public class OfficalValorantApi {
 
     }
 
-    private String GetPuuid() throws JSONException, IOException, ExecutionException, InterruptedException {
+    private String GetPuuid() throws ExecutionException, InterruptedException {
         Callable<String> callable = new Callable<String>() {
             @Override
             public String call() throws Exception {
@@ -325,7 +336,6 @@ public class OfficalValorantApi {
                 JSONObject jsonObject = new JSONObject(response.body().string());
                 String Puuid = jsonObject.getString("sub");
                 // Handle the response
-                Log.d("Official Api", "GetPuuid: "+Puuid);
                 return Puuid;
 
             }
@@ -395,7 +405,6 @@ public class OfficalValorantApi {
 
         ResponseString = response.body().string();
 
-        Log.d("Party Debug", "Is Player Online: "+ ResponseString);
 
         return StoreList;
     }
@@ -494,6 +503,33 @@ public class OfficalValorantApi {
 
     }
 
+    public boolean isGameRunning() throws IOException, JSONException, NoSuchAlgorithmException, KeyManagementException, ExecutionException, InterruptedException {
+
+        Callable<Boolean> callable = new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+
+                Headers headers = new Headers.Builder()
+                        .add("X-Riot-ClientVersion",ValorantApi.getInstance().GetClientVersion())
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url("https://glz-eu-1.eu.a.pvp.net/parties/v1/players/"+GetPuuid())
+                        .headers(headers)
+                        .build();
+
+                Response response = miscClient.newCall(request).execute();
+
+                return response.isSuccessful();
+            }
+        };
+
+        return executor.submit(callable).get();
+
+    }
+
     public String GetQeueMode() throws JSONException, IOException, NoSuchAlgorithmException, ExecutionException, InterruptedException, KeyManagementException {
 
         String QeueMode = new JSONObject(GetParty()).getJSONObject("MatchmakingData").getString("QueueID");
@@ -511,20 +547,23 @@ public class OfficalValorantApi {
                         .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
                         .build();
 
-                JSONObject requestBody = new JSONObject();
+
 
                 String[] payload = new String[]{puuid};
+
                 Request request = new Request.Builder()
                         .url("https://pd.eu.a.pvp.net/name-service/v2/players")
                         .headers(headers)
-                        .post(RequestBody.create(MediaType.parse("application/json"), gson.toJson(requestBody)))
+                        .put(RequestBody.create(MediaType.parse("application/json"), gson.toJson(payload)))
                         .build();
 
                 Response response = miscClient.newCall(request).execute();
 
                 String ResponseString = response.body().string();
 
-                return  new JSONArray(ResponseString).getJSONObject(0).getString("GameName");
+                String GameName = new JSONArray(ResponseString).getJSONObject(0).getString("GameName");
+
+                return GameName;
             }
         };
 
@@ -532,5 +571,84 @@ public class OfficalValorantApi {
 
     }
 
+    public boolean StartStopQ(QeueType type) throws ExecutionException, InterruptedException {
+        Callable<Boolean> callable = new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url("https://glz-eu-1.eu.a.pvp.net/parties/v1/parties/"+GetPartyID()+"/matchmaking/"+type.getQeuery())
+                        .headers(headers)
+                        .post(RequestBody.create(null, new byte[0]))
+                        .build();
+
+                Response response = miscClient.newCall(request).execute();
+
+                return response.isSuccessful();
+            }
+        };
+
+        return executor.submit(callable).get();
+
+    }
+
+    public boolean SetPartyAcc(PartyStatus partyStatus) throws ExecutionException, InterruptedException {
+        Callable<Boolean> callable = new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                        .build();
+
+                JSONObject payload = new JSONObject();
+                payload.put("accessibility:",partyStatus.getQeuery());
+
+                Request request = new Request.Builder()
+                        .url("https://glz-eu-1.eu.a.pvp.net/parties/v1/parties/"+GetPartyID()+"/accessibility")
+                        .headers(headers)
+                        .post(RequestBody.create(MediaType.parse("application/json"), gson.toJson(payload)))
+                        .build();
+
+                Response response = miscClient.newCall(request).execute();
+
+                return response.isSuccessful();
+            }
+        };
+
+        return executor.submit(callable).get();
+
+    }
+
+    public boolean ChangeQueue(GameModes gameModes) throws ExecutionException, InterruptedException {
+        Callable<Boolean> callable = new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                        .build();
+
+                JSONObject payload = new JSONObject();
+                payload.put("queueId",gameModes.getCodeName());
+                Request request = new Request.Builder()
+                        .url("https://glz-eu-1.eu.a.pvp.net/parties/v1/parties/"+GetPartyID()+"/queue")
+                        .headers(headers)
+                        .post(RequestBody.create(MediaType.parse("application/json"), gson.toJson(payload)))
+                        .build();
+
+                Response response = miscClient.newCall(request).execute();
+
+                return response.isSuccessful();
+            }
+        };
+
+        return executor.submit(callable).get();
+
+    }
 
 }

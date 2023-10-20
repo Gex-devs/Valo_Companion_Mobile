@@ -1,4 +1,4 @@
-package com.gex.gex_riot_take_a_shit;
+package com.gex.gex_riot_take_a_shit.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +27,12 @@ import com.dexafree.materialList.card.action.TextViewAction;
 import com.dexafree.materialList.view.MaterialListView;
 import com.gex.gex_riot_take_a_shit.Background.ConnectionService;
 import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
+import com.gex.gex_riot_take_a_shit.Current_status_Data;
+import com.gex.gex_riot_take_a_shit.MainActivity;
+import com.gex.gex_riot_take_a_shit.R;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
+import com.gex.gex_riot_take_a_shit.Utils.signInChecker;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
 import com.squareup.picasso.RequestCreator;
 
@@ -40,15 +46,21 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-public class Game_Status extends Fragment implements View.OnClickListener{
-    Current_status_Data viewModel;
+public class Game_Status extends Fragment {
     String myString;
+    Button retryButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            myString = savedInstanceState.getString("myString","default");
+
+        try {
+            if (OfficalValorantApi.getInstance().isGameRunning()){
+                FragmentSwitcher.Qeue_Menu();
+            }
+        } catch (IOException | JSONException | NoSuchAlgorithmException | ExecutionException |
+                 InterruptedException | KeyManagementException e) {
+            throw new RuntimeException(e);
         }
     }
     @Override
@@ -66,10 +78,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
         super.onViewStateRestored(savedInstanceState);
         // Restore UI state from the savedInstanceState.
         // This bundle has also been passed to onCreate.
-        String myString = null;
-        if (savedInstanceState != null) {
-            myString = savedInstanceState.getString("myString");
-        }
+
     }
 
     @Override
@@ -83,15 +92,21 @@ public class Game_Status extends Fragment implements View.OnClickListener{
             myString = savedInstanceState.getString("myString","default");
         }
 
-        viewModel = new ViewModelProvider(requireActivity()).get(Current_status_Data.class);
-        viewModel.getFor_char().observe(requireActivity(),item->{
-            //WebServer.broadcast(item, WebServer.getConnections());
-            System.out.println("Broadcast has been called");
-            //Gex.broadcast("pls send", Gex.getConnections());
-            System.out.println(item);
-            // Works for other Mutalables expect for this, change it or fix it
+        retryButton = v.findViewById(R.id.retryBtn);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (OfficalValorantApi.getInstance().isGameRunning())
+                        FragmentSwitcher.Qeue_Menu();
+                    else
+                        Toast.makeText(requireActivity(),"Game not running",Toast.LENGTH_LONG).show();
+                } catch (IOException | JSONException | NoSuchAlgorithmException |
+                         KeyManagementException | ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         });
-
 
 
         return v;
@@ -104,10 +119,7 @@ public class Game_Status extends Fragment implements View.OnClickListener{
 
     }
 
-    @Override
-    public void onClick(View view) {
-        viewModel.for_char("Say something i am giving up on u");
-    }
+
 
 
 
