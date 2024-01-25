@@ -39,7 +39,7 @@ public class BackgroundWatchers {
 
                 lastData = partyData;
 
-                _viewModel.Selection(partyData);
+//                _viewModel.Selection(partyData);
             }
 
         }

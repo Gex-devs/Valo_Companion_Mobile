@@ -117,9 +117,10 @@ public class util {
                 return("Pearl");
             case "/Game/Maps/Jam/Jam":
                 return ("Lotus");
-
+            case "/Game/Maps/Poveglia/Range":
+                return "Range";
         }
-        return null;
+        return "Unknown";
     }
     public static int get_respective_map_image(String map){
         switch (map){

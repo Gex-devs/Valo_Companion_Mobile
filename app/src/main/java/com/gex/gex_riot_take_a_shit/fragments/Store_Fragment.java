@@ -5,12 +5,12 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -104,8 +104,7 @@ public class Store_Fragment extends Fragment {
         _logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OfficalValorantApi.getInstance().clearCookies();
-                FragmentSwitcher.getInstance().Store_Fragment();
+                Logout();
             }
         });
         return v;
@@ -117,14 +116,31 @@ public class Store_Fragment extends Fragment {
         loadingDialog.setTitleText("Loading...");
         loadingDialog.setCancelable(false);
         loadingDialog.show();
+
+        loadingTimeoutHandler.postDelayed(loadingTimeoutRunnable, LOADING_TIMEOUT_MS);
     }
     private void dismissLoadingDialog() {
         // Dismiss the loading dialog
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismissWithAnimation();
         }
-    }
 
+        loadingTimeoutHandler.removeCallbacks(loadingTimeoutRunnable);
+    }
+    private void Logout(){
+        OfficalValorantApi.getInstance().clearCookies();
+        FragmentSwitcher.getInstance().Store_Fragment();
+    }
+    private static final int LOADING_TIMEOUT_MS = 20000; // 20 seconds
+
+    private Handler loadingTimeoutHandler = new Handler();
+    private Runnable loadingTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Logout();
+            dismissLoadingDialog();
+        }
+    };
 
     private void LoadOffers() {
         AsyncTask.execute(new Runnable() {

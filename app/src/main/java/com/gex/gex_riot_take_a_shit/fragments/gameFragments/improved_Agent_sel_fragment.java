@@ -153,7 +153,8 @@ public class improved_Agent_sel_fragment extends Fragment implements View.OnClic
                 jsonParseTask.cancel(true);
             }
             jsonParseTask = new JsonParseTask();
-            jsonParseTask.execute(item);
+            String fake = "sd";
+            jsonParseTask.execute(fake);
         });
 
         try {

@@ -20,7 +20,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/raze">
+                android:src="@drawable/raze"
+                android:id="@+id/playerCard">
             </ImageView>
 
             <LinearLayout
@@ -31,14 +32,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gex">
+                    android:text="Gex"
+                    android:id="@+id/playerName">
 
                 </TextView>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Unrated 0 - 6">
+                    android:text="Unrated 0 - 6"
+                    android:id="@+id/playerStatus">
 
                 </TextView>
             </LinearLayout>

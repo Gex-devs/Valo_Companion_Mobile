@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 try {
                     // Move the instantiation of OfficalValorantApi here
                     OfficalValorantApi officalValorantApi = OfficalValorantApi.getInstance(MainActivity.ContextMethod().getApplicationContext());
-                    XMPPServer xmppServer = new XMPPServer(viewModel);
+                    XMPPServer xmppServer = new XMPPServer(viewModel, MainActivity.this);
                     xmppServer.Start();
                     latch.countDown();
                 } catch (IOException  | NoSuchAlgorithmException |

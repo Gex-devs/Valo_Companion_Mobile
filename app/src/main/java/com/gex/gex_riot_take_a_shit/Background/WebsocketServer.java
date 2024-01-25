@@ -126,7 +126,7 @@ public class WebsocketServer extends WebSocketClient{
                 if (util.IdentifyDataType(message) == InfoType.Chat) {
                     viewModel.SetPartyChat(message);
                 } else {
-                    viewModel.Selection(message);
+//                    viewModel.Selection(message);
                 }
                 break;
         }

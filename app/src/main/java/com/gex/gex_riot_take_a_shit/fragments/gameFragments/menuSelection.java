@@ -83,21 +83,6 @@ public class menuSelection extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Thread backgroundThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BackgroundWatchers backgroundWatchers = new BackgroundWatchers(_viewModel);
-                try {
-                    backgroundWatchers.StartWatch();
-                } catch (JSONException | IOException | NoSuchAlgorithmException |
-                         ExecutionException | InterruptedException | KeyManagementException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-
-
     }
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
@@ -212,7 +197,24 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         spProvince.setOnItemSelectedListener(GameModeSelectorListener);
 
         _viewModel.getSelectedItem().observe(requireActivity(), item ->{
-            new JsonParseTask().execute(item);
+            try {
+                String currentPartyId = item.getString("partyId");
+                String gotagota = OfficalValorantApi.getInstance().GetPartyID();
+                if (currentPartyId.equals(gotagota))
+                    new JsonParseTask().execute(OfficalValorantApi.getInstance().GetParty());
+            } catch (JSONException e) {
+                Log.e("menuSelection", "onCreateView: " + e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            } catch (KeyManagementException e) {
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         try {

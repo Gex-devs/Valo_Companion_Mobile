@@ -545,6 +545,7 @@ public class OfficalValorantApi {
         return QeueMode;
     }
 
+    
     public String GetNameByPuuid(String puuid) throws IOException, JSONException, NoSuchAlgorithmException, KeyManagementException, ExecutionException, InterruptedException{
 
         Callable<String> callable = new Callable<String>() {

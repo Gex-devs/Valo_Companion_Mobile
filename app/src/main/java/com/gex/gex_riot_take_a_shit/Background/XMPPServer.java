@@ -1,9 +1,11 @@
 package com.gex.gex_riot_take_a_shit.Background;
 import android.util.Log;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;
 
 import com.gex.gex_riot_take_a_shit.Current_status_Data;
+import com.gex.gex_riot_take_a_shit.MainActivity;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.Utils.util;
 
@@ -43,9 +45,9 @@ public class XMPPServer {
             "<presence/>"
     };
 
-    private  OutputStream outputStream;
+    private static OutputStream outputStream;
     private  InputStream inputStream;
-    public XMPPServer(Current_status_Data viewModel) throws IOException, ExecutionException, InterruptedException {
+    public XMPPServer(Current_status_Data viewModel, MainActivity mainActivity) throws IOException, ExecutionException, InterruptedException {
         // Init Server connection here
         SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
         sslSocket = (SSLSocket) sslSocketFactory.createSocket(addr, 5223);
@@ -55,6 +57,8 @@ public class XMPPServer {
         sslSocket.setEnabledCipherSuites(supportedCipherSuites);
 
         _viewModel = viewModel;
+
+
         // Start the handshake
         sslSocket.startHandshake();
 
@@ -78,7 +82,7 @@ public class XMPPServer {
     public void OnMessage(String message) throws IOException {
         processData(message);
         // Implement your logic here to handle the received message
-//        Log.d("XMPPServer", "OnMessage: " + message);
+        Log.d("XMPPServer", "OnMessage: " + message);
     }
 
     private int indexCount = 0;
@@ -89,7 +93,7 @@ public class XMPPServer {
         }
     }
 
-    private void SendMessage(String data) throws IOException{
+    public static void SendMessage(String data) throws IOException{
         outputStream.write(data.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -164,27 +168,31 @@ public class XMPPServer {
         }
     }
     private void ProcessXMLDATA(String data){
-        String puuid = data.substring(16, 52);
-        String valorantData = extractDataFromXML(data, "valorant");
-        if (valorantData != null){
-            String data64 = extractDataFromXML(valorantData, "p");
-            long timeStamp = Long.parseLong(Objects.requireNonNull(extractDataFromXML(valorantData, "s.t")));
-            try {
-                // TODO: Make sure the decoder actually works
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    byte[] decoded = Base64.getDecoder().decode(data64);
-                    JSONObject presenceData = new JSONObject(new String(decoded));
-                    processPresenceData(puuid, presenceData, timeStamp);
+        try{
+            String puuid = data.substring(16, 52);
+            String valorantData = extractDataFromXML(data, "valorant");
+            if (valorantData != null){
+                String data64 = extractDataFromXML(valorantData, "p");
+                long timeStamp = Long.parseLong(Objects.requireNonNull(extractDataFromXML(valorantData, "s.t")));
+                try {
+                    // TODO: Make sure the decoder actually works
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        byte[] decoded = Base64.getDecoder().decode(data64);
+                        JSONObject presenceData = new JSONObject(new String(decoded));
+                        processPresenceData(puuid, presenceData, timeStamp);
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
             }
+        }catch (StringIndexOutOfBoundsException exception){
+            Log.e("XMPP", "ProcessXMLDATA: " + exception);
         }
+
 
     }
 
     private String extractDataFromXML(String xml, String tagName){
-
         int dataStartIndex = xml.indexOf("<" + tagName + ">");
         int dataEndIndex = xml.indexOf("</" + tagName + ">", dataStartIndex);
         if (dataStartIndex >= 0 && dataEndIndex > dataStartIndex) {
@@ -199,13 +207,7 @@ public class XMPPServer {
             presenceData.put("puuid",puuid);
             presenceData.put("logtime",timeStamp);
             _viewModel.SetSocialFriendsData(presenceData);
-//            int matchMap = presenceData.getString("matchMap").split("/").length - 1;
-//            // TODO: This is stupid, Make change later
-//            String map = presenceData.getString("provisioningFlow") == "ShootingRange"? "Range" : presenceData.getString("matchMap").split("/")[presenceData.getString("matchMap").split("/").length - 1];
-//            String name = OfficalValorantApi.getInstance().GetNameByPuuid(puuid);
-////            String gameMode = util.GetRespectiveGameMode(presenceData.getString("queueID")).getDisplayName();
-//            String partyState = presenceData.getString("partyState");
-
+            _viewModel.Selection(presenceData);
         } catch (JSONException  e) {
             throw new RuntimeException(e);
         }
