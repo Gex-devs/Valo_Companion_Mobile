@@ -132,7 +132,7 @@ public class ValorantApi {
         Callable<String[]> callable = new Callable<String[]>() {
             public String[] call() {
                 try {
-                    String[] TheData = new String[4];
+                    String[] TheData = new String[3];
 
                     Request request = new Request.Builder()
                             .url("https://valorant-api.com/v1/weapons/skinlevels/"+WeaponID)

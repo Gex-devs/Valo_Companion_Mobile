@@ -12,9 +12,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 
 public class BackgroundWatchers {
-
-
-
     String lastData = "";
     Current_status_Data _viewModel;
 
@@ -26,24 +23,23 @@ public class BackgroundWatchers {
 
     public void StartWatch() throws JSONException, IOException, NoSuchAlgorithmException, ExecutionException, InterruptedException, KeyManagementException {
 
-        while (true){
+        while (true) {
 
-            if (!signInChecker.isCookieAlive() || !OfficalValorantApi.getInstance().isGameRunning()){
+            Thread.sleep(5000);
+
+            if (!signInChecker.isCookieAlive() || !OfficalValorantApi.getInstance().isGameRunning()) {
                 Thread.sleep(5000);
-                return;
+                continue;
             }
 
 
             String partyData = OfficalValorantApi.getInstance().GetParty();
 
-            if (partyData != lastData){
+            if (partyData != lastData) {
 
                 lastData = partyData;
 
                 _viewModel.Selection(partyData);
-
-                Thread.sleep(5000);
-
             }
 
         }

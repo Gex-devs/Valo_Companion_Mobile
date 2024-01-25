@@ -16,6 +16,7 @@ import com.gex.gex_riot_take_a_shit.enums.PartyStatus;
 import com.gex.gex_riot_take_a_shit.enums.QeueType;
 import com.google.gson.Gson;
 
+import org.checkerframework.checker.index.qual.PolyUpperBound;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,12 +96,10 @@ public class OfficalValorantApi {
     }
 
 
-    // Will clean up one day
+    // TODO: Clean Up this shit fam
     public boolean AuthToken(String username, String password) throws IOException, JSONException, ExecutionException, InterruptedException {
 
         Callable<Boolean> callable = new Callable<Boolean>(){
-
-
             @Override
             public Boolean call() throws Exception {
                 clearCookies();
@@ -226,6 +225,10 @@ public class OfficalValorantApi {
         if (!signInChecker.isCookieAlive()){
             return;
         }
+        Headers headers = new Headers.Builder()
+                .add("User-Agent", "insomnia/8.6.0")
+                .build();
+
         OkHttpClient client = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
                 .build();
@@ -233,48 +236,27 @@ public class OfficalValorantApi {
         String reAuthCookiesUrl = "https://auth.riotgames.com/authorize?redirect_uri=https%3A%2F%2Fplayvalorant.com%2Fopt_in&client_id=play-valorant-web-prod&response_type=token%20id_token&nonce=1";
         Request putRequest = new Request.Builder()
                 .url(reAuthCookiesUrl)
+                .headers(headers)
+                .get()
                 .build();
 
         // Send the PUT request
         Response putResponse = client.newCall(putRequest).execute();
 
+        if (putResponse.code() == 202) // Cookies fail on 202, remove and refresh
+            clearCookies();
 
+        String jsonPostResponse = putResponse.networkResponse().toString();
 
-        Headers headers = new Headers.Builder()
-                .add("Content-Type", "application/json")
-                .build();
-
-        AuthCookiesBody authCookiesBody = new AuthCookiesBody();
-
-        String postjsonbody = gson.toJson(authCookiesBody);
-        Request postRequest = new Request.Builder()
-                .url(AuthCookiesUrl)
-                .headers(headers)
-                .post(RequestBody.create(MediaType.parse("application/json"), postjsonbody))
-                .build();
-
-        // Send the POST request
-        Response postResponse = client.newCall(postRequest).execute();
-
-        String jsonPostResponse = postResponse.body().string();
-
-        TokenJson = jsonPostResponse;
+        TokenJson = jsonPostResponse.substring("Response".length());
 
     }
 
-    private String GetAccessToken() {
+    public String GetAccessToken() {
         String accessToken = null;
-        try{
-            JSONObject jsonObject = new JSONObject(TokenJson);
-            JSONObject j = jsonObject.getJSONObject("response");
-            JSONObject jj = j.getJSONObject("parameters");
-            String jjj = jj.getString("uri");
-            // Extract the access token from the URI
-            accessToken = jjj.split("access_token=")[1].split("&")[0];
-        }catch (JSONException e){
-            Log.d("OfficialApi", "GetAccessToken: "+e);
-        }
-
+        int startIndex = TokenJson.indexOf("access_token=") ;
+        int endIndex = TokenJson.indexOf("&", startIndex);
+        accessToken = TokenJson.substring(startIndex, endIndex).substring("access_token=".length());
         return accessToken;
     }
 
@@ -283,6 +265,7 @@ public class OfficalValorantApi {
         Callable<String> callable = new Callable<String>() {
             @Override
             public String call() throws Exception {
+
                 Headers headers = new Headers.Builder()
                         .add("Content-Type", "application/json")
                         .add("Authorization","Bearer "+ GetAccessToken())
@@ -342,11 +325,36 @@ public class OfficalValorantApi {
         };
 
         return executor.submit(callable).get();
-
-
     }
 
+    public String GetPSA() throws ExecutionException, InterruptedException {
+        Callable<String> callable = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .build();
+
+                //Empty Body
+                RequestBody requestBody = RequestBody.create(null, new byte[0]);
+                Request Request = new Request.Builder()
+                        .url("https://riot-geo.pas.si.riotgames.com/pas/v1/service/chat")
+                        .headers(headers)
+                        .build();
+
+                // Send the POST request
+                Response response = miscClient.newCall(Request).execute();
+                // Handle the response
+                return response.body().string();
+
+            }
+        };
+
+        return executor.submit(callable).get();
+    }
     public Map<String, Integer> GetStore() throws JSONException, IOException, ExecutionException, InterruptedException, NoSuchAlgorithmException, KeyManagementException {
+
+
         Headers headers = new Headers.Builder()
                 .add("Authorization","Bearer "+ GetAccessToken())
                 .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
@@ -360,7 +368,7 @@ public class OfficalValorantApi {
         Response response = miscClient.newCall(request).execute();
 
         String ResponseString = response.body().string();
-
+            
         JSONObject jsonObject = new JSONObject(ResponseString);
         JSONObject j = jsonObject.getJSONObject("SkinsPanelLayout");
         String RemaningTime = j.getString("SingleItemOffersRemainingDurationInSeconds");
@@ -547,8 +555,6 @@ public class OfficalValorantApi {
                         .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
                         .build();
 
-
-
                 String[] payload = new String[]{puuid};
 
                 Request request = new Request.Builder()
@@ -568,7 +574,6 @@ public class OfficalValorantApi {
         };
 
         return executor.submit(callable).get();
-
     }
 
     public boolean StartStopQ(QeueType type) throws ExecutionException, InterruptedException {

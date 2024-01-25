@@ -1,15 +1,19 @@
 package com.gex.gex_riot_take_a_shit.fragments;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.fragment.app.Fragment;
 
@@ -34,9 +38,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import okhttp3.Headers;
-import okhttp3.Request;
-import okhttp3.Response;
 
 
 public class Store_Fragment extends Fragment {
@@ -51,9 +52,6 @@ public class Store_Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
@@ -68,15 +66,19 @@ public class Store_Fragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_store_, container, false);
 
+        // Init Items
         itemOffers = new ShapeableImageView[4];
         itemOffers[0] = v.findViewById(R.id.ItemOffer1);
         itemOffers[1] = v.findViewById(R.id.ItemOffer2);
         itemOffers[2] = v.findViewById(R.id.ItemOffer3);
         itemOffers[3] = v.findViewById(R.id.ItemOffer4);
 
+        // Setup on click listeners
+        for (ShapeableImageView items: itemOffers) {
+            items.setOnClickListener(SkinOnClickHandler);
+        }
 
         bundle = v.findViewById(R.id.bundleImage);
-
 
         currencies = new TextView[3];
         currencies[0] = v.findViewById(R.id.valPoint);
@@ -86,8 +88,10 @@ public class Store_Fragment extends Fragment {
 
         _logoutButton = v.findViewById(R.id.logout_button);
 
+
         showLoadingDialog();
 
+//        OfficalValorantApi.getInstance().clearCookies();
 
         try {
             LoadOffers();
@@ -120,14 +124,14 @@ public class Store_Fragment extends Fragment {
             loadingDialog.dismissWithAnimation();
         }
     }
-    private void LoadOffers() {
-        AsyncTask<Void, Void, Void> loadOffersTask = new AsyncTask<Void, Void, Void>() {
-            @SuppressLint("StaticFieldLeak")
-            @Override
-            protected Void doInBackground(Void... params) {
 
+
+    private void LoadOffers() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
                 try {
-                    String[] skins = new String[4];
+                    String[] skins = new String[3];
                     Map<String, Integer> load = OfficalValorantApi.getInstance().GetStore();
 
                     int index = 0;
@@ -135,8 +139,6 @@ public class Store_Fragment extends Fragment {
                     for (Map.Entry<String, Integer> entry : load.entrySet()) {
                         String ItemID = entry.getKey();
                         Integer Cost = entry.getValue();
-
-                        Log.d("loadstore", "doInBackground: "+ItemID);
                         skins = ValorantApi.GetSkinByLevel(ItemID);
 
                         if (index < itemOffers.length) {
@@ -146,6 +148,7 @@ public class Store_Fragment extends Fragment {
                                 @Override
                                 public void run() {
                                     Picasso.with(MainActivity.ContextMethod()).load(finalSkins[SkinsVariable.Image.ordinal()]).into(itemOffers[currentIndex]);
+                                    itemOffers[currentIndex].setTag(finalSkins[SkinsVariable.StreamedVid.ordinal()]);
                                 }
                             });
                             index++;
@@ -169,8 +172,6 @@ public class Store_Fragment extends Fragment {
                         });
                     }
 
-
-
                 } catch (JSONException | IOException | ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 } catch (NoSuchAlgorithmException e) {
@@ -180,14 +181,11 @@ public class Store_Fragment extends Fragment {
                 }
                 // Dismiss the loading dialog when the task is completed
                 dismissLoadingDialog();
-
-                return null;
             }
-        };
-
-
-        loadOffersTask.execute();
+        });
     }
+
+
 
     private void LoadWallet() {
         AsyncTask<Void, Void, Map<String, Integer>> loadWalletTask = new AsyncTask<Void, Void, Map<String, Integer>>() {
@@ -229,6 +227,42 @@ public class Store_Fragment extends Fragment {
         };
 
         loadWalletTask.execute();
+    }
+
+    View.OnClickListener SkinOnClickHandler = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Object downloadVideo = view.getTag();
+            // for some reason its a string null
+            if (downloadVideo != "null"){
+                VideoPreviewHandler(downloadVideo.toString());
+            }else{
+                Toast.makeText(getActivity(),"Preview video not available for this Skin",Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    };
+
+    private void VideoPreviewHandler(String downloadVideo){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View popupView = getLayoutInflater().inflate(R.layout.video_player_popup, null);
+        builder.setView(popupView);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+        alertDialog.show();
+
+        VideoView videoView = popupView.findViewById(R.id.videoView);
+        videoView.setVideoURI(Uri.parse(downloadVideo));
+        videoView.start();
+
+        // Loop the video
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoView.start();
+            }
+        });
     }
 
 }

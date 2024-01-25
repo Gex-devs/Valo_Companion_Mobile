@@ -23,8 +23,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
+import com.gex.gex_riot_take_a_shit.Background.BackgroundWatchers;
 import com.gex.gex_riot_take_a_shit.Current_status_Data;
-import com.gex.gex_riot_take_a_shit.LocalApiHandler;
 import com.gex.gex_riot_take_a_shit.MainActivity;
 import com.gex.gex_riot_take_a_shit.R;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
@@ -82,6 +82,21 @@ public class menuSelection extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Thread backgroundThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BackgroundWatchers backgroundWatchers = new BackgroundWatchers(_viewModel);
+                try {
+                    backgroundWatchers.StartWatch();
+                } catch (JSONException | IOException | NoSuchAlgorithmException |
+                         ExecutionException | InterruptedException | KeyManagementException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+
 
     }
     @Override
@@ -187,9 +202,6 @@ public class menuSelection extends Fragment implements View.OnClickListener {
 
         });
 
-        // Update on render
-
-
         // drop down menu https://github.com/Chivorns/SmartMaterialSpinner
         spProvince = v.findViewById(R.id.spinner1);
         provinceList = new ArrayList<>();
@@ -200,21 +212,17 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         spProvince.setOnItemSelectedListener(GameModeSelectorListener);
 
         _viewModel.getSelectedItem().observe(requireActivity(), item ->{
-//            UiUpdate(item);
             new JsonParseTask().execute(item);
         });
 
         try {
             new JsonParseTask().execute(OfficalValorantApi.getInstance().GetParty());
-//            UiUpdate(LocalApiHandler.get_party());
-            //spProvince.setSelection(GameModes.getByCodeName(OfficalValorantApi.getInstance().GetQeueMode()).ordinal());
         } catch (IOException | ExecutionException | InterruptedException |
                  NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
         }catch (JSONException e){
             Log.d("Api Json Parse", "JsonParse: "+ e);
         }
-
 
         return v;
     }

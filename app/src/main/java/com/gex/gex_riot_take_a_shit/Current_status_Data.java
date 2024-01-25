@@ -4,12 +4,17 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.json.JSONObject;
+
 public class Current_status_Data extends ViewModel {
     private final MutableLiveData<String> Selection_Menu_json = new MutableLiveData<>();
     private final MutableLiveData<String> ChatData = new MutableLiveData<>();
-    private final MutableLiveData<String> char_select_item = new MutableLiveData<>();
 
+    private final MutableLiveData<JSONObject> SocialFriendsData = new MutableLiveData<>();
 
+    public void SetSocialFriendsData(JSONObject jsonObject){
+        SocialFriendsData.postValue(jsonObject);
+    }
     public void Selection(String item) {
         Selection_Menu_json.postValue(item);
     }
@@ -18,14 +23,10 @@ public class Current_status_Data extends ViewModel {
         ChatData.postValue(Text);
     }
 
-    public void for_char(String som){
-        char_select_item.postValue(som);
-    }
 
     public LiveData<String> getPartyChat(){
         return ChatData;
     }
-
 
 
     public LiveData<String> getSelectedItem() {
@@ -33,9 +34,9 @@ public class Current_status_Data extends ViewModel {
         return Selection_Menu_json;
     }
 
-    public LiveData<String> getFor_char() {
-
-        return char_select_item;
+    public LiveData<JSONObject> getSocialFriendsData(){
+        return SocialFriendsData;
     }
+
 }
 

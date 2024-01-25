@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.gex.gex_riot_take_a_shit.fragments.Game_Status;
 import com.gex.gex_riot_take_a_shit.fragments.Riot_login_frag;
+import com.gex.gex_riot_take_a_shit.fragments.Social;
 import com.gex.gex_riot_take_a_shit.fragments.Store_Fragment;
 import com.gex.gex_riot_take_a_shit.fragments.gameFragments.fragment_improved_ingame;
 import com.gex.gex_riot_take_a_shit.fragments.gameFragments.improved_Agent_sel_fragment;
@@ -52,6 +53,11 @@ public class FragmentSwitcher {
     }
     public static void Qeue_Menu() {
         Fragment fragment = new menuSelection(viewModel);
+        new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
+    }
+
+    public static void Soical(){
+        Fragment fragment = new Social(viewModel);
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
     }
     public static void Game_Status_Fragment(){

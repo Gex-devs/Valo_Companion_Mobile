@@ -17,6 +17,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.gex.gex_riot_take_a_shit.Background.BackgroundWatchers;
 import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
+import com.gex.gex_riot_take_a_shit.Background.XMPPServer;
 import com.gex.gex_riot_take_a_shit.ThirdParty.Firebase;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.ThirdParty.ValorantApi;
@@ -97,15 +98,19 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 try {
                     // Move the instantiation of OfficalValorantApi here
                     OfficalValorantApi officalValorantApi = OfficalValorantApi.getInstance(MainActivity.ContextMethod().getApplicationContext());
+                    XMPPServer xmppServer = new XMPPServer(viewModel);
+                    xmppServer.Start();
                     latch.countDown();
-                    BackgroundWatchers backgroundWatchers = new BackgroundWatchers(viewModel);
-                    backgroundWatchers.StartWatch();
                 } catch (IOException  | NoSuchAlgorithmException |
-                         KeyManagementException | ExecutionException | InterruptedException e) {
+                         KeyManagementException e) {
                     Log.d("ApiThread", "run: " + e);
                     throw new RuntimeException(e);
                 }catch (JSONException e){
                     Log.d("ApiThread", "run: "+e);
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -147,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         bottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.valo,"GAME"))
                 .addItem(new BottomNavigationItem(R.drawable.riot, "STORE"))
-                .addItem(new BottomNavigationItem(R.drawable.controller,"EXTRA"))
+                .addItem(new BottomNavigationItem(R.drawable.controller,"Social"))
                 .setInActiveColor(R.color.Inactive_color_bottom_bar)
                 .setBarBackgroundColor(R.color.Bottom_bar_color)
                 .setActiveColor(R.color.Valo_Color)
@@ -161,18 +166,15 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 switch (position){
                     case 0:
                         FragmentSwitcher.getInstance().Game_Status_Fragment();
-                        System.out.println("First_fragment");
                         break;
                     case 1:
                         FragmentSwitcher.getInstance().Store_Fragment();
                         // Replace with Toasty if possible
                         Toast.makeText(MainActivity.this,"Store is still under development",Toast.LENGTH_SHORT).show();
-                        System.out.println("Second_fragment");
                         break;
                     case 2:
-                        //party_fragment();
+                        FragmentSwitcher.getInstance().Soical();
                         Toast.makeText(MainActivity.this,"Feature is still under development",Toast.LENGTH_SHORT).show();
-                        System.out.println("Third_fragment");
                         break;
                 }
             }

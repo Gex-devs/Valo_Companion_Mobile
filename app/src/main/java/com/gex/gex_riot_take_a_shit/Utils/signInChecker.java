@@ -21,13 +21,9 @@ public class signInChecker {
         CookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(sharedPreferences));
         List<Cookie> cookies = cookieJar.loadForRequest(HttpUrl.parse(AuthCookiesUrl));
 
-// Check if cookies are present
+        // Check if cookies are present
         if (!cookies.isEmpty()) {
             // Cookies are present
-            for (Cookie cookie : cookies) {
-                // Do something with each cookie
-                System.out.println("Cookie: " + cookie.toString());
-            }
             return true;
         } else {
             // No cookies found

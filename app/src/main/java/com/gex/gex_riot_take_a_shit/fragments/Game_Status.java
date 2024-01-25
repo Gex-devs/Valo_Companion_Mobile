@@ -56,7 +56,7 @@ public class Game_Status extends Fragment {
 
         try {
             if (OfficalValorantApi.getInstance().isGameRunning()){
-                FragmentSwitcher.Qeue_Menu();
+                //FragmentSwitcher.Qeue_Menu();
             }
         } catch (IOException | JSONException | NoSuchAlgorithmException | ExecutionException |
                  InterruptedException | KeyManagementException e) {
