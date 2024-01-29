@@ -9,7 +9,6 @@ import org.json.JSONObject;
 public class Current_status_Data extends ViewModel {
     private final MutableLiveData<JSONObject> Selection_Menu_json = new MutableLiveData<>();
     private final MutableLiveData<String> ChatData = new MutableLiveData<>();
-
     private final MutableLiveData<JSONObject> SocialFriendsData = new MutableLiveData<>();
 
     public void SetSocialFriendsData(JSONObject jsonObject){

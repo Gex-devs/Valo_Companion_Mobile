@@ -1,4 +1,7 @@
 package com.gex.gex_riot_take_a_shit.Background;
+import static com.gex.gex_riot_take_a_shit.ThirdParty.XMPPConstants.XMPPRegionURLs;
+import static com.gex.gex_riot_take_a_shit.ThirdParty.XMPPConstants.XMPPRegions;
+
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -20,7 +23,10 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,26 +34,19 @@ import java.util.regex.Pattern;
 import javax.net.ssl.*;
 public class XMPPServer {
     private String bufferedMessage = "";
-    String XMPPRegion = "la1";
-    String RSO = OfficalValorantApi.getInstance().GetAccessToken();
-    String PAS = OfficalValorantApi.getInstance().GetPSA();
-    String addr = "la1.chat.si.riotgames.com";
-    SSLSocket sslSocket;
+    private String XMPPRegion = "ru1";
+    private String RSO;
+    private String PAS;
+    private String addr = "ru1.chat.si.riotgames.com";
+    private SSLSocket sslSocket;
     private Current_status_Data _viewModel;
-
-    String[] messages = {
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><stream:stream to=\"" + XMPPRegion + ".pvp.net\" xml:lang=\"en\" version=\"1.0\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\">",
-            "<auth mechanism=\"X-Riot-RSO-PAS\" xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><rso_token>" + RSO + "</rso_token><pas_token>" + PAS + "</pas_token></auth>",
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><stream:stream to=\"" + XMPPRegion + ".pvp.net\" xml:lang=\"en\" version=\"1.0\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\">",
-            "<iq id=\"_xmpp_bind1\" type=\"set\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><puuid-mode enabled=\"true\"/><resource>RC-2709252368</resource></bind></iq>",
-            "<iq id=\"_xmpp_session1\" type=\"set\"><session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/></iq>",
-            "<iq type=\"get\" id=\"2\"><query xmlns=\"jabber:iq:riotgames:roster\" last_state=\"true\" /></iq>",
-            "<presence/>"
-    };
-
+    private Thread readerThread;
+    private String[] messages;
+    private int indexCount = 0;
+    public static Map<String, String> friendsList = new HashMap<>();
     private static OutputStream outputStream;
     private  InputStream inputStream;
-    public XMPPServer(Current_status_Data viewModel, MainActivity mainActivity) throws IOException, ExecutionException, InterruptedException {
+    public XMPPServer(Current_status_Data viewModel) throws IOException, ExecutionException, InterruptedException {
         // Init Server connection here
         SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
         sslSocket = (SSLSocket) sslSocketFactory.createSocket(addr, 5223);
@@ -58,13 +57,54 @@ public class XMPPServer {
 
         _viewModel = viewModel;
 
-
-        // Start the handshake
-        sslSocket.startHandshake();
+        // Setup
+        RSO = OfficalValorantApi.getInstance().GetAccessToken();
+        PAS = OfficalValorantApi.getInstance().GetPSA();
+//        SetupRegion();
+        SetupMessage();
 
         inputStream = sslSocket.getInputStream();
         outputStream = sslSocket.getOutputStream();
 
+        // Start the handshake
+        sslSocket.startHandshake();
+    }
+    private String decodeToken(String token) {
+        // Split the token by '.' and get the base64 encoded payload
+        String[] parts = token.split("\\.");
+        String encodedPayload = parts[1];
+
+        // Decode the base64 encoded payload
+        byte[] decodedBytes = new byte[0];
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        {
+            decodedBytes = Base64.getDecoder().decode(encodedPayload);
+        }
+        String decodedPayload = new String(decodedBytes);
+
+        return decodedPayload;
+    }
+    private void SetupRegion(){
+        try{
+            String region = decodeToken(PAS);
+            JSONObject jsonObject = new JSONObject(new String(region));
+            region = jsonObject.getString("affinity");
+            addr = XMPPRegionURLs.get(region);
+            XMPPRegion = XMPPRegions.get(region);
+        }catch (JSONException e){
+            Log.e("XMPPServer", "SetupRegion: Failed to find region, " + e);
+        }
+    }
+    private void SetupMessage(){
+        messages = new String[]{
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?><stream:stream to=\"" + XMPPRegion + ".pvp.net\" xml:lang=\"en\" version=\"1.0\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\">",
+                "<auth mechanism=\"X-Riot-RSO-PAS\" xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><rso_token>" + RSO + "</rso_token><pas_token>" + PAS + "</pas_token></auth>",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?><stream:stream to=\"" + XMPPRegion + ".pvp.net\" xml:lang=\"en\" version=\"1.0\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\">",
+                "<iq id=\"_xmpp_bind1\" type=\"set\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><puuid-mode enabled=\"true\"/><resource>RC-2709252368</resource></bind></iq>",
+                "<iq id=\"_xmpp_session1\" type=\"set\"><session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/></iq>",
+                "<iq type=\"get\" id=\"2\"><query xmlns=\"jabber:iq:riotgames:roster\" last_state=\"true\" /></iq>",
+                "<presence/>"
+        };
     }
 
     private void readMessages() throws IOException {
@@ -85,7 +125,6 @@ public class XMPPServer {
         Log.d("XMPPServer", "OnMessage: " + message);
     }
 
-    private int indexCount = 0;
     private void SendInitMessages() throws IOException {
         if (indexCount  < messages.length) {
             SendMessage(messages[indexCount]);
@@ -98,7 +137,7 @@ public class XMPPServer {
     }
 
     public void Start() throws IOException {
-        Thread readerThread = new Thread(() -> {
+        readerThread = new Thread(() -> {
             try {
                 readMessages();
             } catch (IOException e) {
@@ -120,17 +159,14 @@ public class XMPPServer {
             data = bufferedMessage + data;
             if (data.equals("")) return;
             if (!data.startsWith("<")) {
-                Log.e("XMPPServer", "processData: " + "XML presence data doesn't start with '<'!");
+                Log.e("XMPPServer", "processData: " + "XML presence data doesn't start with '<'!" + data);
                 return;
             }
             //"stream:features"
-
             String firstTagName = data.substring(1, data.indexOf('>')).split(" ")[0];
-
             // check for self-closing tag eg <presence />
-            if (findSelfClosingTagIndex(data) == 0) {
+            if (findSelfClosingTagIndex(data) != 0) {
                 data = data.replace("/>", "></" + firstTagName + ">");
-                System.out.println(data);
             }
 
             int closingTagIndex = data.indexOf("</" + firstTagName + ">");
@@ -155,6 +191,23 @@ public class XMPPServer {
             int firstTagEnd = closingTagIndex + ("</" + firstTagName + ">").length();
             bufferedMessage = data.substring(firstTagEnd); // will be an empty string if only one tag
             data = data.substring(0, firstTagEnd);
+
+            if (data.startsWith("<iq from=") && data.endsWith("</query></iq>")){
+
+                String queryTag = data.substring(data.indexOf("<query xmlns='jabber:iq:riotgames:roster'>") + 42, data.indexOf("</query>"));
+                String[] items = queryTag.split("</item>");
+
+                for (String dataNames: items) {
+
+                    String puuid = dataNames.substring(11, 47);
+                    int idTagIndex = dataNames.indexOf("<id ");
+
+                    int usernameIndex = dataNames.indexOf("name=", idTagIndex) + 6;
+                    String username = dataNames.substring(usernameIndex, dataNames.indexOf("' ", usernameIndex));
+
+                    friendsList.put(puuid, username);
+                }
+            }
 
             if (firstTagName.equals("presence")) {
                 ProcessXMLDATA(data);
@@ -183,13 +236,13 @@ public class XMPPServer {
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
+                }catch (IllegalArgumentException ex){
+                    Log.e("XMPP", "ProcessXMLDATA: " + ex);
                 }
             }
         }catch (StringIndexOutOfBoundsException exception){
             Log.e("XMPP", "ProcessXMLDATA: " + exception);
         }
-
-
     }
 
     private String extractDataFromXML(String xml, String tagName){
@@ -217,11 +270,21 @@ public class XMPPServer {
         String regex = "<[^<>]+/>";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(data);
-
         if (matcher.find()) {
             return matcher.start();
         } else {
             return -1; // Return -1 if no match is found
         }
+    }
+
+
+    private void Reconnect() throws ExecutionException, InterruptedException, IOException {
+        // Re-init
+        indexCount = 0;
+        RSO = OfficalValorantApi.getInstance().GetAccessToken();
+        PAS = OfficalValorantApi.getInstance().GetPSA();
+        sslSocket.close();
+        sslSocket.startHandshake();
+        Start();
     }
 }

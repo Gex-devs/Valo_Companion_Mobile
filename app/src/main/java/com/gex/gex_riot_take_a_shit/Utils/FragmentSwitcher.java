@@ -11,8 +11,7 @@ import com.gex.gex_riot_take_a_shit.fragments.Game_Status;
 import com.gex.gex_riot_take_a_shit.fragments.Riot_login_frag;
 import com.gex.gex_riot_take_a_shit.fragments.Social;
 import com.gex.gex_riot_take_a_shit.fragments.Store_Fragment;
-import com.gex.gex_riot_take_a_shit.fragments.gameFragments.improved_Agent_sel_fragment;
-import com.gex.gex_riot_take_a_shit.fragments.gameFragments.menuSelection;
+import com.gex.gex_riot_take_a_shit.fragments.menuSelection;
 import com.gex.gex_riot_take_a_shit.party;
 
 
@@ -46,10 +45,6 @@ public class FragmentSwitcher {
         return Instance;
     }
 
-    public static void Agent_Select_fragment(){
-        Fragment fragment = new improved_Agent_sel_fragment();
-        new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
-    }
     public static void Qeue_Menu() {
         Fragment fragment = new menuSelection(viewModel);
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
@@ -76,14 +71,5 @@ public class FragmentSwitcher {
 
         new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
 
-    }
-    public static void Game_Fragment(){
-        Fragment fragment = new menuSelection(viewModel);
-        new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
-    }
-
-    public static void party_fragment(){
-        Fragment fragment = new party();
-        new FragmentTransactionTask(_fragmentManager, _container, fragment).execute();
     }
 }

@@ -93,5 +93,5 @@ public class Riot_login_frag extends Fragment {
                     StyleableToast.makeText(getContext(), "Invalid Username or password", Toast.LENGTH_SHORT, R.style.invalidErrorToast).show();
                 }
 
-                }
     }
+}

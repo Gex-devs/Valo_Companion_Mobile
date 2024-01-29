@@ -1,12 +1,7 @@
 package com.gex.gex_riot_take_a_shit.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.nsd.NsdManager;
-import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,32 +12,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.dexafree.materialList.card.Card;
-import com.dexafree.materialList.card.CardProvider;
-import com.dexafree.materialList.card.OnActionClickListener;
-import com.dexafree.materialList.card.action.TextViewAction;
-import com.dexafree.materialList.view.MaterialListView;
-import com.gex.gex_riot_take_a_shit.Background.ConnectionService;
-import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
-import com.gex.gex_riot_take_a_shit.Current_status_Data;
-import com.gex.gex_riot_take_a_shit.MainActivity;
 import com.gex.gex_riot_take_a_shit.R;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
-import com.gex.gex_riot_take_a_shit.Utils.signInChecker;
 import com.labo.kaji.fragmentanimations.MoveAnimation;
-import com.squareup.picasso.RequestCreator;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 

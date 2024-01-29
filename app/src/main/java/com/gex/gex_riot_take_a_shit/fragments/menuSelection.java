@@ -1,4 +1,4 @@
-package com.gex.gex_riot_take_a_shit.fragments.gameFragments;
+package com.gex.gex_riot_take_a_shit.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
@@ -23,7 +23,6 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
-import com.gex.gex_riot_take_a_shit.Background.BackgroundWatchers;
 import com.gex.gex_riot_take_a_shit.Current_status_Data;
 import com.gex.gex_riot_take_a_shit.MainActivity;
 import com.gex.gex_riot_take_a_shit.R;
@@ -190,9 +189,11 @@ public class menuSelection extends Fragment implements View.OnClickListener {
         // drop down menu https://github.com/Chivorns/SmartMaterialSpinner
         spProvince = v.findViewById(R.id.spinner1);
         provinceList = new ArrayList<>();
+
         for (GameModes gameModes: GameModes.values()){
             provinceList.add(gameModes.getDisplayName());
         }
+
         spProvince.setItem(provinceList);
         spProvince.setOnItemSelectedListener(GameModeSelectorListener);
 

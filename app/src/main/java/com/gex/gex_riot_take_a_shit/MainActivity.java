@@ -15,14 +15,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.gex.gex_riot_take_a_shit.Background.BackgroundWatchers;
-import com.gex.gex_riot_take_a_shit.Background.WebsocketServer;
 import com.gex.gex_riot_take_a_shit.Background.XMPPServer;
 import com.gex.gex_riot_take_a_shit.ThirdParty.Firebase;
 import com.gex.gex_riot_take_a_shit.ThirdParty.OfficalValorantApi;
 import com.gex.gex_riot_take_a_shit.ThirdParty.ValorantApi;
 import com.gex.gex_riot_take_a_shit.Utils.FragmentSwitcher;
-import com.gex.gex_riot_take_a_shit.Utils.signInChecker;
 
 import org.json.JSONException;
 
@@ -60,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
-    @SuppressLint({"NewApi", "ResourceAsColor"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,12 +73,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Firebase firebase = new Firebase(this);
 
         //Create instance of Api Handler to use as a singleton
-        try {
-            LocalApiHandler apiHandler = new LocalApiHandler();
-            ValorantApi valorantApi = new ValorantApi();
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new RuntimeException(e);
-        }
+        ValorantApi valorantApi = new ValorantApi();
+
 
         // Fragment container
         container = findViewById(R.id.fragmentContainerView);
@@ -98,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 try {
                     // Move the instantiation of OfficalValorantApi here
                     OfficalValorantApi officalValorantApi = OfficalValorantApi.getInstance(MainActivity.ContextMethod().getApplicationContext());
-                    XMPPServer xmppServer = new XMPPServer(viewModel, MainActivity.this);
+                    XMPPServer xmppServer = new XMPPServer(viewModel);
                     xmppServer.Start();
                     latch.countDown();
                 } catch (IOException  | NoSuchAlgorithmException |
@@ -125,21 +117,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             throw new RuntimeException(e);
         }
 
-//        try {
-//            latch.await();
-//            if (!OfficalValorantApi.getInstance().isGameRunning()){
-//                FragmentSwitcher.Game_Status_Fragment();
-//            }else if(OfficalValorantApi.getInstance() != null) {
-//                FragmentSwitcher.Qeue_Menu();
-//            }
-//        } catch (IOException | JSONException | NoSuchAlgorithmException |
-//                 InterruptedException | KeyManagementException e) {
-//            throw new RuntimeException(e);
-//        }catch (ExecutionException e){
-//            throw new RuntimeException(e);
-//        }
 
-        // Test
     }
     @Override
     public void update(Observable observable, Object o) {

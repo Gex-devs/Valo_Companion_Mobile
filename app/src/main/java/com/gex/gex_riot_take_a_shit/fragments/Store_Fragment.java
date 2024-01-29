@@ -41,8 +41,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class Store_Fragment extends Fragment {
-
-
     ShapeableImageView[] itemOffers;
     ShapeableImageView bundle;
     Button _logoutButton;
@@ -95,7 +93,7 @@ public class Store_Fragment extends Fragment {
 
         try {
             LoadOffers();
-            LoadWallet();
+//            LoadWallet();
         } catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -276,6 +274,7 @@ public class Store_Fragment extends Fragment {
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
+                // I don't think this works
                 videoView.start();
             }
         });

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.gex.gex_riot_take_a_shit.Background.XMPPServer;
 import com.gex.gex_riot_take_a_shit.Utils.requestBodies.AuthCookiesBody;
 import com.gex.gex_riot_take_a_shit.Utils.requestBodies.AuthRequestBody;
 import com.gex.gex_riot_take_a_shit.Utils.signInChecker;
@@ -71,7 +72,7 @@ public class OfficalValorantApi {
 //        clearCookies();
         ReAuth();
 
-        executor = Executors.newFixedThreadPool(15);
+        executor = Executors.newCachedThreadPool();
 
 //        GetEntitlementToken();
     }
@@ -250,14 +251,21 @@ public class OfficalValorantApi {
 
         TokenJson = jsonPostResponse.substring("Response".length());
 
+
     }
 
-    public String GetAccessToken() {
-        String accessToken = null;
-        int startIndex = TokenJson.indexOf("access_token=") ;
-        int endIndex = TokenJson.indexOf("&", startIndex);
-        accessToken = TokenJson.substring(startIndex, endIndex).substring("access_token=".length());
-        return accessToken;
+    public String GetAccessToken() throws IOException {
+        try{
+            String accessToken = null;
+            int startIndex = TokenJson.indexOf("access_token=") ;
+            int endIndex = TokenJson.indexOf("&", startIndex);
+            accessToken = TokenJson.substring(startIndex, endIndex).substring("access_token=".length());
+            return accessToken;
+        }catch (Exception e){
+            Log.e("Valorant Api", "GetAccessToken: "+ e);
+            ReAuth();
+        }
+        return "";
     }
 
     private String GetEntitlementToken() throws ExecutionException, InterruptedException {
@@ -283,7 +291,7 @@ public class OfficalValorantApi {
                 Response response = miscClient.newCall(postRequest).execute();
                 if (!response.isSuccessful()){
                     ReAuth();
-                    GetEntitlementToken();
+//                    GetEntitlementToken();
                 }
 
                 JSONObject jsonObject = new JSONObject(response.body().string());
@@ -511,6 +519,33 @@ public class OfficalValorantApi {
 
     }
 
+    public String GetPartyById(String partyID) throws IOException, JSONException, NoSuchAlgorithmException, KeyManagementException, ExecutionException, InterruptedException {
+
+        Callable<String> callable = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                Headers headers = new Headers.Builder()
+                        .add("Authorization","Bearer "+ GetAccessToken())
+                        .add("X-Riot-Entitlements-JWT",GetEntitlementToken())
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url("https://glz-eu-1.eu.a.pvp.net/parties/v1/parties/" + partyID)
+                        .headers(headers)
+                        .build();
+
+                Response response = miscClient.newCall(request).execute();
+
+                String ResponseString = response.body().string();
+
+                return  ResponseString;
+            }
+        };
+
+        return executor.submit(callable).get();
+
+    }
+
     public boolean isGameRunning() throws IOException, JSONException, NoSuchAlgorithmException, KeyManagementException, ExecutionException, InterruptedException {
 
         Callable<Boolean> callable = new Callable<Boolean>() {
@@ -565,10 +600,13 @@ public class OfficalValorantApi {
                         .build();
 
                 Response response = miscClient.newCall(request).execute();
-
-                String ResponseString = response.body().string();
-
-                String GameName = new JSONArray(ResponseString).getJSONObject(0).getString("GameName");
+                String GameName;
+                if (response.code() == 200){
+                    String ResponseString = response.body().string();
+                    GameName = new JSONArray(ResponseString).getJSONObject(0).getString("GameName");
+                }else {
+                    GameName = "";
+                }
 
                 return GameName;
             }

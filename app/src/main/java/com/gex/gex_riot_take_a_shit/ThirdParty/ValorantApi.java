@@ -2,8 +2,6 @@ package com.gex.gex_riot_take_a_shit.ThirdParty;
 
 import android.util.Log;
 
-import com.gex.gex_riot_take_a_shit.LocalApiHandler;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,11 +32,7 @@ public class ValorantApi {
     public static ValorantApi getInstance() throws NoSuchAlgorithmException, KeyManagementException {
 
         if (instance == null) {
-            synchronized (LocalApiHandler.class) {
-                if (instance == null) {
-                    instance = new ValorantApi();
-                }
-            }
+            instance = new ValorantApi();
         }
         return instance;
     }
@@ -47,8 +41,6 @@ public class ValorantApi {
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
-                    System.out.println("called from python Rest Api");
-
                     Request request = new Request.Builder()
                             .url("https://valorant-api.com/v1/playercards/"+PlayerCardID)
                             .build();
@@ -80,8 +72,6 @@ public class ValorantApi {
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
-                    System.out.println("called from python Rest Api");
-
                     Request request = new Request.Builder()
                             .url("https://valorant-api.com/v1/playertitles/"+PlayerTitle)
                             .build();
@@ -106,8 +96,6 @@ public class ValorantApi {
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
-                    System.out.println("called from python Rest Api");
-
                     Request request = new Request.Builder()
                             .url("https://valorant-api.com/v1/playertitles/"+PlayerTitle)
                             .build();
@@ -166,8 +154,6 @@ public class ValorantApi {
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
-                    System.out.println("called from python Rest Api");
-
                     Request request = new Request.Builder()
                             .url("https://valorant-api.com/v1/bundles/"+bundleID)
                             .build();
@@ -193,7 +179,6 @@ public class ValorantApi {
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
-                    System.out.println("called from python Rest Api");
                     // code request code here
                     Request request = new Request.Builder()
                             .url("https://valorant-api.com/v1/agents/"+puuid)
@@ -224,8 +209,6 @@ public class ValorantApi {
         Callable<String> callable = new Callable<String>() {
             public String call() {
                 try {
-                    System.out.println("called from python Rest Api");
-
                     Request request = new Request.Builder()
                             .url("https://valorant-api.com/v1/version/")
                             .build();
